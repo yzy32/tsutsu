@@ -108,7 +108,8 @@
                   <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
               </div>
                   <input name="password" id="password" class="form-control" placeholder="Password" type="password">
-              </div> <!-- form-group// -->                                   
+              </div> <!-- form-group// --> 
+              <span id="error" class="error text-danger"></span>                                  
               <div class="form-group">
                   <button type="submit" class="btn btn-primary btn-block" id="submit"> Sign In  </button>
               </div> <!-- form-group// -->      
@@ -117,5 +118,31 @@
           </article>
         </div> 
       </div>
+      <script>
+        document.getElementById("submit").addEventListener("click", async(e)=>{
+          try {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          console.log(email, password);
+          const response = await axios.post("/api/1.0/user/signin", {
+            type: "native",
+            email: email,
+            password: password
+          });
+          console.log(response);
+          //FIXME:will window.location.origin affected by proxy? 
+          window.location = `${window.location.origin}/user/${response.data.user.userId}/recipes`
+          localStorage.setItem("user", JSON.stringify(response.data));            
+          } catch (error) {
+            console.log(error);
+            if (error.response.status == 403){
+              document.getElementById("error").innerText="Wrong sign in info. Please try again";
+            } else if (error.response.status == 400){
+              document.getElementById("error").innerText="All fields are required";
+            }
+          }
+        })
+      </script>
   </body>
 </html>

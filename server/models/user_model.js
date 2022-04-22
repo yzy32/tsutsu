@@ -19,7 +19,6 @@ const createUser = async (userName, userId, type, email, password) => {
         type: user.type,
         userName: user.userName,
         email: user.email,
-        userImage: user.userImage,
       },
       process.env.TOKEN_SECRET
     );
@@ -34,13 +33,14 @@ const createUser = async (userName, userId, type, email, password) => {
   }
 };
 
-const getUserInfo = async (type, email, password) => {
+const getUserInfo = async (type, email) => {
   try {
-    User.get;
+    const result = await User.findOne({ type: type, email: email });
+    return result;
   } catch (error) {
     console.log(error);
     return error;
   }
 };
 
-module.exports = { createUser };
+module.exports = { createUser, getUserInfo };

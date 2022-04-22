@@ -1,4 +1,6 @@
-const { createUser } = require("../models/user_model");
+const { createUser, getUserInfo } = require("../models/user_model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const signUp = async (req, res) => {
   //TODO: data validation
@@ -17,18 +19,51 @@ const signUp = async (req, res) => {
   }
   delete result.user.password;
   delete result.error;
-  console.log(result);
+  console.log("user sign up: ", result);
   res.status(200).send(result);
   return;
 };
 
 const signIn = async (req, res) => {
   const { type, email, password } = req.body;
+  console.log(type, email, password);
   //TODO: validate, wrong format: return 400
-  //TODO: get password from mongo based on type and email (model)
-  //TODO: compare password and hased password
-  //TODO: return 403, if password doesn't match
-  //TODO: return token and redirect to user/:id/recipes
+
+  //get password from mongo based on type and email (model)
+  const result = await getUserInfo(type, email);
+  //compare password and hased password
+  const decoded = await bcrypt.compare(password, result.password);
+  let user;
+  if (decoded) {
+    user = {
+      userName: result.userName,
+      userId: result.userId,
+      type: result.type,
+      email: result.email,
+    };
+  } else {
+    //return 403, if password doesn't match
+    res.status(403).send({ error: "Wrong user info" });
+    return;
+  }
+  //return token and redirect to user/:id/recipes
+  const accessToken = jwt.sign(
+    {
+      type: result.type,
+      userName: result.userName,
+      email: result.email,
+      userImage: result.userImage,
+    },
+    process.env.TOKEN_SECRET
+  );
+  const accessExpired = process.env.TOKEN_EXPIRE;
+  console.log("user sign in: ", result);
+  res.status(200).send({
+    user: user,
+    accessToken: accessToken,
+    accessExpired: accessExpired,
+  });
+  return;
 };
 
 module.exports = { signUp, signIn };
