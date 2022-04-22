@@ -2,6 +2,7 @@ require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
 const { Client, ConnectionPool } = require("@elastic/elasticsearch");
+
 const es = new Client({
   node: `https://${process.env.IP}:${process.env.ES_PORT}`,
   auth: {

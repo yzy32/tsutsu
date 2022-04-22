@@ -15,16 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 // CORS allow all
 app.use(cors());
 
-app.get("/test", (req, res) => {
-  res.json({
-    msg: `${process.env.DOMAIN}:${process.env.ES_PORT}, ${process.env.API_VERSION}`,
-  });
-});
-
 // API routes
 app.use("/api/" + `${process.env.API_VERSION}`, [
   require("./server/routes/api/recipe_route"),
-  // require("./server/routes/api/user_route"),
+  require("./server/routes/api/user_route"),
 ]);
 
 // User flow

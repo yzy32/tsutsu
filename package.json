@@ -19,6 +19,7 @@
   "homepage": "https://github.com/yzy32/tsutsu#readme",
   "dependencies": {
     "@elastic/elasticsearch": "^8.1.0",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
