@@ -1,7 +1,7 @@
-// console.log(window.location);
+console.log(window.location);
 // console.log(window.location.search);
 let newUrl = null;
-// first render
+// first render (other to test: document.ready)
 window.onload = search();
 
 // rerender after filter
@@ -100,20 +100,43 @@ async function onClickRemoveTag(tgt, queryKey) {
   });
 });
 
+//only search my recipe
+document.getElementById("myrecipe").addEventListener("click", async (e) => {
+  console.log(e.target.checked);
+  if (e.target.checked) {
+    newUrl.searchParams.set("myrecipe", true);
+  } else {
+    newUrl.searchParams.delete("myrecipe");
+  }
+  window.history.pushState({}, "", newUrl.toString());
+  const data = await search();
+});
+
 async function search() {
-  const { data } = await axios.get(
-    `/api/1.0/recipe/search${window.location.search}`
-  );
-  console.log(data);
-  // render search result area
-  const res = document.getElementById("res");
-  res.innerText = `Showing ${data.recipeCount} results`;
-  let searchResults = document.getElementById("search-results");
-  // console.log(searchResults.innerHTML);
-  searchResults.innerHTML = "";
-  let recipe = "";
-  for (let i = 0; i < data.recipes.length; i++) {
-    recipe += `
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    let jwtToken = null;
+    if (user) {
+      jwtToken = user.accessToken;
+    }
+    const { data } = await axios.get(
+      `/api/1.0/recipe/search${window.location.search}`,
+      {
+        headers: {
+          Authorization: "Bearer " + jwtToken,
+        },
+      }
+    );
+    console.log(data);
+    // render search result area
+    const res = document.getElementById("res");
+    res.innerText = `Showing ${data.recipeCount} results`;
+    let searchResults = document.getElementById("search-results");
+    // console.log(searchResults.innerHTML);
+    searchResults.innerHTML = "";
+    let recipe = "";
+    for (let i = 0; i < data.recipes.length; i++) {
+      recipe += `
     <section class="search-result-item">
               <a class="image-link" href="#"><img class="image" src="https://s23209.pcdn.co/wp-content/uploads/2018/06/211129_DAMN-DELICIOUS_Lemon-Herb-Roasted-Chx_068.jpg">
               </a>
@@ -133,20 +156,26 @@ async function search() {
               </div>
           </section>
     `;
+    }
+    searchResults.innerHTML += recipe;
+    newUrl = new URL(window.location.href);
+    newUrl.searchParams.delete("q");
+    if (data.filter.ingrIncl && data.filter.ingrIncl.length !== 0) {
+      newUrl.searchParams.set("ingrIncl", data.filter.ingrIncl);
+    }
+    if (data.filter.otherKeyword && data.filter.otherKeyword.length !== 0) {
+      newUrl.searchParams.set("otherKeyword", data.filter.otherKeyword);
+    }
+    // render filter area
+    renderFilter(data);
+    return data;
+  } catch (error) {
+    if (error.response.data.redirectUrl) {
+      const redirectUrl = error.response.data.redirectUrl;
+      document.location = redirectUrl;
+    }
+    console.log(error.response.data);
   }
-  searchResults.innerHTML += recipe;
-  newUrl = new URL(window.location.href);
-  newUrl.searchParams.delete("q");
-  if (data.filter.ingrIncl && data.filter.ingrIncl.length !== 0) {
-    newUrl.searchParams.set("ingrIncl", data.filter.ingrIncl);
-  }
-  if (data.filter.otherKeyword && data.filter.otherKeyword.length !== 0) {
-    newUrl.searchParams.set("otherKeyword", data.filter.otherKeyword);
-  }
-  // render filter area
-  renderFilter(data);
-  return data;
-  //TODO: with token
 }
 
 function renderFilter(data) {
@@ -157,15 +186,25 @@ function renderFilter(data) {
     cookTime.value = data.filter.cookTime;
   }
 
+  //show search my recipe if user login
+  if (data.loginStatus) {
+    document.getElementById("myrecipeGroup").style.display = "";
+    //render checked box
+    let myrecipe = newUrl.searchParams.get("myrecipe");
+    if (myrecipe) {
+      document.getElementById("myrecipe").checked = true;
+    }
+  }
+
+  // render pagination
   let pageGroup = document.getElementById("pageGroup");
   pageGroup.innerHTML = "";
 
-  //FIXME: current page = 1st page is not defined
   let currentPage = parseInt(newUrl.searchParams.get("page")) || 1;
   if (currentPage > data.totalPage) {
     currentPage = 1;
   }
-  // no data
+
   if (data.totalPage === 0) {
     return;
   }

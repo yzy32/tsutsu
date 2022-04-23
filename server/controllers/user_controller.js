@@ -51,8 +51,8 @@ const signIn = async (req, res) => {
     {
       type: result.type,
       userName: result.userName,
+      userId: result.userId,
       email: result.email,
-      userImage: result.userImage,
     },
     process.env.TOKEN_SECRET
   );

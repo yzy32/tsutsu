@@ -1,9 +1,12 @@
 const path = require("path");
 const { searchIngredient, searchRecipe } = require("../models/recipe_model");
 const { arrayToString } = require("../../utils/util.js");
+const { nextTick } = require("process");
 const pageSize = 10;
 
 const getRecipe = async (req, res) => {
+  console.log("user in search: ", req.user);
+  console.log("login status in search: ", req.loginStatus);
   try {
     let {
       q,
@@ -39,11 +42,11 @@ const getRecipe = async (req, res) => {
       otherKeyword = keywords.otherKeywords;
       ingrExcl = "";
     }
-    //TODO: show recipe
-    //TODO: sort by ingredients
-    //FIXME: sort by time
-    //TODO: handling one of parameters is null
-    //TODO: filter when myrecipe === true (now using default: false)
+
+    //TODO: wrong token, 403, redirect to sign in page
+    if (myrecipe && req.loginStatus) {
+      myrecipe = req.user.userId;
+    }
     result = await searchRecipe(
       ingrIncl,
       ingrExcl,
@@ -56,7 +59,7 @@ const getRecipe = async (req, res) => {
     );
     // console.log(result);
     let recipes = [];
-    //TODO: get image from mongo or s3
+    //TODO: get image from mongo or s3 based on document_id
     for (let i = 0; i < result.hits.length; i++) {
       if (!result.hits[i].highlight) {
         result.hits[i].highlight = {
@@ -77,10 +80,9 @@ const getRecipe = async (req, res) => {
 
       recipes.push(recipe);
     }
-    //TODO: next paging
-    // let nextPage = result.total.value > pageSize * page ? page + 1 : null;
+    //pagination
     let totalPage = Math.ceil(result.total.value / pageSize);
-    res.json({
+    res.status(200).json({
       recipes: recipes,
       recipeCount: result.total.value,
       filter: {
@@ -89,11 +91,12 @@ const getRecipe = async (req, res) => {
         otherKeyword: otherKeyword,
         cookTime: cookTime,
       },
-      // nextPage: nextPage,
       totalPage: totalPage,
+      loginStatus: req.loginStatus,
     });
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 

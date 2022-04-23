@@ -36,7 +36,7 @@ const searchRecipe = async (
 ) => {
   try {
     let recipeFrom = pageSize * (page - 1);
-    console.log("recipe from: ", recipeFrom);
+    // console.log("recipe from: ", recipeFrom);
     if (!cookTime) {
       cookTime = 1000000;
     }
@@ -62,6 +62,7 @@ const searchRecipe = async (
       query: {
         bool: {
           should: [],
+          filter: [],
           must_not: [
             {
               match: {
@@ -124,12 +125,20 @@ const searchRecipe = async (
       });
     }
     if (cookTime) {
-      searchInput.query.bool.filter = [
-        { range: { cookTime: { lte: cookTime } } },
-      ];
+      searchInput.query.bool.filter.push({
+        range: { cookTime: { lte: cookTime } },
+      });
     }
-
+    if (myrecipe) {
+      //filter by user id
+      searchInput.query.bool.filter.push({
+        match: { authorId: { query: myrecipe } },
+      });
+      //remove must not (match: isPublic)
+      searchInput.query.bool.must_not.shift();
+    }
     const result = await es.search(searchInput);
+    // console.log(searchInput);
     // console.log(result.hits.hits);
     // console.log(result.hits.total.value);
     return result.hits;

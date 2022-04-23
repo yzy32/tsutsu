@@ -18,6 +18,7 @@ const createUser = async (userName, userId, type, email, password) => {
       {
         type: user.type,
         userName: user.userName,
+        userId: user.userId,
         email: user.email,
       },
       process.env.TOKEN_SECRET

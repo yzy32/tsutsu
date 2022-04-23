@@ -55,7 +55,7 @@ module.exports = mongoose.model("user", userSchema);
 //         {
 //           step: { type: String, required: true },
 //           image: { type: String, default: null },
-//           _id: false,
+//           _id: false, //FIXME: how to quickly find the step and update it >> use step "x"
 //         },
 //       ],
 //       required: true,
