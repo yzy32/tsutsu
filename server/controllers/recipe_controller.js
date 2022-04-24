@@ -1,7 +1,8 @@
 const path = require("path");
 const { searchIngredient, searchRecipe } = require("../models/recipe_model");
 const { arrayToString } = require("../../utils/util.js");
-const { nextTick } = require("process");
+const { Recipe } = require("../../utils/mongo");
+const es = require("../../utils/es");
 const pageSize = 10;
 
 const getRecipe = async (req, res) => {
@@ -43,7 +44,6 @@ const getRecipe = async (req, res) => {
       ingrExcl = "";
     }
 
-    //TODO: wrong token, 403, redirect to sign in page
     if (myrecipe && req.loginStatus) {
       myrecipe = req.user.userId;
     }
@@ -118,4 +118,47 @@ async function categorizeKeywords(keywords) {
   return keywordsCategory;
 }
 
-module.exports = { getRecipe };
+const createRecipe = async (req, res) => {
+  let recipe = {
+    recipeImage: req.files.recipeImage[0].location,
+    servings: req.body.servings,
+    recipeSteps: [],
+    recipeName: req.body.recipeName,
+    description: req.body.description,
+    cookTime: req.body.cookTime,
+    ingredients: req.body.ingredients,
+    author: req.user.userName,
+    authorId: req.user.userId,
+  };
+  for (let i = 0; i < req.body.recipeSteps.length; i++) {
+    let recipeStep = {
+      step: req.body.recipeSteps[i],
+      image: req.files.recipeStepImage[i].location,
+    };
+    recipe.recipeSteps.push(recipeStep);
+  }
+  if (req.body.isPublic) {
+    recipe.isPublic = req.body.isPublic;
+  }
+  if (req.body.tags) {
+    let tags = Array.isArray(req.body.tags) ? req.body.tags : [req.body.tags];
+    recipe.tags = tags;
+  }
+  let recipeInserted = await Recipe.create(recipe);
+  let result = await recipeInserted.save();
+  console.log("recipe", recipe);
+  console.log("mongo result for saving: ", result);
+  let recipeES = recipe; //FIXME: shallow copy
+  delete recipeES.servings;
+  delete recipeES.recipeSteps;
+  let esResult = await es.index({
+    index: "recipes",
+    id: result.id,
+    document: recipeES,
+  });
+  console.log("es result for saving: ", esResult);
+  res.status(200).json({ test: req.body });
+  return;
+};
+
+module.exports = { getRecipe, createRecipe };

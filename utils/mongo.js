@@ -26,6 +26,7 @@ async function mongoConnection() {
   }
 }
 mongoConnection();
+
 const userSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -40,52 +41,57 @@ const userSchema = new mongoose.Schema({
   useRecipes: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
 });
 
-module.exports = mongoose.model("user", userSchema);
+const recipeSchema = new mongoose.Schema({
+  timeCreated: { type: Date, default: Date.now },
+  timeEdited: { type: Date, default: null },
+  recipeImage: { type: String, required: true },
+  servings: { type: Number, required: true },
+  recipeSteps: {
+    type: [
+      {
+        step: { type: String, required: true },
+        image: { type: String, default: null },
+        _id: false,
+      },
+    ],
+    required: true,
+  },
+  recipeReviews: {
+    type: [
+      {
+        userName: { type: String, required: true },
+        userId: { type: mongoose.SchemaTypes.ObjectId, required: true },
+        review: { type: String, required: true },
+        timeCreated: { type: Date, default: Date.now },
+        _id: false,
+      },
+    ],
+    default: [],
+  },
+  recipeName: { type: String, required: true },
+  description: { type: String, default: null },
+  cookTime: { type: Number, required: true },
+  ingredients: [{ type: String, required: true }],
+  isPublic: { type: Boolean, default: "true" },
+  favoriteCount: { type: Number, default: 0 },
+  tags: [{ type: String, default: [] }],
+  author: { type: String, required: true },
+  authorId: { type: String, required: true },
+});
+
+const keywordSchema = new mongoose.Schema({
+  timeCreated: { type: Date, default: Date.now },
+  userId: { type: String, required: true },
+  keyword: { type: String, required: true },
+});
+
+module.exports = {
+  User: mongoose.model("user", userSchema),
+  Recipe: mongoose.model("recipes", recipeSchema),
+  Keyword: mongoose.model("keyword", keywordSchema),
+};
 
 //mongo schema
-// async function mongoRecipeSchema() {
-//   await mongoConnection();
-//   const recipeSchema = new mongoose.Schema({
-//     timeCreated: { type: Date, default: Date.now },
-//     timeEdited: { type: Date, default: null },
-//     recipeImage: { type: String, required: true },
-//     servings: { type: Number, required: true },
-//     recipeSteps: {
-//       type: [
-//         {
-//           step: { type: String, required: true },
-//           image: { type: String, default: null },
-//           _id: false, //FIXME: how to quickly find the step and update it >> use step "x"
-//         },
-//       ],
-//       required: true,
-//     },
-//     recipeReviews: {
-//       type: [
-//         {
-//           userName: { type: String, required: true },
-//           userId: { type: mongoose.SchemaTypes.ObjectId, required: true },
-//           review: { type: String, required: true },
-//           timeCreated: { type: Date, default: Date.now },
-//           _id: false,
-//         },
-//       ],
-//       default: [],
-//     },
-//     recipeName: { type: String, required: true },
-//     description: { type: String, default: null },
-//     cookTime: { type: Number, required: true },
-//     ingredients: [{ type: String, required: true }],
-//     isPublic: { type: Boolean, default: "true" },
-//     favoriteCount: { type: Number, default: 0 },
-//     tags: [{ type: String, default: [] }],
-//     author: { type: String, required: true },
-//     // authorId: { type: mongoose.SchemaTypes.ObjectId, required: true },
-//     authorId: { type: String, required: true },
-//   });
-//   return mongoose.model("recipes", recipeSchema);
-// }
-
 // async function mongoIngredientSchema() {
 //   await mongoConnection();
 //   const ingredientSchema = new mongoose.Schema({

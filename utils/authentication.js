@@ -33,6 +33,39 @@ async function searchAuth(req, res, next) {
   }
 }
 
+async function auth(req, res, next) {
+  let accessToken = req.get("Authorization");
+  if (!accessToken) {
+    res
+      .status(401)
+      .send({ error: "Unauthorized", redirectUrl: "/user/signin" });
+    return;
+  }
+
+  accessToken = accessToken.replace("Bearer ", "");
+  if (accessToken == "null") {
+    res
+      .status(401)
+      .send({ error: "Unauthorized", redirectUrl: "/user/signin" });
+    return;
+  }
+
+  try {
+    const user = await util.promisify(jwt.verify)(
+      accessToken,
+      process.env.TOKEN_SECRET
+    );
+    req.user = user;
+    next();
+    return;
+  } catch (error) {
+    console.log("auth error: ", error);
+    res.status(403).send({ error: "Forbidden", redirectUrl: "/user/signin" });
+    return;
+  }
+}
+
 module.exports = {
   searchAuth,
+  auth,
 };

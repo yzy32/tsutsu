@@ -1,5 +1,6 @@
 require("dotenv").config();
 const path = require("path");
+const s3 = require("./utils/s3");
 
 // Express Initialization
 const express = require("express");
@@ -26,6 +27,11 @@ app.use("/", [
   require("./server/routes/userflow/user_route"),
   require("./server/routes/userflow/recipe_route"),
 ]);
+
+// app.get("/s3Url", async (req, res) => {
+//   const url = await s3.generateUploadURL();
+//   res.status(200).json({ s3Url: url });
+// });
 
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`);

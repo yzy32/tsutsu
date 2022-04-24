@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require("../../utils/mongo");
+const { User } = require("../../utils/mongo");
 const jwt = require("jsonwebtoken");
 
 const createUser = async (userName, userId, type, email, password) => {
