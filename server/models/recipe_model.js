@@ -1,5 +1,7 @@
 const { resourceLimits } = require("worker_threads");
 const es = require("../../utils/es");
+const { Recipe, ObjectId } = require("../../utils/mongo");
+const mongoose = require("mongoose");
 
 const searchIngredient = async (keyword) => {
   try {
@@ -148,7 +150,18 @@ const searchRecipe = async (
   }
 };
 
+const getRecipeById = async (id) => {
+  try {
+    const result = await Recipe.findById(id);
+    return result;
+  } catch (error) {
+    // console.log(error);
+    return error;
+  }
+};
+
 module.exports = {
   searchIngredient,
   searchRecipe,
+  getRecipeById,
 };

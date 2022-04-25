@@ -3,13 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../../css/nav.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
-      crossorigin="anonymous"
-    />
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -25,6 +18,16 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="../../css/nav.css" />
+    <link rel="stylesheet" href="../../css/recipe.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <title>TsuTsu - User - Recipe</title>
   </head>
   <body>
@@ -72,22 +75,129 @@
         </ul>
       </div>
     </nav>
-    <!-- main area -->
-    <main>
-      <h3>Recipe Name</h3>
-      <ul>
-        <li>
-          add to favorate
-        </li>
-        <li>
-          <a href="/user/:id/recipes">author id</a>
-        </li>
-        <li>follow author</li>
-        <li>recipe content</li>
-        <li>leave a review
-          <a href="/recipe/review">HERE</a>
-        </li>
-      </ul>
+    <main class="mt-5 mb-5">
+      <div class="container" style="max-width: 800px;">
+        <div class="row">
+          <!-- 1st part: recipe image, recipe name, cook time, #favorate, #reviews, author, follow, tags -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header h2" id="recipeName">
+              </div>
+              <div class="card-body">
+                <div class="media">
+                  <img class="align-self-center mr-3 col-6" src="https://s23209.pcdn.co/wp-content/uploads/2018/06/211129_DAMN-DELICIOUS_Lemon-Herb-Roasted-Chx_068.jpg" alt="recipe image" style="object-fit:cover; height: 300px;">
+                  <div class="media-body col-6 h-100" style="background-color: rgb(240, 237, 237); height: 300px;">
+                    <!-- recipe intro -->
+                    <h4 class="mt-0">About This Recipe </h4>
+                    <div id="description" class="mb-3">
+                    </div>
+                    <!-- end of recipe intro -->
+                    <!-- tag list -->
+                    <div>
+                      <ul id="tagList">
+                      </ul>  
+                    </div>
+                    <!-- end of tag list -->
+                    <!-- follow author -->
+                    <div class="align-bottom mt-2">
+                      <button type="button" class="btn btn-outline-primary btn-sm mr-2"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+                      <a id="author-link" href="#" class="text-dark">
+                        <span id="author"></span>
+                      </a>
+                    </div>
+                    <!-- end of follow -->
+                  </div>
+                </div>
+                <hr>
+                <div class="mt-3 col-12">
+                  <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item flex-fill border-0">
+                      <span id="cookTime">
+                      </span>
+                    </li>
+                    <li class="list-group-item flex-fill border-0">
+                      <span id="servings">
+                      </span>
+                    </li>
+                    <li class="list-group-item flex-fill border-0">
+                      <span id="favoriteCount">
+                      </span>
+                    </li>
+                    <li class="list-group-item flex-fill border-0">
+                      <span id="reviewCount">
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of 1st part -->
+          <!-- ingredients part -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <table class="table">
+                  <thead class="h5">
+                    <tr>
+                      <th scope="col" style="width: 50px;">#</th>
+                      <th scope="col">Ingredient</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ingredientList">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- end of ingredients part -->
+          <!-- steps and tips -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header h3">Steps and Tips</div>
+              <div class="card-body" id="recipeSteps">
+              </div>
+            </div>
+          </div>
+          <!-- end of steps and tips -->
+          <!-- review part -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header h3">Reviews
+                <button type="button" class="btn btn-outline-secondary float-right" data-toggle="modal" data-target="#leave-review"><i class="fa-solid fa-plus mr-2"></i> Leave a Review </button>
+              </div>
+              <div class="card-body"></div>
+            </div>
+          </div>
+          <!-- review part -->
+        </div>
+      </div>
     </main>
+    <!-- Modal -->
+    <div class="modal fade" id="leave-review" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Has Any Thoughts? </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Leave a Review:</label>
+                <textarea class="form-control" id="message-text"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="submitReview" type="button" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../../js/recipe.js"></script>
   </body>
 </html>

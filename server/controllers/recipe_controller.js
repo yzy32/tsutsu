@@ -1,12 +1,17 @@
 const path = require("path");
-const { searchIngredient, searchRecipe } = require("../models/recipe_model");
+const {
+  searchIngredient,
+  searchRecipe,
+  getRecipeById,
+} = require("../models/recipe_model");
 const { storeKeywords } = require("../models/keyword_model");
 const { arrayToString } = require("../../utils/util.js");
 const { Recipe } = require("../../utils/mongo");
+const mongoose = require("mongoose");
 const es = require("../../utils/es");
 const pageSize = 10;
 
-const getRecipe = async (req, res) => {
+const getSearchRecipe = async (req, res) => {
   console.log("user in search: ", req.user);
   console.log("login status in search: ", req.loginStatus);
   try {
@@ -188,4 +193,20 @@ const createRecipe = async (req, res) => {
   return;
 };
 
-module.exports = { getRecipe, createRecipe };
+const getRecipe = async (req, res) => {
+  //TODO: check if mongo has this recipe
+  const isId = await mongoose.isValidObjectId(req.params.id);
+  const result = await getRecipeById(req.params.id);
+  console.log("is id? ", isId);
+  console.log(result);
+  //if not, return 404  //FIXME: how to catch non-12byte id (mongo return error instread of null)
+  if (!result || !isId) {
+    res.status(404).json({ error: "Recipe Not Found" });
+    return;
+  }
+  //TODO: if yes, return recipe data
+  res.status(200).json({ recipe: result });
+  return;
+};
+
+module.exports = { getSearchRecipe, createRecipe, getRecipe };

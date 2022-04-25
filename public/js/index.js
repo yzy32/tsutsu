@@ -1,11 +1,12 @@
 $(async function () {
-  const response = await axios.get("/api/1.0/keyword/trending");
-  let keywords = response.data;
-  for (let i = 0; i < keywords.length; i++) {
-    $(".keyword").eq(i).text(keywords[i].keyword.toUpperCase());
-    for (let j = 0; j < keywords[i].recipes.length; j++) {
-      let card = `
-      <div class="card" style="max-height: 300px;">
+  try {
+    const response = await axios.get("/api/1.0/keyword/trending");
+    let keywords = response.data;
+    for (let i = 0; i < keywords.length; i++) {
+      $(".keyword").eq(i).text(keywords[i].keyword.toUpperCase());
+      for (let j = 0; j < keywords[i].recipes.length; j++) {
+        let card = `
+      <div class="card" style="height: 300px;">
       <img src="${keywords[i].recipes[j].recipeImage}" class="card-img-top h-50" alt="recipe-image" style="object-fit:cover;">
       <div class="card-body h-50">
         <a href="/recipe/${keywords[i].recipes[j].recipeId}" class="text-dark">
@@ -16,11 +17,14 @@ $(async function () {
       </div>
     </div>
       `;
-      $(".keyword-recipes").eq(i).append(card);
+        $(".keyword-recipes").eq(i).append(card);
+      }
     }
+    $(".keyword").on("click", (e) => {
+      let keyword = $(e.target).text();
+      window.location = `recipe/search?q=${keyword}`;
+    });
+  } catch (error) {
+    console.log(error);
   }
-  $(".keyword").on("click", (e) => {
-    let keyword = $(e.target).text();
-    window.location = `recipe/search?q=${keyword}`;
-  });
 });
