@@ -20,6 +20,7 @@ app.use(cors());
 app.use("/api/" + `${process.env.API_VERSION}`, [
   require("./server/routes/api/recipe_route"),
   require("./server/routes/api/user_route"),
+  require("./server/routes/api/keyword_route"),
 ]);
 
 // User flow

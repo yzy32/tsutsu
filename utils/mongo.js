@@ -81,8 +81,9 @@ const recipeSchema = new mongoose.Schema({
 
 const keywordSchema = new mongoose.Schema({
   timeCreated: { type: Date, default: Date.now },
-  userId: { type: String, required: true },
-  keyword: { type: String, required: true },
+  userId: { type: String, default: null },
+  queryField: { type: String, default: null },
+  keyword: [{ type: String, required: true }],
 });
 
 module.exports = {

@@ -1,5 +1,6 @@
 const path = require("path");
 const { searchIngredient, searchRecipe } = require("../models/recipe_model");
+const { storeKeywords } = require("../models/keyword_model");
 const { arrayToString } = require("../../utils/util.js");
 const { Recipe } = require("../../utils/mongo");
 const es = require("../../utils/es");
@@ -21,9 +22,9 @@ const getRecipe = async (req, res) => {
     } = req.query;
     page = parseInt(page) || 1;
     cookTime = parseInt(cookTime);
-    ingrIncl = arrayToString(ingrIncl);
-    ingrExcl = arrayToString(ingrExcl);
-    otherKeyword = arrayToString(otherKeyword);
+    // ingrIncl = arrayToString(ingrIncl);
+    // ingrExcl = arrayToString(ingrExcl);
+    // otherKeyword = arrayToString(otherKeyword);
     console.log(
       q,
       ingrIncl,
@@ -37,7 +38,8 @@ const getRecipe = async (req, res) => {
     let result;
     if (q) {
       console.log("home page");
-      const keywords = await categorizeKeywords([q]);
+      let qArray = q.split(" ");
+      const keywords = await categorizeKeywords(qArray);
       console.log("cagegorize keywords: ", keywords);
       ingrIncl = keywords.ingrIncl;
       otherKeyword = keywords.otherKeywords;
@@ -69,7 +71,7 @@ const getRecipe = async (req, res) => {
       recipe = {
         recipeId: result.hits[i]._id,
         recipeName: result.hits[i]._source.recipeName,
-        mainImage: null,
+        recipeImage: null,
         authorId: result.hits[i]._source.authorId,
         author: result.hits[i]._source.author,
         cookTime: result.hits[i]._source.cookTime,
@@ -80,6 +82,9 @@ const getRecipe = async (req, res) => {
 
       recipes.push(recipe);
     }
+    //record keyword
+    await keywordsToMongo(req);
+
     //pagination
     let totalPage = Math.ceil(result.total.value / pageSize);
     res.status(200).json({
@@ -100,7 +105,7 @@ const getRecipe = async (req, res) => {
   }
 };
 
-async function categorizeKeywords(keywords) {
+const categorizeKeywords = async (keywords) => {
   let ingredients = [];
   let otherKeywords = [];
   for (let i = 0; i < keywords.length; i++) {
@@ -116,7 +121,28 @@ async function categorizeKeywords(keywords) {
     otherKeywords: otherKeywords.join(" "),
   };
   return keywordsCategory;
-}
+};
+
+const keywordsToMongo = async (req) => {
+  try {
+    delete req.query.cookTime;
+    delete req.query.myrecipe;
+    delete req.query.sort;
+    delete req.query.page;
+    delete req.query.ingrExcl;
+    let documents = Object.keys(req.query).map((key) => {
+      let document = { queryField: key, keyword: req.query[key].split(" ") };
+      if (req.user) {
+        document.userId = req.user.userId;
+      }
+      return document;
+    });
+    console.log(documents);
+    await storeKeywords(documents);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const createRecipe = async (req, res) => {
   let recipe = {
@@ -144,11 +170,12 @@ const createRecipe = async (req, res) => {
     let tags = Array.isArray(req.body.tags) ? req.body.tags : [req.body.tags];
     recipe.tags = tags;
   }
+  //TODO: split db operation to model
   let recipeInserted = await Recipe.create(recipe);
   let result = await recipeInserted.save();
   console.log("recipe", recipe);
   console.log("mongo result for saving: ", result);
-  let recipeES = recipe; //FIXME: shallow copy
+  let recipeES = recipe; //shallow copy
   delete recipeES.servings;
   delete recipeES.recipeSteps;
   let esResult = await es.index({
@@ -157,7 +184,7 @@ const createRecipe = async (req, res) => {
     document: recipeES,
   });
   console.log("es result for saving: ", esResult);
-  res.status(200).json({ test: req.body });
+  res.status(200).json({ msg: "success" });
   return;
 };
 
