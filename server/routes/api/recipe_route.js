@@ -3,6 +3,7 @@ const {
   getSearchRecipe,
   createRecipe,
   getRecipe,
+  createReview,
 } = require("../../controllers/recipe_controller");
 const { errorHandler } = require("../../../utils/util");
 const { searchAuth, auth } = require("../../../utils/authentication");
@@ -19,5 +20,6 @@ router.post(
   ]),
   errorHandler(createRecipe)
 );
+router.post("/recipe/:id/review", auth, errorHandler(createReview));
 
 module.exports = router;

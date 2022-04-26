@@ -1,4 +1,4 @@
-* {
+/* * {
   box-sizing: border-box;
 }
 
@@ -345,8 +345,8 @@ h6 {
   }
 }
 
-/* new add */
-.search-result-categories > li > a {
+/* FIXME: new add for search result */
+/* .search-result-categories > li > a {
   color: #b6b6b6;
   font-weight: 400;
 }
@@ -442,7 +442,7 @@ h6 {
   .search-result-item-heading {
     margin: 0;
   }
-}
+} */
 
 /* self-add */
 .filter-tag {
@@ -497,4 +497,18 @@ ul.tag-list li > span.rmTag:hover {
 
 #page > li {
   list-style-type: none;
+}
+/* end of tags */
+
+/* TODO: nav */
+
+/* search input */
+.search-input {
+  outline: none;
+  border: none;
+  display: inline-block;
+}
+#sort {
+  outline: none;
+  border: none;
 }

@@ -34,7 +34,7 @@
     <!-- Navbar section -->
     <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
       <a class="navbar-brand ml-2 font-weight-bold" href="/"
-        ><span id="lightblue">TshinTshai - Recipe</span><span id="blue">TsuTsu</span></a
+        ><span id="lightblue">TshinTshai</span><span id="blue">TsuTsu</span></a
       >
       <button
         class="navbar-toggler"
@@ -85,8 +85,8 @@
               </div>
               <div class="card-body">
                 <div class="media">
-                  <img class="align-self-center mr-3 col-6" src="https://s23209.pcdn.co/wp-content/uploads/2018/06/211129_DAMN-DELICIOUS_Lemon-Herb-Roasted-Chx_068.jpg" alt="recipe image" style="object-fit:cover; height: 300px;">
-                  <div class="media-body col-6 h-100" style="background-color: rgb(240, 237, 237); height: 300px;">
+                  <img id="recipeImage" class="align-self-center mr-3 col-6" src="" alt="recipe image" style="object-fit:cover; height: 300px;">
+                  <div class="media-body col-6 h-100" style="height: 300px;">
                     <!-- recipe intro -->
                     <h4 class="mt-0">About This Recipe </h4>
                     <div id="description" class="mb-3">
@@ -140,7 +140,7 @@
                 <table class="table">
                   <thead class="h5">
                     <tr>
-                      <th scope="col" style="width: 50px;">#</th>
+                      <th scope="col" style="width: 80px;">#</th>
                       <th scope="col">Ingredient</th>
                     </tr>
                   </thead>
@@ -166,7 +166,20 @@
               <div class="card-header h3">Reviews
                 <button type="button" class="btn btn-outline-secondary float-right" data-toggle="modal" data-target="#leave-review"><i class="fa-solid fa-plus mr-2"></i> Leave a Review </button>
               </div>
-              <div class="card-body"></div>
+              <div class="card-body">
+                <!-- 1st review -->
+                <div class="callout callout-info">
+                  <h5>Nobody</h5>
+                  <p>Awesome! An easy peasy recipe for my family </p>
+                </div>
+                <!-- end of 1st review -->
+                <!-- 2nd review -->
+                <div class="callout callout-info">
+                  <h5>Nobody</h5>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, architecto! Vel tenetur nam porro omnis facere rerum quibusdam saepe? Inventore placeat facilis quibusdam voluptas nihil unde eveniet quos temporibus recusandae. </p>
+                </div>
+                <!-- end of 2nd review -->
+              </div>
             </div>
           </div>
           <!-- review part -->

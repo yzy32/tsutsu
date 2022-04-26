@@ -82,6 +82,7 @@ const getSearchRecipe = async (req, res) => {
         cookTime: result.hits[i]._source.cookTime,
         favoriteCount: result.hits[i]._source.favoriteCount,
         ingredients: result.hits[i]._source.ingredients,
+        tags: result.hits[i]._source.tags,
         ingrMatchedCount: result.hits[i].highlight.ingredients.length,
       };
 
@@ -194,19 +195,20 @@ const createRecipe = async (req, res) => {
 };
 
 const getRecipe = async (req, res) => {
-  //TODO: check if mongo has this recipe
   const isId = await mongoose.isValidObjectId(req.params.id);
   const result = await getRecipeById(req.params.id);
   console.log("is id? ", isId);
   console.log(result);
-  //if not, return 404  //FIXME: how to catch non-12byte id (mongo return error instread of null)
+  //if not, return 404
   if (!result || !isId) {
     res.status(404).json({ error: "Recipe Not Found" });
     return;
   }
-  //TODO: if yes, return recipe data
+  //if yes, return recipe data
   res.status(200).json({ recipe: result });
   return;
 };
 
-module.exports = { getSearchRecipe, createRecipe, getRecipe };
+const createReview = async (req, res) => {};
+
+module.exports = { getSearchRecipe, createRecipe, getRecipe, createReview };

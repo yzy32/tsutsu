@@ -8,6 +8,7 @@ $(async function () {
     $("#recipeName").append(
       `${recipe.recipeName}<button type="button" class="btn btn-outline-primary float-right"><i class="fa-regular fa-bookmark mr-2"></i>Add to Favorite</button>`
     );
+    $("#recipeImage").attr("src", recipe.recipeImage);
     $("#description").text(recipe.description);
     $("#author").text(recipe.author);
     $("#author-link").attr("href", `/user/${recipe.authorId}/recipes`);
@@ -43,16 +44,28 @@ $(async function () {
         ? recipe.recipeSteps[i].image
         : "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/step.png";
       let step = `
-      <hr>
+      
       <div class="media">
       <img class="align-self-center mr-3 col-3" src="${stepImg}" alt="Generic placeholder image" style="object-fit:cover; height: 150px;">
       <div class="media-body">
         <h4 class="mt-0">${i + 1}</h4>
         ${recipe.recipeSteps[i].step}
       </div>
-    </div>`;
+    </div>
+    <hr>`;
       stepList.append(step);
     }
+    $("#submitReview").on("click", async (e) => {
+      e.preventDefault();
+      try {
+        //TODO: post review with jwt token
+        const response = await axios.post(`/api/1.0${recipeRoute}/review`);
+        console.log(response);
+        //TODO: if response success, display review on the top of the review
+      } catch (error) {
+        console.log(error);
+      }
+    });
   } catch (error) {
     console.log(error);
   }

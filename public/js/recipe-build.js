@@ -24,6 +24,9 @@ $(function () {
           "Content-Type": "multipart/form-data",
         },
       });
+      if (response.status == 200) {
+        window.location = `/user/${user.user.userId}/recipes`;
+      }
     } catch (error) {
       console.log(error);
       // if (error.response.data.redirectUrl) {

@@ -132,31 +132,47 @@ async function search() {
     const res = document.getElementById("res");
     res.innerText = `Showing ${data.recipeCount} results`;
     let searchResults = document.getElementById("search-results");
-    // console.log(searchResults.innerHTML);
     searchResults.innerHTML = "";
     let recipe = "";
     for (let i = 0; i < data.recipes.length; i++) {
+      let tags = data.recipes[i].tags.join("&#160;&#160;&#124;&#160;&#160;");
+      if (!data.recipes[i].recipeImage) {
+        data.recipes[i].recipeImage =
+          "https://s23209.pcdn.co/wp-content/uploads/2018/06/211129_DAMN-DELICIOUS_Lemon-Herb-Roasted-Chx_068.jpg";
+      }
       recipe += `
-    <section class="search-result-item">
-              <a class="image-link" href="#"><img class="image" src="https://s23209.pcdn.co/wp-content/uploads/2018/06/211129_DAMN-DELICIOUS_Lemon-Herb-Roasted-Chx_068.jpg">
-              </a>
-              <div class="search-result-item-body">
-                  <div class="row">
-                      <div class="col-sm-9">
-                          <h4 class="search-result-item-heading"><a href="#">${data.recipes[i].recipeName}</a> </h4>
-                          <p class="info">${data.recipes[i].author}</p>
-                          <p class="description">You have all ${data.recipes[i].ingrMatchedCount} ingredients</p>
-
-                      </div>
-                      <div class="row-sm-3 text-align-center">
-                        <p class="fs-mini text-muted">Cook Time: ${data.recipes[i].cookTime} mins</p>
-                        <p class="fs-mini text-muted">Favorite: ${data.recipes[i].favoriteCount}</p><a class="btn btn-primary btn-info btn-sm" href="/recipe/${data.recipes[i].recipeId}">Learn More</a>
-                    </div>
-                  </div>
+      <div class="col-11">
+      <div class="callout callout-info">
+        <div class="media">
+          <img class="align-self-center mr-3 col-4" src="${data.recipes[i].recipeImage}" alt="recipe image" style="object-fit:cover; height: 200px;">
+          <div class="media-body col-8">
+            <a href="/recipe/${data.recipes[i].recipeId}" class="text-decoration-none">
+              <h3 class="mb-0 text-info">${data.recipes[i].recipeName}</h3>
+              <small class="mb-1">${data.recipes[i].author}</small>
+              <p class="mt-2 text-info">You have all ${data.recipes[i].ingrMatchedCount} ingredients</p>
+              <p>${tags}</p>
+              <div>
+                <ul class="list-group list-group-horizontal">
+                  <li class="list-group-item flex-fill border-0">
+                    <span>
+                      <i class="fa-regular fa-clock mr-3"></i>${data.recipes[i].cookTime} Mins
+                    </span>
+                  </li>
+                  <li class="list-group-item flex-fill border-0">
+                    <span>
+                      <i class="fa-regular fa-bookmark mr-3"></i>${data.recipes[i].favoriteCount} Favorites
+                    </span>
+                  </li>
+                </ul>
               </div>
-          </section>
-    `;
+            </a>
+          </div>
+        </div> 
+      </div>
+    </div>
+      `;
     }
+    console.log("recipe html: ", recipe);
     searchResults.innerHTML += recipe;
     newUrl = new URL(window.location.href);
     newUrl.searchParams.delete("q");
@@ -170,11 +186,11 @@ async function search() {
     renderFilter(data);
     return data;
   } catch (error) {
-    if (error.response.data.redirectUrl) {
-      const redirectUrl = error.response.data.redirectUrl;
-      document.location = redirectUrl;
-    }
-    console.log(error.response.data);
+    // if (error.response.data.redirectUrl) {
+    //   const redirectUrl = error.response.data.redirectUrl;
+    //   document.location = redirectUrl;
+    // }
+    console.log(error);
   }
 }
 
