@@ -41,6 +41,14 @@ const userSchema = new mongoose.Schema({
   useRecipes: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
 });
 
+userSchema.index({ userId: 1 });
+
+//TODO:
+// const followSchema = new mongoose.Schema({
+//   follower: { type: String, required: true },
+//   following: { type: String, required: true },
+// });
+
 const recipeSchema = new mongoose.Schema({
   timeCreated: { type: Date, default: Date.now },
   timeEdited: { type: Date, default: null },
@@ -56,18 +64,19 @@ const recipeSchema = new mongoose.Schema({
     ],
     required: true,
   },
-  recipeReviews: {
-    type: [
-      {
-        userName: { type: String, required: true },
-        userId: { type: mongoose.SchemaTypes.ObjectId, required: true },
-        review: { type: String, required: true },
-        timeCreated: { type: Date, default: Date.now },
-        _id: false,
-      },
-    ],
-    default: [],
-  },
+  // recipeReviews: {
+  //   type: [
+  //     {
+  //       userName: { type: String, required: true },
+  //       userId: { type: mongoose.SchemaTypes.ObjectId, required: true },
+  //       review: { type: String, required: true },
+  //       timeCreated: { type: Date, default: Date.now },
+  //       _id: false,
+  //     },
+  //   ],
+  //   default: [],
+  // },
+  reviewCount: { type: Number, default: 0 },
   recipeName: { type: String, required: true },
   description: { type: String, default: null },
   cookTime: { type: Number, required: true },
@@ -77,6 +86,15 @@ const recipeSchema = new mongoose.Schema({
   tags: [{ type: String, default: [] }],
   author: { type: String, required: true },
   authorId: { type: String, required: true },
+});
+
+//TODO: change review schema (userid, documentid)
+const reviewSchema = new mongoose.Schema({
+  // userName: { type: String, required: true },
+  userId: { type: String, required: true },
+  review: { type: String, required: true },
+  timeCreated: { type: Date, default: Date.now },
+  recipeId: { type: mongoose.SchemaTypes.ObjectId, required: true },
 });
 
 const keywordSchema = new mongoose.Schema({
@@ -90,6 +108,7 @@ module.exports = {
   User: mongoose.model("user", userSchema),
   Recipe: mongoose.model("recipes", recipeSchema),
   Keyword: mongoose.model("keyword", keywordSchema),
+  Review: mongoose.model("review", reviewSchema),
 };
 
 //mongo schema

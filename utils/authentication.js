@@ -43,7 +43,7 @@ async function auth(req, res, next) {
   }
 
   accessToken = accessToken.replace("Bearer ", "");
-  if (accessToken == "null") {
+  if (accessToken == null) {
     res
       .status(401)
       .send({ error: "Unauthorized", redirectUrl: "/user/signin" });

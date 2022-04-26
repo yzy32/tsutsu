@@ -66,4 +66,8 @@ const signIn = async (req, res) => {
   return;
 };
 
+const favoriteRecipe = async (req, res) => {
+  //TODO:
+};
+
 module.exports = { signUp, signIn };

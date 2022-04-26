@@ -1,7 +1,16 @@
 $(async function () {
   try {
-    const recipeRoute = window.location.pathname;
-    const result = await axios.get(`/api/1.0${recipeRoute}`);
+    const user = JSON.parse(localStorage.getItem("user"));
+    let jwtToken = null;
+    let userId = null;
+    if (user) {
+      jwtToken = user.accessToken;
+      userId = user.user.userId;
+    }
+    const recipeId = window.location.pathname.replace("/recipe/", "");
+
+    //TODO: get recipe with jwt token
+    const result = await axios.get(`/api/1.0/recipe/${recipeId}`);
     let recipe = result.data.recipe;
     console.log(recipe);
     // first part
@@ -10,7 +19,7 @@ $(async function () {
     );
     $("#recipeImage").attr("src", recipe.recipeImage);
     $("#description").text(recipe.description);
-    $("#author").text(recipe.author);
+    $("#author").text(recipe.authorId);
     $("#author-link").attr("href", `/user/${recipe.authorId}/recipes`);
     $("#cookTime").append(
       `<i class="fa-regular fa-clock fa-lg mr-3"></i>${recipe.cookTime} Mins`
@@ -22,7 +31,7 @@ $(async function () {
       `<i class="fa-regular fa-bookmark fa-lg mr-3"></i>${recipe.favoriteCount} Favorites`
     );
     $("#reviewCount").append(
-      `<i class="fa-regular fa-comment fa-lg mr-3"></i>${recipe.recipeReviews.length} Reviews`
+      `<i class="fa-regular fa-comment fa-lg mr-3"></i>${recipe.reviewCount} Reviews`
     );
     let tagList = $("#tagList");
     recipe.tags.map((t) => {
@@ -55,16 +64,53 @@ $(async function () {
     <hr>`;
       stepList.append(step);
     }
+    // review section
+    let reviewList = $("#reviewList");
+
+    // submit new review
+    $("#reviewBtn").on("click", async (e) => {
+      console.log("click on review");
+      if (userId) {
+        $("#userId").attr("placeholder", userId);
+      } else {
+        $("#submitReview").addClass("d-none");
+        $("#signin").removeClass("d-none");
+      }
+    });
     $("#submitReview").on("click", async (e) => {
       e.preventDefault();
       try {
         //TODO: post review with jwt token
-        const response = await axios.post(`/api/1.0${recipeRoute}/review`);
-        console.log(response);
-        //TODO: if response success, display review on the top of the review
+        let review = $("#message-text").val();
+        recipeReview = {
+          recipeId: recipeId,
+          review: review,
+        };
+        const response = await axios.post(
+          `/api/1.0/recipe/${recipeId}/review`,
+          recipeReview,
+          {
+            headers: {
+              Authorization: "Bearer " + jwtToken,
+            },
+          }
+        );
+        //TODO: if response success, display review on the top of the review and close the window
+        $("#review-modal").modal("hide");
+        let reviewDiv = `
+        <div class="callout callout-info">
+        <h5>${userId}</h5>
+        <p>${review}</p>
+      </div>`;
+        reviewList.prepend(reviewDiv);
       } catch (error) {
         console.log(error);
       }
+    });
+
+    $("#signin").on("click", (e) => {
+      e.preventDefault();
+      window.location = "/user/signin";
     });
   } catch (error) {
     console.log(error);

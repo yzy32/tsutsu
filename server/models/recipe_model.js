@@ -1,6 +1,6 @@
 const { resourceLimits } = require("worker_threads");
 const es = require("../../utils/es");
-const { Recipe, ObjectId } = require("../../utils/mongo");
+const { Recipe, Review } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 
 const searchIngredient = async (keyword) => {
@@ -152,10 +152,43 @@ const searchRecipe = async (
 
 const getRecipeById = async (id) => {
   try {
-    const result = await Recipe.findById(id);
+    const result = await Recipe.findById(id).lean();
     return result;
   } catch (error) {
     // console.log(error);
+    return error;
+  }
+};
+
+const getReviewByRecipeId = async (id, skip, desiredQty) => {
+  try {
+    //TODO: get recent 5 reviews by recipeid
+    const result = await Review.find({
+      recipeId: id,
+    })
+      .sort({ timeCreated: -1 })
+      .skip(skip)
+      .limit(desiredQty)
+      .lean();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
+const insertReview = async (recipeReview) => {
+  try {
+    const reviewInserted = await Review.create(recipeReview);
+    const recipeInserted = await Recipe.findOneAndUpdate(
+      {
+        _id: recipeReview.recipeId,
+      },
+      { $inc: { reviewCount: 1 } }
+    );
+    const reviewResult = await reviewInserted.save();
+    recipeInserted.save();
+    return true;
+  } catch (error) {
     return error;
   }
 };
@@ -164,4 +197,6 @@ module.exports = {
   searchIngredient,
   searchRecipe,
   getRecipeById,
+  insertReview,
+  getReviewByRecipeId,
 };

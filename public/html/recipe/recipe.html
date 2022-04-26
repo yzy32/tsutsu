@@ -164,9 +164,9 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header h3">Reviews
-                <button type="button" class="btn btn-outline-secondary float-right" data-toggle="modal" data-target="#leave-review"><i class="fa-solid fa-plus mr-2"></i> Leave a Review </button>
+                <button id="reviewBtn" type="button" data-remote="false" class="btn btn-outline-secondary float-right" data-toggle="modal" data-target="#review-modal"><i class="fa-solid fa-plus mr-2"></i> Leave a Review </button>
               </div>
-              <div class="card-body">
+              <div id="reviewList" class="card-body">
                 <!-- 1st review -->
                 <div class="callout callout-info">
                   <h5>Nobody</h5>
@@ -187,7 +187,7 @@
       </div>
     </main>
     <!-- Modal -->
-    <div class="modal fade" id="leave-review" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="review-modal"class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -199,6 +199,10 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
+                <label>User Id:</label>
+                <input id="userId" type="text" class="form-control" placeholder="please sign in to review" disabled>
+              </div>
+              <div class="form-group">
                 <label for="message-text" class="col-form-label">Leave a Review:</label>
                 <textarea class="form-control" id="message-text"></textarea>
               </div>
@@ -207,6 +211,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button id="submitReview" type="button" class="btn btn-primary">Submit</button>
+            <button id="signin" type="button" class="btn btn-primary d-none">Sign In</button>
           </div>
         </div>
       </div>

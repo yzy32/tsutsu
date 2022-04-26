@@ -3,17 +3,20 @@ const {
   searchIngredient,
   searchRecipe,
   getRecipeById,
+  insertReview,
+  getReviewByRecipeId,
 } = require("../models/recipe_model");
 const { storeKeywords } = require("../models/keyword_model");
 const { arrayToString } = require("../../utils/util.js");
-const { Recipe } = require("../../utils/mongo");
+const { Recipe, Review } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const es = require("../../utils/es");
 const pageSize = 10;
+const desiredReviewQty = 5;
 
 const getSearchRecipe = async (req, res) => {
-  console.log("user in search: ", req.user);
-  console.log("login status in search: ", req.loginStatus);
+  // console.log("user in search: ", req.user);
+  // console.log("login status in search: ", req.loginStatus);
   try {
     let {
       q,
@@ -66,7 +69,6 @@ const getSearchRecipe = async (req, res) => {
     );
     // console.log(result);
     let recipes = [];
-    //TODO: get image from mongo or s3 based on document_id
     for (let i = 0; i < result.hits.length; i++) {
       if (!result.hits[i].highlight) {
         result.hits[i].highlight = {
@@ -194,21 +196,36 @@ const createRecipe = async (req, res) => {
   return;
 };
 
-const getRecipe = async (req, res) => {
-  const isId = await mongoose.isValidObjectId(req.params.id);
-  const result = await getRecipeById(req.params.id);
-  console.log("is id? ", isId);
-  console.log(result);
-  //if not, return 404
-  if (!result || !isId) {
+const getRecipePage = async (req, res) => {
+  const isId = mongoose.isValidObjectId(req.params.id);
+  let recipeResult = await getRecipeById(req.params.id);
+  //if not a valid recipeId, return 404
+  if (!recipeResult || !isId) {
     res.status(404).json({ error: "Recipe Not Found" });
     return;
   }
-  //if yes, return recipe data
-  res.status(200).json({ recipe: result });
+  //if yes, get recent 5 reviews
+  const reviewResult = await getReviewByRecipeId(
+    req.params.id,
+    0,
+    desiredReviewQty
+  );
+  // console.log("review result: ", reviewResult);
+  //TODO: return both recipe data and review data
+  recipeResult.reviewList = reviewResult;
+  res.status(200).json({ recipe: recipeResult });
   return;
 };
 
-const createReview = async (req, res) => {};
+const createReview = async (req, res) => {
+  let recipeReview = {
+    userId: req.user.userId,
+    review: req.body.review,
+    recipeId: req.body.recipeId,
+  };
+  const result = await insertReview(recipeReview);
+  res.status(200).json({ msg: "success" });
+  return;
+};
 
-module.exports = { getSearchRecipe, createRecipe, getRecipe, createReview };
+module.exports = { getSearchRecipe, createRecipe, getRecipePage, createReview };
