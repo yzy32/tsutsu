@@ -204,15 +204,34 @@ const getRecipePage = async (req, res) => {
     res.status(404).json({ error: "Recipe Not Found" });
     return;
   }
-  //if yes, get recent 5 reviews
+  //get recent 5 reviews
   const reviewResult = await getReviewByRecipeId(
     req.params.id,
     0,
     desiredReviewQty
   );
+  recipeResult.reviewList = reviewResult;
+  //check if userid = authorid
+  if (recipeResult.authorId == user.userId) {
+    //if match, send data, mark isFollow = null, isFavorite = null
+    recipeResult.isFollow = null;
+    recipeResult.isFavorite = null;
+    res.status(200).json({ recipe: recipeResult });
+    return;
+  }
+  //if not match, check if it is public
+  if (!recipeResult.isPublic) {
+    //if it is private, send 403 forbidden
+    res.status(403).json({ error: "Forbidden" });
+  } else {
+    //if it is public, mark isFollow = true/false
+    recipeResult.isFollow = false;
+  }
+  //TODO: check if user has follow
+  //TODO: check if user has keep this recipe, mark isFavorite = true/false
   // console.log("review result: ", reviewResult);
   //TODO: return both recipe data and review data
-  recipeResult.reviewList = reviewResult;
+
   res.status(200).json({ recipe: recipeResult });
   return;
 };
@@ -228,4 +247,18 @@ const createReview = async (req, res) => {
   return;
 };
 
-module.exports = { getSearchRecipe, createRecipe, getRecipePage, createReview };
+const getReview = async (req, res) => {
+  let id = req.params.id;
+  let page = req.query.page;
+  let skip = desiredReviewQty * (page - 1);
+  let result = await getReviewByRecipeId(id, skip, desiredReviewQty);
+  res.status(200).json({ review: result });
+};
+
+module.exports = {
+  getSearchRecipe,
+  createRecipe,
+  getRecipePage,
+  createReview,
+  getReview,
+};

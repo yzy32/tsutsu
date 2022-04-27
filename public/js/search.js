@@ -63,6 +63,9 @@ document.getElementById("sort").addEventListener("change", async (e) => {
 document.getElementById("pageGroup").addEventListener("click", async (e) => {
   let queryPage = e.target.dataset.page;
   console.log("click on page: ", e.target.dataset.page);
+  if (!queryPage) {
+    return;
+  }
   let currentPage = parseInt(newUrl.searchParams.get("page"));
   newUrl.searchParams.set("page", queryPage);
   window.history.pushState({}, "", newUrl.toString());
@@ -172,7 +175,6 @@ async function search() {
     </div>
       `;
     }
-    console.log("recipe html: ", recipe);
     searchResults.innerHTML += recipe;
     newUrl = new URL(window.location.href);
     newUrl.searchParams.delete("q");

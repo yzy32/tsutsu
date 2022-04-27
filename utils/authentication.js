@@ -6,14 +6,12 @@ async function searchAuth(req, res, next) {
   if (!accessToken) {
     req.loginStatus = false;
     req.query.myrecipe = false;
-    //FIXME: how to handle client side url (if myrecipe=true)
     return next();
   }
   accessToken = accessToken.replace("Bearer ", "");
   if (accessToken == "null") {
     req.loginStatus = false;
     req.query.myrecipe = false;
-    //FIXME: how to handle client side url (if myrecipe=true)
     return next();
   }
   try {
@@ -26,10 +24,32 @@ async function searchAuth(req, res, next) {
     return next();
   } catch (error) {
     //TODO: token refresh (option)
-
+    //FIXME: what if they just have an expired token? continue to search but let login status = false
     console.log("auth error: ", error);
     res.status(403).send({ error: "Forbidden", redirectUrl: "/user/signin" });
     return;
+  }
+}
+
+async function recipeAuth(req, res, next) {
+  // only mark user with valid token has user properties
+  let accessToken = req.get("Authorization");
+  if (!accessToken) {
+    return next();
+  }
+  accessToken = accessToken.replace("Bearer ", "");
+  if (accessToken == "null") {
+    return next();
+  }
+  try {
+    const user = await util.promisify(jwt.verify)(
+      accessToken,
+      process.env.TOKEN_SECRET
+    );
+    req.user = user;
+    return next();
+  } catch (error) {
+    return next();
   }
 }
 
@@ -67,5 +87,6 @@ async function auth(req, res, next) {
 
 module.exports = {
   searchAuth,
+  recipeAuth,
   auth,
 };

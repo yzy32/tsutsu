@@ -88,7 +88,7 @@ const recipeSchema = new mongoose.Schema({
   authorId: { type: String, required: true },
 });
 
-//TODO: change review schema (userid, documentid)
+//change review schema (userid, documentid)
 const reviewSchema = new mongoose.Schema({
   // userName: { type: String, required: true },
   userId: { type: String, required: true },
