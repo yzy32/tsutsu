@@ -88,7 +88,10 @@
           <!-- 1st part: recipe image, recipe name, cook time, #favorate, #reviews, author, follow, tags -->
           <div class="col-12">
             <div class="card">
-              <div class="card-header h2" id="recipeName">
+              <div class="card-header h2 font-weight-bold">
+                <span id="recipeName"></span>
+                <button id="favoriteBtn" type="button" class="btn btn-outline-secondary float-right d-none"><i class="fa-regular fa-bookmark mr-2"></i>Add to Favorite</button>
+                <button id="unfavoriteBtn" type="button" class="btn btn-secondary float-right d-none"><i class="fa-regular fa-bookmark mr-2"></i>Remove from Favorite</button>
               </div>
               <div class="card-body">
                 <div class="media">
@@ -100,18 +103,20 @@
                     </div>
                     <!-- end of recipe intro -->
                     <!-- tag list -->
-                    <div>
+                    <div class="mt-2">
                       <ul id="tagList">
                       </ul>  
                     </div>
                     <!-- end of tag list -->
+                    
                     <!-- follow author -->
-                    <div class="align-bottom mt-2">
-                      <button id="followBtn" type="button" class="btn btn-outline-info btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-                      <button id="unfollowBtn" type="button" class="btn btn-info btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-                      <a id="author-link" href="#" class="text-dark">
+                    <div class="align-bottom my-2 float-right text-secondary">
+                      &mdash;&nbsp;
+                      <a id="author-link" href="#" class="text-secondary mr-2">
                         <span id="author"></span>
                       </a>
+                      <button id="followBtn" type="button" class="btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+                      <button id="unfollowBtn" type="button" class="btn btn-sebtn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>
                     </div>
                     <!-- end of follow -->
                   </div>

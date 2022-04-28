@@ -1,3 +1,22 @@
+let recipe = null;
+let recipeId = null;
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: false,
+  progressBar: false,
+  positionClass: "toast-bottom-right",
+  preventDuplicates: true,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "4000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut",
+};
 $(async function () {
   try {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -7,28 +26,31 @@ $(async function () {
       jwtToken = user.accessToken;
       userId = user.user.userId;
     }
-    const recipeId = window.location.pathname.replace("/recipe/", "");
+    recipeId = window.location.pathname.replace("/recipe/", "");
     // ------- render recipe page -----------
-    //TODO: get recipe with jwt token
-    //TODO: return 403 forbidden if the recipe is private and userid != authorid
-    //TODO: if it is public and user = author, no btn
-    //TODO: if it is public and pure user, show btn based on follow and favorite status
+
+    //get recipe with jwt token
     const result = await axios.get(`/api/1.0/recipe/${recipeId}`, {
       headers: {
         Authorization: "Bearer " + jwtToken,
       },
     });
-    let recipe = result.data.recipe;
+    recipe = result.data.recipe;
     console.log(recipe);
-    // first part
-    // favorite
-    $("#recipeName").append(
-      `${recipe.recipeName}<button id="favoriteBtn" type="button" class="btn btn-outline-info float-right"><i class="fa-regular fa-bookmark mr-2"></i>Add to Favorite</button>`
-    );
-    // unfavorite
-    $("#recipeName").append(
-      `${recipe.recipeName}<button id="unfavoriteBtn" type="button" class="btn btn-info float-right"><i class="fa-regular fa-bookmark mr-2"></i>Add to Favorite</button>`
-    );
+    if (!recipe.reviewCount) {
+      recipe.reviewCount = 0;
+    }
+    if (recipe.isFollow === true) {
+      $("#unfollowBtn").removeClass("d-none");
+    } else if (recipe.isFollow === false) {
+      $("#followBtn").removeClass("d-none");
+    }
+    if (recipe.isFavorite === true) {
+      $("#unfavoriteBtn").removeClass("d-none");
+    } else if (recipe.isFavorite === false) {
+      $("#favoriteBtn").removeClass("d-none");
+    }
+    $("#recipeName").text(recipe.recipeName);
     $("#recipeImage").attr("src", recipe.recipeImage);
     $("#description").text(recipe.description);
     $("#author").text(recipe.authorId);
@@ -47,7 +69,7 @@ $(async function () {
     );
     let tagList = $("#tagList");
     recipe.tags.map((t) => {
-      let tag = `<li><a href="/recipe/search?q=${t}" class="text-dark">${t}</a></li>`;
+      let tag = `<li><a href="/recipe/search?q=${t}" class="text-orange">&num;&nbsp;${t}</a></li>`;
       tagList.append(tag);
     });
     // ingredients
@@ -90,18 +112,138 @@ $(async function () {
     renderReviewPagination(currentPage, pageSize, recipe.reviewCount);
     // ------- end of recipe page -----------
 
-    //TODO: click "add to favorite"
-    //TODO: if user not sign in, redirect to user/signin
-    //TODO: post to /api/1.0/user/:id/favorite
-    //TODO: if success, change btn (favorite: to solid; unfavorite: to outline)
-    //TODO: if success, add favorite count +1 (or-1)
-    //TODO: if not success, show alert
+    //click "add to favorite"
+    $("#favoriteBtn").on("click", async (e) => {
+      e.preventDefault();
+      let data = { recipeId: recipeId };
+      console.log("favorite: ", recipeId);
+      //if user not sign in, redirect to user/signin
+      try {
+        if (!jwtToken || !userId) {
+          window.location = "/user/signin";
+        } else {
+          const result = await axios.post(`/api/1.0/user/favorite`, data, {
+            headers: {
+              Authorization: "Bearer " + jwtToken,
+            },
+          });
+          // if success, change btn
+          $("#favoriteBtn").addClass("d-none");
+          $("#unfavoriteBtn").removeClass("d-none");
+          recipe.favoriteCount += 1;
+          // change favorite count
+          $("#favoriteCount").empty();
+          $("#favoriteCount").append(
+            `<i class="fa-regular fa-bookmark fa-lg mr-3"></i>${recipe.favoriteCount} Favorites`
+          );
+          console.log(recipe.favoriteCount);
+        }
+      } catch (error) {
+        console.log(error);
+        //if fail to favorite, trigger warning
+        toastr.warning("Fail to favorite.");
+        // if fails, change btn back
+        $("#favoriteBtn").removeClass("d-none");
+        $("#unfavoriteBtn").addClass("d-none");
+        recipe.favoriteCount -= 1;
+      }
+    });
 
-    //TODO: click "follow"
-    //TODO: if user not sign in, redirect to user/signin
-    //TODO: post to /api/1.0/user/:id/follow
-    //TODO: if success, change btn (follow: to solid; unfollow: to outline)
-    //TODO: if no success, show alert
+    //click "remove from favorite"
+    $("#unfavoriteBtn").on("click", async (e) => {
+      e.preventDefault();
+      let data = { recipeId: recipeId };
+      console.log("favorite: ", recipeId);
+      //if user not sign in, redirect to user/signin
+      try {
+        if (!jwtToken || !userId) {
+          window.location = "/user/signin";
+        } else {
+          const result = await axios.delete(`/api/1.0/user/favorite`, {
+            headers: {
+              Authorization: "Bearer " + jwtToken,
+            },
+            data: data,
+          });
+          // if success, change btn
+          $("#favoriteBtn").removeClass("d-none");
+          $("#unfavoriteBtn").addClass("d-none");
+          recipe.favoriteCount -= 1;
+          // change favorite count
+          $("#favoriteCount").empty();
+          $("#favoriteCount").append(
+            `<i class="fa-regular fa-bookmark fa-lg mr-3"></i>${recipe.favoriteCount} Favorites`
+          );
+          console.log(recipe.favoriteCount);
+        }
+      } catch (error) {
+        console.log(error);
+        //if fail to favorite, trigger warning
+        toastr.warning("Fail to remove from favorite.");
+        // if fails, change btn back
+        $("#favoriteBtn").addClass("d-none");
+        $("#unfavoriteBtn").removeClass("d-none");
+      }
+    });
+
+    //click "follow"
+    $("#followBtn").on("click", async (e) => {
+      e.preventDefault();
+      try {
+        //if user not sign in, redirect to user/signin
+        if (!jwtToken || !userId) {
+          window.location = "/user/signin";
+        } else {
+          //post to /api/1.0/user/following
+          let data = { followingId: recipe.authorId };
+          const response = await axios.post("/api/1.0/user/following", data, {
+            headers: {
+              Authorization: "Bearer " + jwtToken,
+            },
+          });
+          //if success, change btn
+          $("#followBtn").addClass("d-none");
+          $("#unfollowBtn").removeClass("d-none");
+          console.log("follow result: ", response.data);
+        }
+      } catch (error) {
+        console.log(error);
+        //if no success, show alert
+        if (error.response && error.response.status != 200) {
+          toastr.warning("Fail to follow.");
+        }
+      }
+    });
+    //click unfollow
+    $("#unfollowBtn").on("click", async (e) => {
+      e.preventDefault();
+      try {
+        //if user not sign in, redirect to user/signin
+        if (!jwtToken || !userId) {
+          window.location = "/user/signin";
+        } else {
+          console.log("token: ", jwtToken);
+          //post to /api/1.0/user/following
+          let data = { unfollowingId: recipe.authorId };
+          const response = await axios.delete("/api/1.0/user/following", {
+            headers: {
+              Authorization: "Bearer " + jwtToken,
+            },
+            data: data,
+          });
+          //if success, change btn
+          $("#followBtn").removeClass("d-none");
+          $("#unfollowBtn").addClass("d-none");
+          console.log("unfollow result", response.data);
+        }
+      } catch (error) {
+        console.log(error);
+        //if no success, show alert
+        if (error.response && error.response.status != 200) {
+          toastr.warning("Fail to unfollow.");
+        }
+      }
+    });
 
     // change review page
     let pageGroup = $("#pageGroup");
@@ -152,7 +294,7 @@ $(async function () {
         //if response success, display review on the top of the review and close the window
         //prepend review and remove last one if reviewlist > 5
         let reviewDiv = `
-        <div class="callout callout-info">
+        <div class="callout callout-warning">
           <h5>${userId}</h5>
           <p>${review}</p>
         </div>`;
@@ -178,29 +320,29 @@ $(async function () {
     });
 
     //FIXME: test alert (need to delete)
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-bottom-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "300",
-      hideDuration: "1000",
-      timeOut: "2000",
-      extendedTimeOut: "1000",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    $("#followBtn").on("click", (e) => {
-      e.preventDefault();
-      toastr.warning(
-        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr."
-      );
-    });
+    // toastr.options = {
+    //   closeButton: true,
+    //   debug: false,
+    //   newestOnTop: false,
+    //   progressBar: false,
+    //   positionClass: "toast-bottom-right",
+    //   preventDuplicates: true,
+    //   onclick: null,
+    //   showDuration: "300",
+    //   hideDuration: "1000",
+    //   timeOut: "2000",
+    //   extendedTimeOut: "1000",
+    //   showEasing: "swing",
+    //   hideEasing: "linear",
+    //   showMethod: "fadeIn",
+    //   hideMethod: "fadeOut",
+    // };
+    // $("#followBtn").on("click", (e) => {
+    //   e.preventDefault();
+    //   toastr.warning(
+    //     "Lorem ipsum dolor sit amet, consetetur sadipscing elitr."
+    //   );
+    // });
     // $(".toastrDefaultWarning").click(function () {
     //   toastr.warning(
     //     "Lorem ipsum dolor sit amet, consetetur sadipscing elitr."
@@ -253,7 +395,7 @@ function renderReviewPagination(currentPage, pageSize, reviewCount) {
 
 function renderReview(reviewList, r) {
   let reviewDiv = `
-  <div class="callout callout-info">
+  <div class="callout callout-warning">
   <h5>${r.userId}</h5>
   <p>${r.review}</p>
 </div>`;

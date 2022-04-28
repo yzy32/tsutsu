@@ -145,14 +145,14 @@ async function search() {
       }
       recipe += `
       <div class="col-11">
-      <div class="callout callout-info">
+      <div class="callout callout-warning">
         <div class="media">
           <img class="align-self-center mr-3 col-4" src="${data.recipes[i].recipeImage}" alt="recipe image" style="object-fit:cover; height: 200px;">
           <div class="media-body col-8">
             <a href="/recipe/${data.recipes[i].recipeId}" class="text-decoration-none">
-              <h3 class="mb-0 text-info">${data.recipes[i].recipeName}</h3>
+              <h3 class="mb-0 text-dark">${data.recipes[i].recipeName}</h3>
               <small class="mb-1">${data.recipes[i].author}</small>
-              <p class="mt-2 text-info">You have all ${data.recipes[i].ingrMatchedCount} ingredients</p>
+              <p class="mt-2 text-dark">You have all ${data.recipes[i].ingrMatchedCount} ingredients</p>
               <p>${tags}</p>
               <div>
                 <ul class="list-group list-group-horizontal">

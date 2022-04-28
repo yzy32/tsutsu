@@ -1,4 +1,11 @@
-const { createUser, getUserInfo } = require("../models/user_model");
+const {
+  createUser,
+  getUserInfo,
+  addFavorite,
+  removeFavorite,
+  addFollowing,
+  removeFollowing,
+} = require("../models/user_model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -66,8 +73,41 @@ const signIn = async (req, res) => {
   return;
 };
 
-const favoriteRecipe = async (req, res) => {
-  //TODO:
+const favorite = async (req, res) => {
+  //TODO: get userid from user.userId
+  //TODO: get recipeId from req.body
+  //TODO: insert into user's favorite by userid
+  const result = await addFavorite(req.user.userId, req.body.recipeId);
+  res.status(200).json({ msg: "success" });
+  return;
 };
 
-module.exports = { signUp, signIn };
+const unfavorite = async (req, res) => {
+  const result = await removeFavorite(req.user.userId, req.body.recipeId);
+  res.status(200).json({ msg: "success" });
+  return;
+};
+
+const following = async (req, res) => {
+  //TODO: get userid from user.userid
+  //TODO: get following id from req.body.followingId
+  //TODO: insert into user's following array and insert into followingId's follower array
+  const result = await addFollowing(req.user.userId, req.body.followingId);
+  res.status(200).json({ msg: "success" });
+  return;
+};
+
+const unfollowing = async (req, res) => {
+  const result = await removeFollowing(req.user.userId, req.body.unfollowingId);
+  res.status(200).json({ msg: "success" });
+  return;
+};
+
+module.exports = {
+  signUp,
+  signIn,
+  favorite,
+  unfavorite,
+  following,
+  unfollowing,
+};

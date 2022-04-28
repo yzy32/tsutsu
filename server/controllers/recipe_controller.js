@@ -6,6 +6,8 @@ const {
   insertReview,
   getReviewByRecipeId,
 } = require("../models/recipe_model");
+const { isFollow, isFavorite } = require("../models/user_model");
+
 const { storeKeywords } = require("../models/keyword_model");
 const { arrayToString } = require("../../utils/util.js");
 const { Recipe, Review } = require("../../utils/mongo");
@@ -90,8 +92,8 @@ const getSearchRecipe = async (req, res) => {
 
       recipes.push(recipe);
     }
-    //record keyword
-    await keywordsToMongo(req);
+    //record keyword (eliminate await)
+    keywordsToMongo(req);
 
     //pagination
     let totalPage = Math.ceil(result.total.value / pageSize);
@@ -145,7 +147,6 @@ const keywordsToMongo = async (req) => {
       }
       return document;
     });
-    console.log(documents);
     await storeKeywords(documents);
   } catch (error) {
     console.log(error);
@@ -211,29 +212,48 @@ const getRecipePage = async (req, res) => {
     desiredReviewQty
   );
   recipeResult.reviewList = reviewResult;
-  //check if userid = authorid
-  if (recipeResult.authorId == user.userId) {
-    //if match, send data, mark isFollow = null, isFavorite = null
-    recipeResult.isFollow = null;
-    recipeResult.isFavorite = null;
+
+  //if user not sign in and the recipe is public, then return isFollow and isFavorite = false
+  if (!req.user && recipeResult.isPublic) {
+    recipeResult.isFollow = false;
+    recipeResult.isFavorite = false;
     res.status(200).json({ recipe: recipeResult });
     return;
   }
-  //if not match, check if it is public
-  if (!recipeResult.isPublic) {
-    //if it is private, send 403 forbidden
+  //if user not sign in and the recipe is private, then return 403 forbidden
+  if (!req.user && !recipeResult.isPublic) {
     res.status(403).json({ error: "Forbidden" });
-  } else {
-    //if it is public, mark isFollow = true/false
-    recipeResult.isFollow = false;
+    return;
   }
-  //TODO: check if user has follow
-  //TODO: check if user has keep this recipe, mark isFavorite = true/false
-  // console.log("review result: ", reviewResult);
-  //TODO: return both recipe data and review data
-
-  res.status(200).json({ recipe: recipeResult });
-  return;
+  //if user sign in and recipe is public, then check if user has follow this author and keep this recipe from user table
+  if (req.user && recipeResult.isPublic) {
+    const followResult = await isFollow(recipeResult.authorId);
+    if (followResult.length == 0) {
+      recipeResult.isFollow = false;
+    } else {
+      recipeResult.isFollow = true;
+    }
+    const favoriteResult = await isFavorite(req.params.id);
+    if (favoriteResult.length == 0) {
+      recipeResult.isFavorite = false;
+    } else {
+      recipeResult.isFavorite = true;
+    }
+    res.status(200).json({ recipe: recipeResult });
+    return;
+  }
+  //if user sign in and recipe is private, then check if userid = author id
+  if (req.user && !recipeResult.isPublic) {
+    if (user.userId == recipeResult.authorId) {
+      recipeResult.isFollow = null;
+      recipeResult.isFavorite = null;
+      res.status(200).json({ recipe: recipeResult });
+      return;
+    } else {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+  }
 };
 
 const createReview = async (req, res) => {

@@ -12,15 +12,15 @@ async function mongoConnection() {
       `mongodb://${process.env.IP}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
       options
     );
-    mongoose.connection.on("connected", () => {
+    mongoose.connection.once("open", () => {
       console.log("mongo is connected");
     });
     mongoose.connection.on("error", (err) => {
       console.log(err);
     });
-    mongoose.connection.on("disconnected", () => {
-      console.log("mongo is disconnected");
-    });
+    // mongoose.connection.on("disconnected", () => {
+    //   console.log("mongo is disconnected");
+    // });
   } catch (error) {
     console.log(error);
   }
@@ -35,19 +35,13 @@ const userSchema = new mongoose.Schema({
   userName: { type: String, required: true },
   introduction: { type: String, default: null },
   userImage: { type: String, default: null },
-  following: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
-  follower: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
+  following: { type: [String], default: [] },
+  follower: { type: [String], default: [] },
   userFavorites: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
-  useRecipes: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
+  userRecipes: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
 });
 
 userSchema.index({ userId: 1 });
-
-//TODO:
-// const followSchema = new mongoose.Schema({
-//   follower: { type: String, required: true },
-//   following: { type: String, required: true },
-// });
 
 const recipeSchema = new mongoose.Schema({
   timeCreated: { type: Date, default: Date.now },
