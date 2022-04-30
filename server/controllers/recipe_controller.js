@@ -18,7 +18,7 @@ const { Recipe, Review } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const es = require("../../utils/es");
 const { nextTick } = require("process");
-const pageSize = 10;
+const pageSize = 10; //search
 const userPageSize = 10;
 const desiredReviewQty = 5;
 
@@ -241,13 +241,13 @@ const getRecipePage = async (req, res) => {
       return;
     }
     // if user != author, check if user has followed this author
-    const followResult = await isFollow(recipeResult.authorId);
+    const followResult = await isFollow(req.user.userId, recipeResult.authorId);
     if (followResult.length == 0) {
       recipeResult.isFollow = false;
     } else {
       recipeResult.isFollow = true;
     }
-    const favoriteResult = await isFavorite(req.params.id);
+    const favoriteResult = await isFavorite(req.user.userId, req.params.id);
     if (favoriteResult.length == 0) {
       recipeResult.isFavorite = false;
     } else {

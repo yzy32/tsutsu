@@ -46,9 +46,12 @@ const getUserInfo = async (type, email) => {
   }
 };
 
-const isFollow = async (authorId) => {
+const isFollow = async (userId, authorId) => {
   try {
-    const result = await User.find({ following: { $in: [authorId] } });
+    const result = await User.find({
+      userId: userId,
+      following: { $in: [authorId] },
+    });
     return result;
   } catch (error) {
     console.log(error);
@@ -56,9 +59,12 @@ const isFollow = async (authorId) => {
   }
 };
 
-const isFavorite = async (recipeId) => {
+const isFavorite = async (userId, recipeId) => {
   try {
-    const result = await User.find({ userFavorites: { $in: [recipeId] } });
+    const result = await User.find({
+      userId: userId,
+      userFavorites: { $in: [recipeId] },
+    });
     return result;
   } catch (error) {
     console.log(error);
@@ -166,6 +172,54 @@ const getUserProfile = async (userId) => {
   }
 };
 
+const getFollower = async (userId, authorId, page, followPageSize) => {
+  try {
+    // get author's follower
+    const followerResult = await User.aggregate([
+      { $match: { userId: authorId } },
+      {
+        $project: {
+          followerCount: { $size: "$follower" },
+          followerId: {
+            $slice: ["$follower", followPageSize * (page - 1), followPageSize],
+          },
+        },
+      },
+    ]);
+    const total = followerResult[0].followerCount;
+    // get user's following list if authorId != userId
+    let userFollowings = null;
+    if (userId != authorId) {
+      userFollowings = await User.findOne({ userId: userId })
+        .select({ following: 1, _id: 0 })
+        .lean();
+      userFollowings.following.push(userId);
+    }
+    // get author follower's detail and check if user has followed these followers
+    let result = [];
+    for (let i = 0; i < followerResult[0].followerId.length; i++) {
+      let follower = await User.findOne({
+        userId: followerResult[0].followerId[i],
+      })
+        .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
+        .lean();
+      follower.isFollowing = true;
+      if (
+        userId != authorId &&
+        !userFollowings.following.includes(follower.userId)
+      ) {
+        follower.isFollowing = false;
+      }
+      result.push(follower);
+    }
+    console.log(userFollowings);
+    return { total, result };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserInfo,
@@ -176,6 +230,7 @@ module.exports = {
   addFollowing,
   removeFollowing,
   getUserProfile,
+  getFollower,
 };
 
 //FIXME: transaction require replica or sharded cluster

@@ -6,9 +6,11 @@ const {
   addFollowing,
   removeFollowing,
   getUserProfile,
+  getFollower,
 } = require("../models/user_model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const followPageSize = 20;
 
 const signUp = async (req, res) => {
   //TODO: data validation
@@ -101,12 +103,20 @@ const unfollowing = async (req, res) => {
 const getProfile = async (req, res) => {
   const result = await getUserProfile(req.params.id);
   delete result._id;
-  delete res.status(200).json({ user: result });
+  res.status(200).json({ user: result });
   return;
 };
 
 const getUserFollower = async (req, res) => {
-  const result = await getUserFollower();
+  let page = req.query.page ? req.query.page : 1;
+  const result = await getFollower(
+    req.user.userId,
+    req.params.id,
+    page,
+    followPageSize
+  );
+  res.status(200).json({ follower: result });
+  return;
 };
 
 module.exports = {
