@@ -340,6 +340,7 @@ function renderPagination(
   pageSize,
   totalCount
 ) {
+  currentPage = parseInt(currentPage);
   let totalPage = totalCount == 0 ? 0 : Math.ceil(totalCount / pageSize);
   pageGroup.children().slice(1).remove(); //empty all pagination except to first page
   let toLastPage = `
@@ -349,7 +350,6 @@ function renderPagination(
     </a>
   </li>
   `;
-  console.log("total page: ", totalPage);
   if (totalPage == 0 || isNaN(totalPage)) {
     $(toFirstPage).addClass("d-none");
     return;
