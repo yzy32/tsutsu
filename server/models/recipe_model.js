@@ -276,6 +276,27 @@ const getFavorite = async (authorId, page, userPageSize) => {
   }
 };
 
+const setPublic = async (recipeId, toPublic) => {
+  try {
+    //set public in mongo
+    console.log(toPublic);
+    const mongoResult = await Recipe.findOneAndUpdate(
+      { _id: recipeId },
+      { isPublic: toPublic },
+      { new: true }
+    );
+    //set public in es
+    const esResult = await es.update({
+      index: "recipes",
+      id: recipeId,
+      doc: { isPublic: toPublic },
+    });
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   searchIngredient,
   searchRecipe,
@@ -285,4 +306,5 @@ module.exports = {
   getRecipeByUserId,
   getPublicRecipeByUserId,
   getFavorite,
+  setPublic,
 };

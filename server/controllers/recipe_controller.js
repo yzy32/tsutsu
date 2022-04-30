@@ -8,6 +8,7 @@ const {
   getRecipeByUserId,
   getPublicRecipeByUserId,
   getFavorite,
+  setPublic,
 } = require("../models/recipe_model");
 const { isFollow, isFavorite } = require("../models/user_model");
 
@@ -16,6 +17,7 @@ const { arrayToString } = require("../../utils/util.js");
 const { Recipe, Review } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const es = require("../../utils/es");
+const { nextTick } = require("process");
 const pageSize = 10;
 const userPageSize = 10;
 const desiredReviewQty = 5;
@@ -314,6 +316,13 @@ const getUserFavorite = async (req, res) => {
   return;
 };
 
+const setRecipePublic = async (req, res) => {
+  let { recipeId, toPublic } = req.body;
+  const result = await setPublic(recipeId, toPublic);
+  res.status(200).json({ msg: "success" });
+  return;
+};
+
 module.exports = {
   getSearchRecipe,
   createRecipe,
@@ -322,4 +331,5 @@ module.exports = {
   getReview,
   getUserRecipe,
   getUserFavorite,
+  setRecipePublic,
 };

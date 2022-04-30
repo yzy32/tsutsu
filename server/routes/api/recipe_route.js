@@ -5,6 +5,7 @@ const {
   getRecipePage,
   createReview,
   getReview,
+  setRecipePublic,
 } = require("../../controllers/recipe_controller");
 const { errorHandler } = require("../../../utils/util");
 const {
@@ -27,5 +28,7 @@ router.post(
 );
 router.get("/recipe/:id/review", errorHandler(getReview));
 router.post("/recipe/:id/review", auth, errorHandler(createReview));
+
+router.post("/recipe/setPublic", auth, errorHandler(setRecipePublic));
 
 module.exports = router;

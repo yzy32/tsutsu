@@ -123,16 +123,43 @@ $(async function () {
         } else if (profileType == "favorites") {
           await renderFavorite(authorId, toPage, pageSize);
         }
-        //TODO: rerender pagination
-        // renderPagination(currentPage, pageSize);
       } catch (error) {
         console.log(error);
       }
     });
 
     //TODO: set private
-    $(".card-tools").on("click", (e) => {
-      console.log(e.target);
+    $(".setPublic").on("click", async (e) => {
+      let toPublic = true;
+      let recipeId = $(e.target).data("recipeid");
+      let data = { recipeId, toPublic };
+      const response = await axios.post("/api/1.0/recipe/setPublic", data, {
+        headers: {
+          Authorization: "Bearer " + jwtToken,
+        },
+      });
+      console.log(data);
+      console.log(response.data);
+      let publicDiv = $(e.target).parent().parent();
+      let privateDiv = publicDiv.prev();
+      publicDiv.addClass("d-none");
+      privateDiv.removeClass("d-none");
+    });
+    $(".setPrivate").on("click", async (e) => {
+      let toPublic = false;
+      let recipeId = $(e.target).data("recipeid");
+      let data = { recipeId, toPublic };
+      const response = await axios.post("/api/1.0/recipe/setPublic", data, {
+        headers: {
+          Authorization: "Bearer " + jwtToken,
+        },
+      });
+      console.log(data);
+      console.log(response.data);
+      let privateDiv = $(e.target).parent().parent();
+      let publicDiv = privateDiv.next();
+      privateDiv.addClass("d-none");
+      publicDiv.removeClass("d-none");
     });
   } catch (error) {
     console.log(error);
@@ -172,18 +199,28 @@ async function renderRecipe(authorId, page, jwtToken, pageSize) {
       //public setting
       let publicBtn = "";
       let public = `
-    <div data-public="true" class="card-tools">
-      <button type="button" class="btn btn-tool">
-        <i class="fa-regular fa-eye"></i>
-      </button>
-    </div>
-    `;
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool">
+          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate"></i>
+        </button>
+      </div>
+      <div class="card-tools d-none ">
+        <button type="button" class="btn btn-tool">
+          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic"></i>
+        </button>
+      </div>
+      `;
       let private = `
-    <div data-public="false" class="card-tools">
-      <button type="button" class="btn btn-tool">
-        <i class="fa-regular fa-eye-slash"></i>
-      </button>
-    </div>
+      <div class="card-tools d-none">
+        <button type="button" class="btn btn-tool">
+          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate"></i>
+        </button>
+      </div>
+      <div class="card-tools ">
+        <button type="button" class="btn btn-tool">
+          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic"></i>
+        </button>
+      </div>
       `;
       //if recipe.setPublic = true, check recipe.result[i].isPublic (true, false)
       //if recipe.setPublic = false, don't show any public setting
@@ -287,7 +324,7 @@ async function renderFavorite(authorId, page, pageSize) {
     `;
       favoriteList.append(favoriteHTML);
     }
-    //TODO: render pagination
+    //render pagination
     let pageGroup = $("#favoritePage");
     let toFirstPage = $("#to-favorite-first");
     renderPagination(pageGroup, toFirstPage, page, pageSize, favorite.total);
@@ -325,9 +362,6 @@ function renderPagination(
   }
   let firstNum = currentPage - 2 < 1 ? 1 : currentPage - 2;
   let lastNum = currentPage + 2 >= totalPage ? totalPage : firstNum + 4;
-  console.log("currentNum: ", currentPage);
-  console.log("firstNum: ", firstNum);
-  console.log("lastNum: ", lastNum);
   for (let i = firstNum; i <= lastNum; i++) {
     let page = `<li class="page-item"><a data-page="${i}" class="page-link" style="cursor: pointer;">${i}</a></li>`;
     if (i == currentPage) {
