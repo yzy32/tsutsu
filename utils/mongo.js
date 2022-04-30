@@ -34,7 +34,11 @@ const userSchema = new mongoose.Schema({
   type: { type: String, required: true },
   userName: { type: String, required: true },
   introduction: { type: String, default: null },
-  userImage: { type: String, default: null },
+  userImage: {
+    type: String,
+    default:
+      "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/user.png",
+  },
   following: { type: [String], default: [] },
   follower: { type: [String], default: [] },
   userFavorites: { type: [mongoose.SchemaTypes.ObjectId], default: [] },

@@ -1,6 +1,5 @@
-const { resourceLimits } = require("worker_threads");
 const es = require("../../utils/es");
-const { Recipe, Review } = require("../../utils/mongo");
+const { Recipe, Review, User } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 
 const searchIngredient = async (keyword) => {
@@ -155,14 +154,14 @@ const getRecipeById = async (id) => {
     const result = await Recipe.findById(id).lean();
     return result;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return error;
   }
 };
 
 const getReviewByRecipeId = async (id, skip, desiredQty) => {
   try {
-    //TODO: get recent 5 reviews by recipeid
+    //get recent 5 reviews by recipeid
     const result = await Review.find({
       recipeId: id,
     })
@@ -172,6 +171,7 @@ const getReviewByRecipeId = async (id, skip, desiredQty) => {
       .lean();
     return result;
   } catch (error) {
+    console.log(error);
     return error;
   }
 };
@@ -189,7 +189,90 @@ const insertReview = async (recipeReview) => {
     recipeInserted.save();
     return true;
   } catch (error) {
+    console.log(error);
     return error;
+  }
+};
+
+const getRecipeByUserId = async (userId, page, userPageSize) => {
+  try {
+    const total = await Recipe.count({ authorId: userId });
+    const result = await Recipe.find(
+      { authorId: userId },
+      "recipeImage recipeName ingredients isPublic"
+    )
+      .sort({
+        timeCreated: -1,
+      })
+      .skip(userPageSize * (page - 1))
+      .limit(userPageSize)
+      .lean();
+    return { total, result };
+  } catch (error) {
+    console.log(error);
+    return { error };
+  }
+};
+
+const getPublicRecipeByUserId = async (authorId, page, userPageSize) => {
+  try {
+    const total = await Recipe.count({ authorId: authorId, isPublic: true });
+    const result = await Recipe.find(
+      { authorId: authorId, isPublic: true },
+      "recipeImage recipeName ingredients isPublic"
+    )
+      .sort({
+        timeCreated: -1,
+      })
+      .skip(userPageSize * (page - 1))
+      .limit(userPageSize)
+      .lean();
+    return { total, result };
+  } catch (error) {
+    console.log(error);
+    return { error };
+  }
+};
+
+const getFavorite = async (authorId, page, userPageSize) => {
+  try {
+    // get total count of favorite recipes
+    // get specific array based on pagination (eg. 0-9, 10-19)
+    const userResult = await User.aggregate([
+      { $match: { userId: authorId } },
+      {
+        $project: {
+          favoriteCount: { $size: "$userFavorites" },
+          favoriteId: {
+            $slice: ["$userFavorites", userPageSize * (page - 1), userPageSize],
+          },
+        },
+      },
+    ]);
+    const total = userResult[0].favoriteCount;
+    let result = [];
+    for (let i = 0; i < userResult[0].favoriteId.length; i++) {
+      let recipe = await Recipe.findOne(
+        { _id: userResult[0].favoriteId[i] },
+        "recipeImage recipeName ingredients isPublic"
+      ).lean();
+      //if recipe is private, remove all info except recipe name
+      if (!recipe.isPublic) {
+        recipe._id = "";
+        recipe.recipeImage = `https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/private.jpeg`;
+        recipe.ingredients = [
+          "Top secret",
+          "Top secret",
+          "Top secret",
+          "Top secret",
+        ];
+      }
+      result.push(recipe);
+    }
+    return { total, result };
+  } catch (error) {
+    console.log(error);
+    return { error };
   }
 };
 
@@ -199,4 +282,7 @@ module.exports = {
   getRecipeById,
   insertReview,
   getReviewByRecipeId,
+  getRecipeByUserId,
+  getPublicRecipeByUserId,
+  getFavorite,
 };

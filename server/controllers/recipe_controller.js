@@ -5,6 +5,9 @@ const {
   getRecipeById,
   insertReview,
   getReviewByRecipeId,
+  getRecipeByUserId,
+  getPublicRecipeByUserId,
+  getFavorite,
 } = require("../models/recipe_model");
 const { isFollow, isFavorite } = require("../models/user_model");
 
@@ -14,6 +17,7 @@ const { Recipe, Review } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const es = require("../../utils/es");
 const pageSize = 10;
+const userPageSize = 10;
 const desiredReviewQty = 5;
 
 const getSearchRecipe = async (req, res) => {
@@ -244,7 +248,7 @@ const getRecipePage = async (req, res) => {
   }
   //if user sign in and recipe is private, then check if userid = author id
   if (req.user && !recipeResult.isPublic) {
-    if (user.userId == recipeResult.authorId) {
+    if (req.user.userId == recipeResult.authorId) {
       recipeResult.isFollow = null;
       recipeResult.isFavorite = null;
       res.status(200).json({ recipe: recipeResult });
@@ -273,6 +277,41 @@ const getReview = async (req, res) => {
   let skip = desiredReviewQty * (page - 1);
   let result = await getReviewByRecipeId(id, skip, desiredReviewQty);
   res.status(200).json({ review: result });
+  return;
+};
+
+const getUserRecipe = async (req, res) => {
+  let authorId = req.params.id;
+  let page = req.query.page ? req.query.page : 1;
+  let userId = req.user ? req.user.userId : null;
+  //find recipe from recipe based on userid and authorid
+  let result = null;
+  if (authorId == userId) {
+    result = await getRecipeByUserId(userId, page, userPageSize);
+    result.setPublic = true;
+  } else {
+    result = await getPublicRecipeByUserId(authorId, page, userPageSize);
+    result.setPublic = false;
+  }
+  if (result.error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  // console.log(result);
+  //return 10pcs of recipe: recipeName, recipeId, recipeImage, ingredients, isPublic, totalPage
+  res.status(200).json({ recipe: result });
+  return;
+};
+
+const getUserFavorite = async (req, res) => {
+  let authorId = req.params.id;
+  let page = req.query.page ? req.query.page : 1;
+  //find recipe from recipe based on userid and authorid
+  let result = await getFavorite(authorId, page, userPageSize);
+  if (result.error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  res.status(200).json({ favorite: result });
+  return;
 };
 
 module.exports = {
@@ -281,4 +320,6 @@ module.exports = {
   getRecipePage,
   createReview,
   getReview,
+  getUserRecipe,
+  getUserFavorite,
 };

@@ -318,36 +318,6 @@ $(async function () {
       e.preventDefault();
       window.location = "/user/signin";
     });
-
-    //FIXME: test alert (need to delete)
-    // toastr.options = {
-    //   closeButton: true,
-    //   debug: false,
-    //   newestOnTop: false,
-    //   progressBar: false,
-    //   positionClass: "toast-bottom-right",
-    //   preventDuplicates: true,
-    //   onclick: null,
-    //   showDuration: "300",
-    //   hideDuration: "1000",
-    //   timeOut: "2000",
-    //   extendedTimeOut: "1000",
-    //   showEasing: "swing",
-    //   hideEasing: "linear",
-    //   showMethod: "fadeIn",
-    //   hideMethod: "fadeOut",
-    // };
-    // $("#followBtn").on("click", (e) => {
-    //   e.preventDefault();
-    //   toastr.warning(
-    //     "Lorem ipsum dolor sit amet, consetetur sadipscing elitr."
-    //   );
-    // });
-    // $(".toastrDefaultWarning").click(function () {
-    //   toastr.warning(
-    //     "Lorem ipsum dolor sit amet, consetetur sadipscing elitr."
-    //   );
-    // });
   } catch (error) {
     console.log(error);
   }
@@ -360,10 +330,10 @@ function renderReviewPagination(currentPage, pageSize, reviewCount) {
   let totalPage = reviewCount == 0 ? 0 : Math.ceil(reviewCount / pageSize);
   let pageGroup = $("#pageGroup");
   let toFirstPage = $("#to-first");
-  pageGroup.children().slice(1).remove();
+  pageGroup.children().slice(1).remove(); //empty all pagination except to first page
   let toLastPage = `
   <li class="page-item">
-    <a id="to-last" data-page="${totalPage}" class="page-link" aria-label="Next">
+    <a id="to-last" data-page="${totalPage}" class="page-link" aria-label="Next"  style="cursor: pointer;">
       &raquo;
     </a>
   </li>
@@ -382,9 +352,9 @@ function renderReviewPagination(currentPage, pageSize, reviewCount) {
   let firstNum = currentPage - 2 < 1 ? 1 : currentPage - 2;
   let lastNum = currentPage + 2 >= totalPage ? totalPage : totalPage - 2;
   for (let i = firstNum; i <= lastNum; i++) {
-    let page = `<li class="page-item"><a data-page="${i}" class="page-link">${i}</a></li>`;
+    let page = `<li class="page-item"><a data-page="${i}" class="page-link" style="cursor: pointer;">${i}</a></li>`;
     if (i == currentPage) {
-      page = `<li class="page-item active"><a data-page="${i}" class="page-link">${i}</a></li>`;
+      page = `<li class="page-item active"><a data-page="${i}" class="page-link" style="cursor: pointer;">${i}</a></li>`;
     }
     pageGroup.append(page);
   }

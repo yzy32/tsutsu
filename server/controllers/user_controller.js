@@ -5,6 +5,7 @@ const {
   removeFavorite,
   addFollowing,
   removeFollowing,
+  getUserProfile,
 } = require("../models/user_model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -74,9 +75,6 @@ const signIn = async (req, res) => {
 };
 
 const favorite = async (req, res) => {
-  //TODO: get userid from user.userId
-  //TODO: get recipeId from req.body
-  //TODO: insert into user's favorite by userid
   const result = await addFavorite(req.user.userId, req.body.recipeId);
   res.status(200).json({ msg: "success" });
   return;
@@ -89,9 +87,6 @@ const unfavorite = async (req, res) => {
 };
 
 const following = async (req, res) => {
-  //TODO: get userid from user.userid
-  //TODO: get following id from req.body.followingId
-  //TODO: insert into user's following array and insert into followingId's follower array
   const result = await addFollowing(req.user.userId, req.body.followingId);
   res.status(200).json({ msg: "success" });
   return;
@@ -103,6 +98,13 @@ const unfollowing = async (req, res) => {
   return;
 };
 
+const getProfile = async (req, res) => {
+  const result = await getUserProfile(req.params.id);
+  delete result._id;
+  delete res.status(200).json({ user: result });
+  return;
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -110,4 +112,5 @@ module.exports = {
   unfavorite,
   following,
   unfollowing,
+  getProfile,
 };

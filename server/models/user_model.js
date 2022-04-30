@@ -3,7 +3,6 @@ const es = require("../../utils/es");
 const { User, Recipe } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const { CostExplorer } = require("aws-sdk");
 
 const createUser = async (userName, userId, type, email, password) => {
   try {
@@ -155,6 +154,18 @@ const removeFollowing = async (followerId, followingId) => {
   }
 };
 
+const getUserProfile = async (userId) => {
+  try {
+    const result = await User.findOne(
+      { userId: userId },
+      "userId userName introduction userImage following follower"
+    ).lean();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserInfo,
@@ -164,6 +175,7 @@ module.exports = {
   removeFavorite,
   addFollowing,
   removeFollowing,
+  getUserProfile,
 };
 
 //FIXME: transaction require replica or sharded cluster

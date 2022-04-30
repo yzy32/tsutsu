@@ -32,7 +32,7 @@ async function searchAuth(req, res, next) {
 }
 
 async function recipeAuth(req, res, next) {
-  // only mark user with valid token has user properties
+  // only mark req.user with valid token has user properties
   let accessToken = req.get("Authorization");
   if (!accessToken) {
     return next();

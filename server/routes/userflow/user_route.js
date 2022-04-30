@@ -19,7 +19,7 @@ router.get("/user/:id/recipes", (req, res) => {
 });
 router.get("/user/:id/favorites", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "../../../public/html/user/user-favorite.html")
+    path.join(__dirname, "../../../public/html/user/user-recipe.html")
   );
 });
 router.get("/user/:id/followings", (req, res) => {
@@ -32,9 +32,9 @@ router.get("/user/:id/followers", (req, res) => {
     path.join(__dirname, "../../../public/html/user/user-follower.html")
   );
 });
-router.get("/user/:id/setting", (req, res) => {
+router.get("/user/:id/settings", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "../../../public/html/user/user-setting.html")
+    path.join(__dirname, "../../../public/html/user/user-recipe.html")
   );
 });
 
