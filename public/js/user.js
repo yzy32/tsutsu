@@ -68,16 +68,29 @@ $(async function () {
       $("#createRecipe").addClass("active");
       $("#createRecipe-section").addClass("active");
     }
+
+    // render recipe and favorites
+    let currentPage = new URLSearchParams(window.location.search).get("page");
+    let pageSize = 10;
+    await renderRecipe(authorId, currentPage, jwtToken, pageSize);
+    await renderFavorite(authorId, currentPage, pageSize);
+
     //tab url
-    $("#myrecipes").on("click", (e) => {
+    $("#myrecipes").on("click", async (e) => {
       console.log("click on myrecipes");
       window.history.pushState({}, "", `/user/${authorId}/recipes`);
       profileType = window.location.pathname.split("/").pop();
+      // render recipe
+      let currentPage = new URLSearchParams(window.location.search).get("page");
+      await renderRecipe(authorId, currentPage, jwtToken, pageSize);
     });
-    $("#myfavorites").on("click", (e) => {
+    $("#myfavorites").on("click", async (e) => {
       console.log("click on myfavorites");
       window.history.pushState({}, "", `/user/${authorId}/favorites`);
       profileType = window.location.pathname.split("/").pop();
+      // render favorite
+      let currentPage = new URLSearchParams(window.location.search).get("page");
+      await renderFavorite(authorId, currentPage, pageSize);
     });
     $("#createRecipe").on("click", (e) => {
       console.log("click on create recipe");
@@ -89,12 +102,6 @@ $(async function () {
       window.history.pushState({}, "", `/user/${authorId}/settings`);
       profileType = window.location.pathname.split("/").pop();
     });
-
-    // render recipe and favorites
-    let currentPage = new URLSearchParams(window.location.search).get("page");
-    let pageSize = 10;
-    await renderRecipe(authorId, currentPage, jwtToken, pageSize);
-    await renderFavorite(authorId, currentPage, pageSize);
 
     // click on pagination to new page
     $(".pagination").on("click", async (e) => {
@@ -317,7 +324,10 @@ function renderPagination(
     $(toFirstPage).removeClass("d-none");
   }
   let firstNum = currentPage - 2 < 1 ? 1 : currentPage - 2;
-  let lastNum = currentPage + 2 >= totalPage ? totalPage : totalPage - 2;
+  let lastNum = currentPage + 2 >= totalPage ? totalPage : firstNum + 4;
+  console.log("currentNum: ", currentPage);
+  console.log("firstNum: ", firstNum);
+  console.log("lastNum: ", lastNum);
   for (let i = firstNum; i <= lastNum; i++) {
     let page = `<li class="page-item"><a data-page="${i}" class="page-link" style="cursor: pointer;">${i}</a></li>`;
     if (i == currentPage) {

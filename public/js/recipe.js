@@ -350,7 +350,7 @@ function renderReviewPagination(currentPage, pageSize, reviewCount) {
     $(toFirstPage).removeClass("d-none");
   }
   let firstNum = currentPage - 2 < 1 ? 1 : currentPage - 2;
-  let lastNum = currentPage + 2 >= totalPage ? totalPage : totalPage - 2;
+  let lastNum = currentPage + 2 >= totalPage ? totalPage : firstNum + 4;
   for (let i = firstNum; i <= lastNum; i++) {
     let page = `<li class="page-item"><a data-page="${i}" class="page-link" style="cursor: pointer;">${i}</a></li>`;
     if (i == currentPage) {
