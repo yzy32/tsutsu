@@ -25,9 +25,9 @@ $(async function () {
     $("#userName").text(user.userName);
     $("#userImage").attr("src", user.userImage);
     $("#following").text(`${user.following.length} following`);
-    $("#following-link").attr("href", `/user/${user.userId}/following`);
+    $("#following-link").attr("href", `/user/${user.userId}/followings`);
     $("#follower").text(`${user.follower.length} follower`);
-    $("#follower-link").attr("href", `/user/${user.userId}/follower`);
+    $("#follower-link").attr("href", `/user/${user.userId}/followers`);
     $("#userId").html(`&commat;${user.userId}`);
     $("#introduction").text(user.introduction);
     // tab active status

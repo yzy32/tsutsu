@@ -105,6 +105,10 @@ const getProfile = async (req, res) => {
   return;
 };
 
+const getUserFollower = async (req, res) => {
+  const result = await getUserFollower();
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -113,4 +117,5 @@ module.exports = {
   following,
   unfollowing,
   getProfile,
+  getUserFollower,
 };

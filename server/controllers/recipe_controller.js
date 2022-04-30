@@ -233,6 +233,14 @@ const getRecipePage = async (req, res) => {
   }
   //if user sign in and recipe is public, then check if user has follow this author and keep this recipe from user table
   if (req.user && recipeResult.isPublic) {
+    // if user = author
+    if (req.user.userId == recipeResult.authorId) {
+      recipeResult.isFollow = null;
+      recipeResult.isFavorite = null;
+      res.status(200).json({ recipe: recipeResult });
+      return;
+    }
+    // if user != author, check if user has followed this author
     const followResult = await isFollow(recipeResult.authorId);
     if (followResult.length == 0) {
       recipeResult.isFollow = false;

@@ -8,6 +8,7 @@ const {
   unfollowing,
   unfavorite,
   getProfile,
+  getUserFollower,
 } = require("../../controllers/user_controller");
 const {
   getUserRecipe,
@@ -27,5 +28,6 @@ router.delete("/user/following", auth, errorHandler(unfollowing));
 router.get("/user/:id/profile", recipeAuth, errorHandler(getProfile));
 router.get("/user/:id/recipes", recipeAuth, errorHandler(getUserRecipe));
 router.get("/user/:id/favorites", recipeAuth, errorHandler(getUserFavorite));
+router.get("/user/:id/followers", recipeAuth, errorHandler(getUserFollower));
 
 module.exports = router;
