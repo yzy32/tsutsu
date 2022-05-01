@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const path = require("path");
+const { auth } = require("../../../utils/authentication");
 
 router.get("/user/signup", (req, res) => {
   res.sendFile(path.join(__dirname, "../../../public/html/user/signup.html"));
@@ -32,7 +33,7 @@ router.get("/user/:id/followers", (req, res) => {
     path.join(__dirname, "../../../public/html/user/user-follow.html")
   );
 });
-router.get("/user/:id/settings", (req, res) => {
+router.get("/user/:id/settings", auth, (req, res) => {
   res.sendFile(
     path.join(__dirname, "../../../public/html/user/user-recipe.html")
   );
