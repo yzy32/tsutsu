@@ -24,12 +24,12 @@ router.get("/user/:id/favorites", (req, res) => {
 });
 router.get("/user/:id/followings", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "../../../public/html/user/user-following.html")
+    path.join(__dirname, "../../../public/html/user/user-follow.html")
   );
 });
 router.get("/user/:id/followers", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "../../../public/html/user/user-follower.html")
+    path.join(__dirname, "../../../public/html/user/user-follow.html")
   );
 });
 router.get("/user/:id/settings", (req, res) => {

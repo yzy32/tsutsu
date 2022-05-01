@@ -10,26 +10,36 @@ $(async function () {
       jwtToken = user.accessToken;
       userId = user.user.userId;
     }
-    const userResponse = await axios.get(`/api/1.0/user/${authorId}/profile`, {
-      headers: {
-        Authorization: "Bearer " + jwtToken,
-      },
-    });
-    user = userResponse.data.user;
-    console.log("user: ", user);
-    //user info
+    const authorResponse = await axios.get(
+      `/api/1.0/user/${authorId}/profile`,
+      {
+        headers: {
+          Authorization: "Bearer " + jwtToken,
+        },
+      }
+    );
+    let author = authorResponse.data.user;
+    console.log("author: ", author);
+    //author info
     if (!jwtToken || authorId != userId) {
       $("#createRecipe").addClass("d-none");
       $("#settings").addClass("d-none");
     }
-    $("#userName").text(user.userName);
-    $("#userImage").attr("src", user.userImage);
-    $("#following").text(`${user.following.length} following`);
-    $("#following-link").attr("href", `/user/${user.userId}/followings`);
-    $("#follower").text(`${user.follower.length} follower`);
-    $("#follower-link").attr("href", `/user/${user.userId}/followers`);
-    $("#userId").html(`&commat;${user.userId}`);
-    $("#introduction").text(user.introduction);
+    $("#userName").text(author.userName);
+    $("#userImage").attr("src", author.userImage);
+    $("#following").text(`${author.following.length} following`);
+    $("#following-link").attr("href", `/user/${author.userId}/followings`);
+    $("#follower").text(`${author.follower.length} follower`);
+    $("#follower-link").attr("href", `/user/${author.userId}/followers`);
+    $("#userId").html(`&commat;${author.userId}`);
+    $("#introduction").text(author.introduction);
+    $("#author-follow").data("userid", author.userId);
+    $("#author-unfollow").data("userid", author.userId);
+    if (author.isFollowing) {
+      $("#author-unfollow").removeClass("d-none");
+    } else if (author.isFollowing != null) {
+      $("#author-follow").removeClass("d-none");
+    }
     // tab active status
     if (profileType == "recipes") {
       $("#myrecipes").addClass("active");
@@ -160,6 +170,63 @@ $(async function () {
       let publicDiv = privateDiv.next();
       privateDiv.addClass("d-none");
       publicDiv.removeClass("d-none");
+    });
+    // listen to follow
+    $(".toFollow").on("click", async (e) => {
+      e.preventDefault();
+      try {
+        console.log($(e.target).data("userid"));
+        console.log($(e.target));
+        let followingId = $(e.target).data("userid");
+        if (!jwtToken) {
+          window.location = "/user/signin";
+        } else {
+          let data = { followingId };
+          const response = await axios.post("/api/1.0/user/following", data, {
+            headers: {
+              Authorization: "Bearer " + jwtToken,
+            },
+          });
+          $(e.target).addClass("d-none");
+          $(e.target).next().removeClass("d-none");
+          console.log("follow result: ", response.data);
+        }
+      } catch (error) {
+        console.log(error);
+        //if no success, show alert
+        if (error.response && error.response.status != 200) {
+          toastr.warning("Fail to follow.");
+        }
+      }
+    });
+    // list to unfollow
+    $(".toUnFollow").on("click", async (e) => {
+      e.preventDefault();
+      try {
+        console.log($(e.target).data("userid"));
+        console.log($(e.target));
+        let unfollowingId = $(e.target).data("userid");
+        if (!jwtToken) {
+          window.location = "/user/signin";
+        } else {
+          let data = { unfollowingId };
+          const response = await axios.delete("/api/1.0/user/following", {
+            headers: {
+              Authorization: "Bearer " + jwtToken,
+            },
+            data: data,
+          });
+          $(e.target).addClass("d-none");
+          $(e.target).prev().removeClass("d-none");
+          console.log("unfollow result: ", response.data);
+        }
+      } catch (error) {
+        console.log(error);
+        //if no success, show alert
+        if (error.response && error.response.status != 200) {
+          toastr.warning("Fail to follow.");
+        }
+      }
     });
   } catch (error) {
     console.log(error);

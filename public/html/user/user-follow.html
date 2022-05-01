@@ -104,12 +104,16 @@
                   alt="User profile picture">
                   <div class="col-10 media-body">
                     <div>
-                      <h4 id="userName" class="mr-4" style="display: inline;"></h4>
+                      <a id="user-recipe" style="text-decoration: none;"><h4 id="userName" class="mr-4 text-dark" style="display: inline;"></h4></a>
                       <div style="display: inline;">
                           <a id="following-link" href="#"><span id="following" class="mx-2 text-dark"></span></a>
                       </div>
                       <div style="display: inline;">
                         <a id="follower-link" href="#"><span id="follower" class="mx-2 text-dark"></span></a>
+                      </div>
+                      <div style="display: inline;" class="float-right">
+                        <button id="author-follow" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+                        <button id="author-unfollow" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>
                       </div>
                     </div>
                     <div>
@@ -127,14 +131,14 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">
+                <h3 id="followType" class="card-title text-capitalize">
                   Followers
                 </h3>
               </div>
               <!-- card boddy -->
-              <div id="follower-section" class="card-body container">
+              <div id="follow-section" class="card-body container">
                 <!-- follower list -->
-                <div id="followerList" class="row d-flex flex-wrap justify-content-start">
+                <div id="followList" class="row d-flex flex-wrap justify-content-start">
                   <!-- 1st follower -->
                   <!-- <div class="col-5 ml-5 callout callout-info my-4 mx-3">
                     <div class="media p-3">

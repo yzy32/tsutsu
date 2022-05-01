@@ -27,87 +27,64 @@ $(async function () {
       jwtToken = user.accessToken;
       userId = user.user.userId;
     }
-    const userResponse = await axios.get(`/api/1.0/user/${authorId}/profile`, {
-      headers: {
-        Authorization: "Bearer " + jwtToken,
-      },
-    });
-    user = userResponse.data.user;
-    console.log("author: ", user);
-    //user info
+    const authorResponse = await axios.get(
+      `/api/1.0/user/${authorId}/profile`,
+      {
+        headers: {
+          Authorization: "Bearer " + jwtToken,
+        },
+      }
+    );
+    let author = authorResponse.data.user;
+    console.log("author: ", author);
+    //author info
     if (!jwtToken || authorId != userId) {
       $("#createRecipe").addClass("d-none");
       $("#settings").addClass("d-none");
     }
-    $("#userName").text(user.userName);
-    $("#userImage").attr("src", user.userImage);
-    $("#following").text(`${user.following.length} following`);
-    $("#following-link").attr("href", `/user/${user.userId}/followings`);
-    $("#follower").text(`${user.follower.length} follower`);
-    $("#follower-link").attr("href", `/user/${user.userId}/followers`);
-    $("#userId").html(`&commat;${user.userId}`);
-    $("#introduction").text(user.introduction);
+    $("#userName").text(author.userName);
+    $("#user-recipe").attr("href", `/user/${author.userId}/recipes`);
+    $("#userImage").attr("src", author.userImage);
+    $("#following").text(`${author.following.length} following`);
+    $("#following-link").attr("href", `/user/${author.userId}/followings`);
+    $("#follower").text(`${author.follower.length} follower`);
+    $("#follower-link").attr("href", `/user/${author.userId}/followers`);
+    $("#userId").html(`&commat;${author.userId}`);
+    $("#introduction").text(author.introduction);
+    $("#followType").text(profileType);
+    $("#author-follow").data("userid", author.userId);
+    $("#author-unfollow").data("userid", author.userId);
+    if (author.isFollowing) {
+      $("#author-unfollow").removeClass("d-none");
+    } else if (author.isFollowing != null) {
+      $("#author-follow").removeClass("d-none");
+    }
 
     // render follower and following basedon profiletype
     let currentPage = new URLSearchParams(window.location.search).get("page");
     let pageSize = 20; //need to be the same with backend
     if (profileType == "followers") {
       await renderFollow(
+        profileType,
         authorId,
         currentPage,
         jwtToken,
         pageSize,
-        user.follower.length
+        author.follower.length
       );
     } else if (profileType == "followings") {
-      //TODO:
-      console.log("under construnction");
+      await renderFollow(
+        profileType,
+        authorId,
+        currentPage,
+        jwtToken,
+        pageSize,
+        author.following.length
+      );
     } else {
       //TODO:
       console.log("redirect to 404");
     }
-
-    // render follower
-    // const followerResponse = await axios.get(
-    //   `/api/1.0/user/${authorId}/followers`,
-    //   {
-    //     headers: {
-    //       Authorization: "Bearer " + jwtToken,
-    //     },
-    //   }
-    // );
-    // const follower = followerResponse.data.follower;
-    // console.log("follower: ", follower);
-    // // render follower lsit
-    // let followerList = $("#followerList");
-    // for (let i = 0; i < follower.length; i++) {
-    //   // set follow, unfollow btn basedon isFollowing = true/fasle
-    //   let followBtn = "";
-    //   let follow = `<button data-userid="${follower[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-    // <button data-userid="${follower[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
-    //   let unFollow = `<button data-userid="${follower[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-    // <button data-userid="${follower[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning "><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
-    //   if (follower[i].isFollowing) {
-    //     followBtn += unFollow;
-    //   } else {
-    //     followBtn += follow;
-    //   }
-    //   let followerHTML = `
-    //   <div class="col-5 ml-5 callout callout-info my-4">
-    //     <div class="media p-3">
-    //       <img class="align-self-center mr-4 profile-user-img img-fluid img-circle" src="${follower[i].userImage}" alt="profile image">
-    //       <div class="media-body col-10">
-    //         <h5 style="display: inline;">${follower[i].userName}</h5>
-    //         <div class="font-italic text-secondary">&commat;${follower[i].userId}</div>
-    //         <div class="mt-3">
-    //           ${followBtn}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   `;
-    //   followerList.append(followerHTML);
-    // }
 
     // click on pagination to new page
     $(".pagination").on("click", async (e) => {
@@ -127,15 +104,25 @@ $(async function () {
         // identify current profile type, then render
         if (profileType == "followers") {
           await renderFollow(
+            profileType,
             authorId,
-            toPage,
+            currentPage,
             jwtToken,
             pageSize,
-            user.follower.length
+            author.follower.length
           );
         } else if (profileType == "followings") {
+          await renderFollow(
+            profileType,
+            authorId,
+            currentPage,
+            jwtToken,
+            pageSize,
+            author.following.length
+          );
+        } else {
           //TODO:
-          console.log("under construction");
+          console.log("redirect to 404");
         }
       } catch (error) {
         console.log(error);
@@ -203,51 +190,58 @@ $(async function () {
   }
 });
 
-async function renderFollow(authorId, page, jwtToken, pageSize, totalCount) {
+async function renderFollow(
+  profileType,
+  authorId,
+  page,
+  jwtToken,
+  pageSize,
+  totalCount
+) {
   try {
     if (!page) {
       page = 1;
     }
-    const followerResponse = await axios.get(
-      `/api/1.0/user/${authorId}/followers?page=${page}`,
+    const followResponse = await axios.get(
+      `/api/1.0/user/${authorId}/${profileType}?page=${page}`,
       {
         headers: {
           Authorization: "Bearer " + jwtToken,
         },
       }
     );
-    const follower = followerResponse.data.follower;
-    console.log("follower: ", follower);
-    // render follower lsit
-    let followerList = $("#followerList");
-    followerList.empty();
-    for (let i = 0; i < follower.length; i++) {
+    const follow = followResponse.data.follow;
+    console.log("follow: ", follow);
+    // render follow lsit
+    let followList = $("#followList");
+    followList.empty();
+    for (let i = 0; i < follow.length; i++) {
       // set follow, unfollow btn basedon isFollowing = true/fasle
-      let followBtn = "";
-      let follow = `<button data-userid="${follower[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-  <button data-userid="${follower[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
-      let unFollow = `<button data-userid="${follower[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-  <button data-userid="${follower[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning "><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
-      if (follower[i].isFollowing) {
-        followBtn += unFollow;
+      let followBtnGroup = "";
+      let followBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
+      let unFollowBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning "><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
+      if (follow[i].isFollowing) {
+        followBtnGroup += unFollowBtn;
       } else {
-        followBtn += follow;
+        followBtnGroup += followBtn;
       }
-      let followerHTML = `
+      let followHTML = `
     <div class="col-5 ml-5 callout callout-info my-4 mx-4">
       <div class="media p-3">
-        <img class="align-self-center mr-3 profile-user-img img-fluid img-circle" src="${follower[i].userImage}" alt="profile image">
+        <img class="align-self-center mr-3 profile-user-img img-fluid img-circle" src="${follow[i].userImage}" alt="profile image">
         <div class="media-body col-10">
-        <a href="/user/${follower[i].userId}/recipes" class="text-decoration-none" ><h5 style="display: inline;" class="text-dark">${follower[i].userName}</h5></a>
-          <div class="font-italic text-secondary">&commat;${follower[i].userId}</div>
+        <a href="/user/${follow[i].userId}/recipes" class="text-decoration-none" ><h5 style="display: inline;" class="text-dark">${follow[i].userName}</h5></a>
+          <div class="font-italic text-secondary">&commat;${follow[i].userId}</div>
           <div class="mt-3">
-            ${followBtn}
+            ${followBtnGroup}
           </div>
         </div>
       </div>
     </div>
     `;
-      followerList.append(followerHTML);
+      followList.append(followHTML);
     }
     let pageGroup = $(".pageGroup");
     let toFirstPage = $("#to-first");

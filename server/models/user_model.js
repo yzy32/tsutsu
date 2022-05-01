@@ -42,7 +42,7 @@ const getUserInfo = async (type, email) => {
     return result;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -55,7 +55,7 @@ const isFollow = async (userId, authorId) => {
     return result;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -94,7 +94,7 @@ const addFavorite = async (userId, recipeId) => {
     return true;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -120,7 +120,7 @@ const removeFavorite = async (userId, recipeId) => {
     return true;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -143,7 +143,7 @@ const addFollowing = async (followerId, followingId) => {
     }
     return true;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -163,19 +163,29 @@ const removeFollowing = async (followerId, followingId) => {
     //FIXME: what if one of db operation failed?
     return true;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
-const getUserProfile = async (userId) => {
+const getUserProfile = async (authorId, userId) => {
   try {
     const result = await User.findOne(
-      { userId: userId },
+      { userId: authorId },
       "userId userName introduction userImage following follower"
     ).lean();
+    if (authorId == userId) {
+      result.isFollowing = null;
+      return result;
+    }
+    let isFollowResult = await isFollow(userId, authorId);
+    if (isFollowResult.length > 0) {
+      result.isFollowing = true;
+    } else {
+      result.isFollowing = false;
+    }
     return result;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -195,7 +205,7 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
     ]);
     // const total = followerResult[0].followerCount;
 
-    // get user's following list
+    // get signin user's following list
     let userFollowings = null;
     if (userId) {
       userFollowings = await User.findOne({ userId: userId })
@@ -226,6 +236,59 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
   }
 };
 
+const getFollowing = async (userId, authorId, page, followPageSize) => {
+  try {
+    // get author's following list
+    const followingResult = await User.aggregate([
+      { $match: { userId: authorId } },
+      {
+        $project: {
+          followingId: {
+            $slice: ["$following", followPageSize * (page - 1), followPageSize],
+          },
+        },
+      },
+    ]);
+    // get signin user's following list
+    let userFollowings = null;
+    if (userId) {
+      userFollowings = await User.findOne({ userId: userId })
+        .select({ following: 1, _id: 0 })
+        .lean();
+      userFollowings.following.push(userId);
+    }
+    // check if author's following is also user's follow
+    // for non-login user: isFollowing = false
+    // for author = user: isFollowing = true
+    // get author's following detail
+    let result = [];
+    for (let i = 0; i < followingResult[0].followingId.length; i++) {
+      let following = await User.findOne({
+        userId: followingResult[0].followingId[i],
+      })
+        .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
+        .lean();
+      console.log("followingId: ", followingResult[0].followingId[i]);
+      console.log("following: ", following);
+      following.isFollowing = false;
+      // login user
+      if (userId == authorId) {
+        following.isFollowing = true;
+      } else if (
+        userId &&
+        userFollowings.following.includes(following.userId)
+      ) {
+        following.isFollowing = true;
+      }
+      result.push(following);
+    }
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserInfo,
@@ -237,61 +300,5 @@ module.exports = {
   removeFollowing,
   getUserProfile,
   getFollower,
+  getFollowing,
 };
-
-//FIXME: transaction require replica or sharded cluster
-// const addFollowing = async (followerId, followingId) => {
-//   const session = await mongoose.startSession();
-//   try {
-//     const sessionRes = await session.withTransaction(async () => {
-//       try {
-//         console.log("start transaction");
-//         const result = await User.updateOne(
-//           { userId: followerId },
-//           { $addToSet: { following: followingId } }
-//         ).session(session);
-//         console.log("follow transaction result: ", result);
-//         throw new Error("test");
-//       } catch (error) {
-//         console.log("follow transaction error: ", error);
-//         return error;
-//       }
-//     });
-//     //TODO: insert followingId to followerId
-//     console.log(sessionRes);
-//     return sessionRes;
-//   } catch (error) {
-//     console.log("unfollow error: ", error);
-//     return error;
-//   } finally {
-//     session.endSession();
-//   }
-// };
-
-// const removeFollowing = async (followerId, unfollowingId) => {
-//   const session = await mongoose.startSession();
-//   try {
-//     const sessionRes = await session.withTransaction(async () => {
-//       try {
-//         console.log("start transaction");
-//         const result = await User.updateOne(
-//           { userId: followerId },
-//           { $pull: { following: unfollowingId } }
-//         ).session(session);
-//         console.log("unfollow transaction result: ", result);
-//         throw new Error("test");
-//       } catch (error) {
-//         console.log("unfollow transaction error: ", error);
-//         return error;
-//       }
-//     });
-//     console.log(sessionRes);
-//     //TODO: remove followingId to followerId
-//   } catch (error) {
-//     console.log("unfollow error: ", error);
-//     return error;
-//   } finally {
-//     console.log("end session");
-//     session.endSession();
-//   }
-// };

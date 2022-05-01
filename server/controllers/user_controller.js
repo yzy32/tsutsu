@@ -7,6 +7,7 @@ const {
   removeFollowing,
   getUserProfile,
   getFollower,
+  getFollowing,
 } = require("../models/user_model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -101,7 +102,8 @@ const unfollowing = async (req, res) => {
 };
 
 const getProfile = async (req, res) => {
-  const result = await getUserProfile(req.params.id);
+  let userId = req.user ? req.user.userId : null;
+  const result = await getUserProfile(req.params.id, userId);
   delete result._id;
   res.status(200).json({ user: result });
   return;
@@ -111,7 +113,20 @@ const getUserFollower = async (req, res) => {
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
   const result = await getFollower(userId, req.params.id, page, followPageSize);
-  res.status(200).json({ follower: result });
+  res.status(200).json({ follow: result });
+  return;
+};
+
+const getUserFollowing = async (req, res) => {
+  let page = req.query.page ? req.query.page : 1;
+  let userId = req.user ? req.user.userId : null;
+  const result = await getFollowing(
+    userId,
+    req.params.id,
+    page,
+    followPageSize
+  );
+  res.status(200).json({ follow: result });
   return;
 };
 
@@ -124,4 +139,5 @@ module.exports = {
   unfollowing,
   getProfile,
   getUserFollower,
+  getUserFollowing,
 };
