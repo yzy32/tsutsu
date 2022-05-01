@@ -223,7 +223,7 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
         .lean();
       follower.isFollowing = false;
       // login user
-      if (userFollowings.following.includes(follower.userId)) {
+      if (userId && userFollowings.following.includes(follower.userId)) {
         follower.isFollowing = true;
       }
       result.push(follower);
