@@ -126,16 +126,21 @@ const removeFavorite = async (userId, recipeId) => {
 
 const addFollowing = async (followerId, followingId) => {
   try {
+    console.log(followerId, followingId);
     const updateFollowing = await User.updateOne(
       { userId: followerId },
       { $addToSet: { following: followingId } }
-    );
+    ).lean();
     const updateFollower = await User.updateOne(
       { userId: followingId },
       { $addToSet: { follower: followerId } }
-    );
+    ).lean();
     console.log("update following: ", updateFollowing);
     console.log("update follower: ", updateFollower);
+    //FIXME: what if one of db operation failed?
+    if (!updateFollower.acknowledged || !updateFollowing.acknowledged) {
+      console.log("follow failure, but backend hasn't handle");
+    }
     return true;
   } catch (error) {
     return error;
@@ -144,6 +149,7 @@ const addFollowing = async (followerId, followingId) => {
 
 const removeFollowing = async (followerId, followingId) => {
   try {
+    console.log(followerId, followingId);
     const removeFollowing = await User.updateOne(
       { userId: followerId },
       { $pull: { following: followingId } }
@@ -154,6 +160,7 @@ const removeFollowing = async (followerId, followingId) => {
     );
     console.log("remove following: ", removeFollowing);
     console.log("remove follower: ", removeFollower);
+    //FIXME: what if one of db operation failed?
     return true;
   } catch (error) {
     return error;
@@ -179,17 +186,18 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
       { $match: { userId: authorId } },
       {
         $project: {
-          followerCount: { $size: "$follower" },
+          // followerCount: { $size: "$follower" },
           followerId: {
             $slice: ["$follower", followPageSize * (page - 1), followPageSize],
           },
         },
       },
     ]);
-    const total = followerResult[0].followerCount;
-    // get user's following list if authorId != userId
+    // const total = followerResult[0].followerCount;
+
+    // get user's following list
     let userFollowings = null;
-    if (userId != authorId) {
+    if (userId) {
       userFollowings = await User.findOne({ userId: userId })
         .select({ following: 1, _id: 0 })
         .lean();
@@ -203,17 +211,15 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
       })
         .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
         .lean();
-      follower.isFollowing = true;
-      if (
-        userId != authorId &&
-        !userFollowings.following.includes(follower.userId)
-      ) {
-        follower.isFollowing = false;
+      follower.isFollowing = false;
+      // login user
+      if (userFollowings.following.includes(follower.userId)) {
+        follower.isFollowing = true;
       }
       result.push(follower);
     }
-    console.log(userFollowings);
-    return { total, result };
+    // console.log("user is follow: ", userFollowings);
+    return result;
   } catch (error) {
     console.log(error);
     throw error;

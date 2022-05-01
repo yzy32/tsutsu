@@ -9,6 +9,7 @@ const {
   unfavorite,
   getProfile,
   getUserFollower,
+  // getUserFollowing,
 } = require("../../controllers/user_controller");
 const {
   getUserRecipe,
@@ -29,5 +30,6 @@ router.get("/user/:id/profile", recipeAuth, errorHandler(getProfile));
 router.get("/user/:id/recipes", recipeAuth, errorHandler(getUserRecipe));
 router.get("/user/:id/favorites", recipeAuth, errorHandler(getUserFavorite));
 router.get("/user/:id/followers", recipeAuth, errorHandler(getUserFollower));
+// router.get("/user/:id/followings", recipeAuth, errorHandler(getUserFollowing));
 
 module.exports = router;

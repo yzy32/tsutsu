@@ -28,6 +28,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="../../css/recipe-build.css">
+    <script src="../../js/nav.js"></script>
     <title>TsuTsu - User - Recipe</title>
   </head>
   <body>
@@ -61,10 +62,16 @@
             </form>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user/signin"
-              ><span class="fa fa-user-o"></span
-              ><span class="text">Login</span></a
-            >
+            <a id="link-user" class="nav-link" href="/user/signin">
+              <span id="signin-icon" class="fa fa-user-o"></span>
+              <span id="nav-userName" class="text">Sign In </span>
+            </a>
+          </li>
+          <li id="logout" class="nav-item d-none">
+            <a class="nav-link" style="cursor: pointer">
+              <!-- <span class="fa fa-user-o"></span> -->
+              <span class="text">Sign Out</span>
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#"
@@ -75,6 +82,7 @@
         </ul>
       </div>
     </nav>
+    <!-- end of navbar section -->
     <!-- main area -->
     <main>
       <section class="content">

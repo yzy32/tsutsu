@@ -128,7 +128,7 @@ $(async function () {
       }
     });
 
-    //TODO: set private
+    //FIXME: set private (when change to next page, cannot set)
     $(".setPublic").on("click", async (e) => {
       let toPublic = true;
       let recipeId = $(e.target).data("recipeid");

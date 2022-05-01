@@ -109,12 +109,8 @@ const getProfile = async (req, res) => {
 
 const getUserFollower = async (req, res) => {
   let page = req.query.page ? req.query.page : 1;
-  const result = await getFollower(
-    req.user.userId,
-    req.params.id,
-    page,
-    followPageSize
-  );
+  let userId = req.user ? req.user.userId : null;
+  const result = await getFollower(userId, req.params.id, page, followPageSize);
   res.status(200).json({ follower: result });
   return;
 };
