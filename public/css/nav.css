@@ -448,3 +448,53 @@ h6 {
   border: none;
   display: inline-block;
 }
+
+/* ----------theme btn---------- */
+
+.btn-tsutsu {
+  background-color: #ecebe9 !important;
+  color: #4a4a4a !important;
+}
+/* .btn-tsutsu:active, */
+/* .btn-tsutsu:focus,  */
+.btn-tsutsu:hover {
+  background-color: #4a4a4a !important;
+  color: #ecebe9 !important;
+}
+
+.btn-tsutsu-click {
+  background-color: #4a4a4a !important;
+  color: #ecebe9 !important;
+}
+.btn-tsutsu-click:hover {
+  background-color: #ecebe9 !important;
+  color: #4a4a4a !important;
+}
+
+.btn-orange {
+  background-color: #f0a500 !important;
+  color: white !important;
+}
+
+/* ----------theme pagination---------- */
+.page-item.acitve .page-link {
+  color: #ecebe9 !important;
+  background-color: #4a4a4a !important;
+  border-color: #4a4a4a !important;
+}
+
+.page-link {
+  color: #4a4a4a !important;
+  /* background-color: #ecebe9 !important; */
+}
+
+/* ----------theme card---------- */
+.card-warning.card-outline {
+  border-top: 5px solid #f0a500 !important;
+}
+
+/* ----------theme nav---------- */
+.nav-pills .nav-link.active {
+  background-color: #4a4a4a !important;
+  color: #ecebe9 !important;
+}

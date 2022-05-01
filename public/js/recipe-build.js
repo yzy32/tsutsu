@@ -74,18 +74,45 @@ $(function () {
   //add new ingredient input, TODO: remove
   $("#addIngredient").on("click", (e) => {
     let ingredientsSection = $("#ingredients-group-section");
-    let newIngredients = $(".ingredients-group").first().clone();
+    let newIngredients = `                     
+    <div class="input-group mb-3 ingredients-group">
+      <div class="input-group-prepend">
+        <button type="button" class="remove btn btn-outline-secondary">&minus;</button>
+      </div>
+      <input name="ingredients" type="text" class="form-control ingredients" placeholder="click - to remove new ingredient" required>
+    </div>`;
     ingredientsSection.append(newIngredients);
   });
   //add new step input, TODO: remove
   $("#addStep").on("click", (e) => {
     let stepsSection = $("#recipeSteps-group-section");
     let stepNum = stepsSection.length + 1;
-    let newStep = $(".recipeSteps-group").first().clone();
-    newStep.first().first().eq(1).text(`Step ${stepNum}`); //FIXME: not working
-    console.log("label", newStep.first().first().eq(1).text());
+    let newStep = `
+    <div class="input-group mb-3 recipeSteps-group">
+      <div class="mb-1">
+        <button type="button" class="remove btn btn-outline-secondary btn-sm pull-left mr-2">&minus;</button>
+        <label>Step ${stepNum}</label>
+      </div>
+      <!-- image -->
+      <div class="input-group mb-3">
+        <div class="custom-file">
+          <input name="recipeStepImage" type="file" class="custom-file-input" id="recipeImage" required>
+          <label class="custom-file-label" for="recipeImage">Choose Image</label>
+        </div>
+      </div>
+      <!-- step -->
+      <div class="input-group">
+        <textarea name="recipeSteps" type="text" class="form-control recipeSteps" placeholder="click - to remove new step" required></textarea>
+      </div>
+    </div>
+    `;
     stepsSection.append(newStep);
   });
+  //remove element
+  $(document).on("click", ".remove", (e) => {
+    $(e.target).parent().parent().remove();
+  });
+
   //create Tag
   $("#newTag").on("keydown", (e) => {
     if (e.key == "Enter") {

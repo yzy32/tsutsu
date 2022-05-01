@@ -31,8 +31,6 @@
     ></script>
     <!-- js: axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- custom file input -->
-    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
     <script src="../../js/nav.js"></script>
     <script src="../../js/user.js"></script>
     <link rel="stylesheet" href="../../css/nav.css" />
@@ -114,8 +112,8 @@
                         <a id="follower-link" href="#"><span id="follower" class="mx-2 text-dark"></span></a>
                       </div>
                       <div style="display: inline;" class="float-right">
-                        <button id="author-follow" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-                        <button id="author-unfollow" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>
+                        <button id="author-follow" type="button" class="toFollow btn btn-tsutsu btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+                        <button id="author-unfollow" type="button" class="toUnFollow btn btn-tsutsu-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>
                       </div>
                     </div>
                     <div>
@@ -138,6 +136,18 @@
                   <li class="nav-item"><a id="myfavorites" class="nav-link" href="#favorite-section" data-toggle="tab">My Favorites</a></li>
                   <li class="nav-item"><a id="createRecipe" class="nav-link" href="#createRecipe-section" data-toggle="tab"><i class="fa-solid fa-plus fa-xs mr-1"></i>Create Recipe</a></li>
                   <li class="nav-item"><a id="settings" class="nav-link" href="#setting-section" data-toggle="tab"><i class="fa-solid fa-gear fa-xs mr-1"></i>Settings</a></li>
+                  <li class="nav-item ml-auto mt-1 mr-3">
+                    <div class="card-tools">
+                      <div class="input-group input-group-sm" style="width: 250px;">
+                        <input type="text" name="keyword" class="form-control" placeholder="Search Recipes">
+                        <div class="input-group-append">
+                          <button id="search" type="submit" class="btn btn-default">
+                            <i class="fas fa-search"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
                 </ul>
               </div>
               <div class="card-body">
@@ -289,7 +299,7 @@
                             </div>
                           </div>
                           <div class="d-flex justify-content-center">
-                            <button id="update" type="button" class="btn btn-secondary" style="width: 90%;">Submit</button>
+                            <button id="update" type="button" class="btn btn-tsutsu-click" style="width: 90%;">Submit</button>
                           </div>
                         </form>
                       </article>
@@ -303,6 +313,9 @@
         </div>
       </div>
     </main>
+    <!-- custom file input -->
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script src="../../js/custom-file.js"></script>
     <style>
       #toast-container > div {
         opacity: 1;

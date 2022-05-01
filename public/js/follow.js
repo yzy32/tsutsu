@@ -128,8 +128,8 @@ $(async function () {
         console.log(error);
       }
     });
-    // listen to follow
-    $(".toFollow").on("click", async (e) => {
+    // click to follow
+    $(document).on("click", ".toFollow", async (e) => {
       e.preventDefault();
       try {
         console.log($(e.target).data("userid"));
@@ -156,8 +156,8 @@ $(async function () {
         }
       }
     });
-    // list to unfollow
-    $(".toUnFollow").on("click", async (e) => {
+    // click to unfollow
+    $(document).on("click", async (e) => {
       e.preventDefault();
       try {
         console.log($(e.target).data("userid"));
