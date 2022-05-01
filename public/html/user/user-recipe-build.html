@@ -3,32 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- js: jQuery -->
     <script
-    src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://kit.fontawesome.com/5093a6c14f.js"
-    crossorigin="anonymous"
-  ></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <link rel="stylesheet" href="../../css/nav.css" />
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous">
+    </script>
+    <!-- Bootstrap -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+      crossorigin="anonymous"
+    ></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
       integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
       crossorigin="anonymous"
     />
+    <!-- toastr -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- js: fontawesome -->
+    <script
+      src="https://kit.fontawesome.com/5093a6c14f.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- js: axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- custom file input -->
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
     <link rel="stylesheet" href="../../css/recipe-build.css">
     <script src="../../js/nav.js"></script>
+    <link rel="stylesheet" href="../../css/nav.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <title>TsuTsu - User - Recipe</title>
   </head>
   <body>
@@ -85,171 +94,174 @@
     <!-- end of navbar section -->
     <!-- main area -->
     <main>
-      <section class="content">
-        <div class="container-fluid">
-          <!-- general form elements -->
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Recipe Upload</h3>
-            </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-            <form id="recipe-form" method="post" enctype="multipart/form-data">
-              <div class="card-body">
-                <!-- is public -->
-                <div class="form-group">
-                  <div class="form-check">
-                    <input name="isPublic" type="checkbox" class="form-check-input" id="isPublic">
-                    <label class="form-check-label" for="isPublic">Keep This Recipe Private</label>
-                  </div>
-                </div>
-                <!-- recipe name -->
-                <div class="form-group">
-                  <label>Recipe Nmae</label>
-                  <input name="recipeName" type="text" class="form-control" placeholder="Title: TsuTsu's dumplings">
-                </div>
-                <!-- recipe description -->
-                <div class="form-group">
-                  <label>Recipe Description</label>
-                  <textarea name="description" class="form-control" rows="3" placeholder="Tell us more about your recipe - who you cook for, what makes it special..."></textarea>
-                </div>
-                <!-- recipe image -->
-                <div id="recipeImage-group" class="form-group">
-                  <label>Upload Recipe Cover Image</label>
-                  <div class="input-group">
-                    <div class="custom-file">
-                      <input name="recipeImage" id="recipeImage" type="file" class="custom-file-input" name="imgS3">
-                      <label class="custom-file-label" for="recipeImage">Choose Image</label>
-                    </div>
-                    <div class="input-group-append">
-                      <span id="uploadImage" class="input-group-text">Upload</span>
-                    </div>
-                  </div>
-                </div>
-                <!-- cook time -->
-                <div class="form-group">
-                  <label>Cook Time</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="far fa-clock"></i></span>
-                    </div>
-                    <input name="cookTime" type="text" class="form-control" placeholder="10 (integer only)">
-                    <div class="input-group-append">
-                      <span class="input-group-text">mins</span>
-                    </div>
-                  </div>
-                </div>
-                <!-- serving -->
-                <div class="form-group">
-                  <label>Servings</label>
-                  <div class="input-group">
-                    <input name="servings" type="text" class="form-control" placeholder="5 (integer only)">
-                    <div class="input-group-append">
-                      <span class="input-group-text">servings</span>
-                    </div>
-                  </div>
-                </div>
-                <!-- ingredients -->
-                <div class="form-group">
-                  <label>Ingredients</label>
-                  <div id="ingredients-group-section">
-                    <!-- 1st ingredient -->
-                    <div class="input-group mb-3 ingredients-group">
-                      <div class="input-group-prepend">
-                        <button type="button" class="btn btn-outline-secondary">&minus;</button>
-                      </div>
-                      <input name="ingredients" type="text" class="form-control ingredients" placeholder="Tell us your secret weapen!">
-                    </div>
-                    <!-- 2nd ingredient -->
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <button type="button" class="btn btn-outline-secondary">&minus;</button>
-                      </div>
-                      <input name="ingredients" type="text" class="form-control ingredients" placeholder="eg. 100ml water">
-                    </div>
-                  </div>
-                  <!-- add ingredient btn -->
-                  <div class="input-group">
-                    <button id="addIngredient" type="button" class="btn btn-primary">&plus; Ingredient</button>
-                  </div>
-                </div>
-                <!-- steps and tips -->
-                <div class="form-group">
-                  <label>Steps and Tips</label>
-                  <div id="recipeSteps-group-section">
-                    <!-- 1st step group -->
-                    <div class="input-group mb-3 recipeSteps-group">
-                      <div class="mb-3">
-                        <button type="button" class="btn btn-outline-secondary btn-sm pull-left">&minus;</button>
-                        <label>Step 1</label>
-                      </div>
-                      <!-- image -->
-                      <div class="input-group mb-3">
-                        <div class="custom-file">
-                          <input name="recipeStepImage" type="file" class="custom-file-input" id="recipeImage">
-                          <label class="custom-file-label" for="recipeImage">Choose Image</label>
-                        </div>
-                        <div class="input-group-append">
-                          <span class="input-group-text">Upload</span>
-                        </div>
-                      </div>
-                      <!-- step -->
-                      <div class="input-group">
-                        <textarea name="recipeSteps" type="text" class="form-control recipeSteps" placeholder="Show us your magic. Tell us how to make it."></textarea>
-                      </div>
-                    </div>
-                    <!-- 2nd step group -->
-                    <div class="input-group mb-3 recipeSteps-group">
-                      <div class="mb-3">
-                        <button type="button" class="btn btn-outline-secondary btn-sm pull-left mb-3">&minus;</button>
-                        <label>Step 2</label>
-                      </div>
-                      <!-- image -->
-                      <div class="input-group mb-3">
-                        <div class="custom-file">
-                          <input name="recipeStepImage" type="file" class="custom-file-input" id="recipeImage">
-                          <label class="custom-file-label" for="recipeImage">Choose Image</label>
-                        </div>
-                        <div class="input-group-append">
-                          <span class="input-group-text">Upload</span>
-                        </div>
-                      </div>
-                      <!-- step -->
-                      <div class="input-group">
-                        <textarea name="recipeSteps" type="text" class="form-control recipeSteps" placeholder="Mix the flour and water until they thicken"></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- add step btn -->
-                  <div class="input-group">
-                    <button id="addStep" type="button" class="btn btn-primary">&plus; Step</button>
-                  </div>
-                </div>
-                <!-- tags -->
-                <div class="form-group">
-                  <label>Tags (Press ENTER to add new tag)</label>
-                  <div class="input-group">
-                    <input id="newTag" class="form-control" placeholder="eg. dinner">
-                    <ul id="tagList">
-                      <!-- All TagList Here! -->
-                      <!-- <li>
-                        <span class="rmTag"></span>
-                      </li> -->
-                    </ul> 
-                  </div>
-                </div>
+      <section class="content container">
+        <div class="row">
+          <div class="col-9 mx-auto">
+            <!-- general form elements -->
+            <div class="card card-primary my-5">
+              <div class="card-header">
+                <h3 class="card-title">Recipe Upload</h3>
               </div>
-              <!-- /.card-body -->
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form id="recipe-form" method="post" enctype="multipart/form-data">
+                <div class="card-body">
+                  <!-- is public -->
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input name="isPublic" type="checkbox" class="form-check-input" id="isPublic">
+                      <label class="form-check-label" for="isPublic">Keep This Recipe Private</label>
+                    </div>
+                  </div>
+                  <!-- recipe name -->
+                  <div class="form-group">
+                    <label>Recipe Nmae</label>
+                    <input name="recipeName" type="text" class="form-control" placeholder="Title: TsuTsu's dumplings">
+                  </div>
+                  <!-- recipe description -->
+                  <div class="form-group">
+                    <label>Recipe Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Tell us more about your recipe - who you cook for, what makes it special..."></textarea>
+                  </div>
+                  <!-- recipe image -->
+                  <div id="recipeImage-group" class="form-group">
+                    <label>Upload Recipe Cover Image</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input name="recipeImage" id="recipeImage" type="file" class="custom-file-input" name="imgS3">
+                        <label class="custom-file-label" for="recipeImage">Choose Image</label>
+                      </div>
+                      <div class="input-group-append">
+                        <span id="uploadImage" class="input-group-text">Upload</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- cook time -->
+                  <div class="form-group">
+                    <label>Cook Time</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-clock"></i></span>
+                      </div>
+                      <input name="cookTime" type="text" class="form-control" placeholder="10 (integer only)">
+                      <div class="input-group-append">
+                        <span class="input-group-text">mins</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- serving -->
+                  <div class="form-group">
+                    <label>Servings</label>
+                    <div class="input-group">
+                      <input name="servings" type="text" class="form-control" placeholder="5 (integer only)">
+                      <div class="input-group-append">
+                        <span class="input-group-text">servings</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- ingredients -->
+                  <div class="form-group">
+                    <label>Ingredients</label>
+                    <div id="ingredients-group-section">
+                      <!-- 1st ingredient -->
+                      <div class="input-group mb-3 ingredients-group">
+                        <div class="input-group-prepend">
+                          <button type="button" class="btn btn-outline-secondary">&minus;</button>
+                        </div>
+                        <input name="ingredients" type="text" class="form-control ingredients" placeholder="Tell us your secret weapen!">
+                      </div>
+                      <!-- 2nd ingredient -->
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <button type="button" class="btn btn-outline-secondary">&minus;</button>
+                        </div>
+                        <input name="ingredients" type="text" class="form-control ingredients" placeholder="eg. 100ml water">
+                      </div>
+                    </div>
+                    <!-- add ingredient btn -->
+                    <div class="input-group">
+                      <button id="addIngredient" type="button" class="btn btn-primary">&plus; Ingredient</button>
+                    </div>
+                  </div>
+                  <!-- steps and tips -->
+                  <div class="form-group">
+                    <label>Steps and Tips</label>
+                    <div id="recipeSteps-group-section">
+                      <!-- 1st step group -->
+                      <div class="input-group mb-3 recipeSteps-group">
+                        <div class="mb-3">
+                          <button type="button" class="btn btn-outline-secondary btn-sm pull-left">&minus;</button>
+                          <label>Step 1</label>
+                        </div>
+                        <!-- image -->
+                        <div class="input-group mb-3">
+                          <div class="custom-file">
+                            <input name="recipeStepImage" type="file" class="custom-file-input" id="recipeImage">
+                            <label class="custom-file-label" for="recipeImage">Choose Image</label>
+                          </div>
+                          <div class="input-group-append">
+                            <span class="input-group-text">Upload</span>
+                          </div>
+                        </div>
+                        <!-- step -->
+                        <div class="input-group">
+                          <textarea name="recipeSteps" type="text" class="form-control recipeSteps" placeholder="Show us your magic. Tell us how to make it."></textarea>
+                        </div>
+                      </div>
+                      <!-- 2nd step group -->
+                      <div class="input-group mb-3 recipeSteps-group">
+                        <div class="mb-3">
+                          <button type="button" class="btn btn-outline-secondary btn-sm pull-left mb-3">&minus;</button>
+                          <label>Step 2</label>
+                        </div>
+                        <!-- image -->
+                        <div class="input-group mb-3">
+                          <div class="custom-file">
+                            <input name="recipeStepImage" type="file" class="custom-file-input" id="recipeImage">
+                            <label class="custom-file-label" for="recipeImage">Choose Image</label>
+                          </div>
+                          <div class="input-group-append">
+                            <span class="input-group-text">Upload</span>
+                          </div>
+                        </div>
+                        <!-- step -->
+                        <div class="input-group">
+                          <textarea name="recipeSteps" type="text" class="form-control recipeSteps" placeholder="Mix the flour and water until they thicken"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- add step btn -->
+                    <div class="input-group">
+                      <button id="addStep" type="button" class="btn btn-primary">&plus; Step</button>
+                    </div>
+                  </div>
+                  <!-- tags -->
+                  <div class="form-group">
+                    <label>Tags (Press ENTER to add new tag)</label>
+                    <div class="input-group">
+                      <input id="newTag" class="form-control" placeholder="eg. dinner">
+                      <ul id="tagList">
+                        <!-- All TagList Here! -->
+                        <!-- <li>
+                          <span class="rmTag"></span>
+                        </li> -->
+                      </ul> 
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
 
-              <div class="card-footer">
-                <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-              </div>
-            </form>
+                <div class="card-footer">
+                  <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
           </div>
           <!-- /.card -->
         </div>
       </section>
     </main>
     <script src="../../js/recipe-build.js"></script>
+    <script src="../../js/custom-file.js"></script>
   </body>
 </html>
