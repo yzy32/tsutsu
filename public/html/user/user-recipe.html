@@ -31,6 +31,8 @@
     ></script>
     <!-- js: axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- custom file input -->
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
     <script src="../../js/nav.js"></script>
     <script src="../../js/user.js"></script>
     <link rel="stylesheet" href="../../css/nav.css" />
@@ -101,7 +103,7 @@
                 <div class="media p-4">
                   <img id="userImage" class="col-2 mr-5 ml-3 profile-user-img img-fluid img-circle align-self-center"
                   src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
-                  alt="User profile picture">
+                  alt="User profile picture" style="object-fit: cover; height: 150px;">
                   <div class="col-10 media-body">
                     <div>
                       <h4 id="userName" class="mr-4" style="display: inline;"></h4>
@@ -251,7 +253,49 @@
                     <!-- end of favorite pagination -->
                   </div>
                   <div class="tab-pane col-12" id="createRecipe-section" ></div>
-                  <div class="tab-pane col-12" id="setting-section" ></div>
+                  <!-- setting section -->
+                  <div class="tab-pane col-12" id="setting-section" >
+                    <div class="card bg-light">
+                      <article class="card-body mx-auto mt-3 mb-5" style="max-width: 400px;">
+                        <form id="profileForm" enctype="multipart/form-data">
+                          <div class="card-body">
+                            <div class="form-group">
+                              <label for="form-email">Email address</label>
+                              <input type="email" class="form-control" id="form-email" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="form-userId">TsuTsu ID</label>
+                              <input type="text" class="form-control" id="form-userId" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="form-userName">TsuTsu Name</label>
+                              <input type="text" class="form-control" id="form-userName" disabled>
+                            </div>
+                            <div class="form-group">
+                              <label for="form-introduction">Introduction</label>
+                              <textarea name="introduction" type="text" class="form-control" id="form-introduction" placeholder="About you and your love of cooking"></textarea>
+                            </div>
+                            <div class="form-group">
+                              <label for="form-userImage">Profile Image Upload</label>
+                              <div class="input-group">
+                                <div class="custom-file">
+                                  <input name="userImage" type="file" class="custom-file-input" id="form-userImage">
+                                  <label class="custom-file-label" for="form-userImage">Choose file</label>
+                                </div>
+                                <!-- <div class="input-group-append">
+                                  <span class="input-group-text">Upload</span>
+                                </div> -->
+                              </div>
+                            </div>
+                          </div>
+                          <div class="d-flex justify-content-center">
+                            <button id="update" type="button" class="btn btn-secondary" style="width: 90%;">Submit</button>
+                          </div>
+                        </form>
+                      </article>
+                    </div> 
+                  </div>
+                  <!-- end of setting section -->
                 </div>
               </div>
             </div>
@@ -259,5 +303,10 @@
         </div>
       </div>
     </main>
+    <style>
+      #toast-container > div {
+        opacity: 1;
+      }
+    </style>
   </body>
 </html>

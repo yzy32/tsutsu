@@ -171,7 +171,7 @@ const getUserProfile = async (authorId, userId) => {
   try {
     const result = await User.findOne(
       { userId: authorId },
-      "userId userName introduction userImage following follower"
+      "userId userName introduction userImage following follower email"
     ).lean();
     if (authorId == userId) {
       result.isFollowing = null;
@@ -289,6 +289,28 @@ const getFollowing = async (userId, authorId, page, followPageSize) => {
   }
 };
 
+const updateUserProfile = async (userId, update) => {
+  try {
+    const userInserted = await User.findOneAndUpdate(
+      { userId: userId },
+      update,
+      {
+        new: true,
+      }
+    );
+    if (!userInserted) {
+      let error = new Error("No User Exists");
+      error.status = 400;
+      throw error;
+    }
+    const result = userInserted.save();
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserInfo,
@@ -301,4 +323,5 @@ module.exports = {
   getUserProfile,
   getFollower,
   getFollowing,
+  updateUserProfile,
 };

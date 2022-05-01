@@ -230,7 +230,7 @@ async function renderFollow(
       let followHTML = `
     <div class="col-5 ml-5 callout callout-info my-4 mx-4">
       <div class="media p-3">
-        <img class="align-self-center mr-3 profile-user-img img-fluid img-circle" src="${follow[i].userImage}" alt="profile image">
+        <img class="align-self-center mr-3 profile-user-img img-fluid img-circle" src="${follow[i].userImage}" alt="profile image" style="object-fit: cover; height: 100px;">
         <div class="media-body col-10">
         <a href="/user/${follow[i].userId}/recipes" class="text-decoration-none" ><h5 style="display: inline;" class="text-dark">${follow[i].userName}</h5></a>
           <div class="font-italic text-secondary">&commat;${follow[i].userId}</div>

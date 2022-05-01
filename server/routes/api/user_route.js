@@ -10,11 +10,13 @@ const {
   getProfile,
   getUserFollower,
   getUserFollowing,
+  updateProfile,
 } = require("../../controllers/user_controller");
 const {
   getUserRecipe,
   getUserFavorite,
 } = require("../../controllers/recipe_controller");
+const { uploadProfile } = require("../../../utils/s3");
 const { auth, recipeAuth } = require("../../../utils/authentication");
 
 router.post("/user/signup", errorHandler(signUp));
@@ -31,5 +33,12 @@ router.get("/user/:id/recipes", recipeAuth, errorHandler(getUserRecipe));
 router.get("/user/:id/favorites", recipeAuth, errorHandler(getUserFavorite));
 router.get("/user/:id/followers", recipeAuth, errorHandler(getUserFollower));
 router.get("/user/:id/followings", recipeAuth, errorHandler(getUserFollowing));
+
+router.put(
+  "/user/profile",
+  auth,
+  uploadProfile.single("userImage"),
+  errorHandler(updateProfile)
+);
 
 module.exports = router;

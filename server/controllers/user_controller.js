@@ -8,6 +8,7 @@ const {
   getUserProfile,
   getFollower,
   getFollowing,
+  updateUserProfile,
 } = require("../models/user_model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -130,6 +131,31 @@ const getUserFollowing = async (req, res) => {
   return;
 };
 
+const updateProfile = async (req, res) => {
+  let update = {};
+  let userId = req.user.userId;
+  if (req.file) {
+    update.userImage = req.file.location;
+  }
+  if (req.body.introduction) {
+    update.introduction = req.body.introduction;
+  }
+  if (Object.keys(update).length === 0) {
+    return res.status(400).json({ error: "User must have input" });
+  }
+  console.log(update);
+  const result = await updateUserProfile(userId, update);
+  let user = {
+    userId: userId,
+    userImage: result.userImage,
+    introduction: result.introduction,
+  };
+  console.log(user);
+  //TODO: return image url and intro text to rerender
+  res.status(200).json({ update: user });
+  return;
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -140,4 +166,5 @@ module.exports = {
   getProfile,
   getUserFollower,
   getUserFollowing,
+  updateProfile,
 };
