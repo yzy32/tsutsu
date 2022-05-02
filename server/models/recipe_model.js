@@ -297,6 +297,116 @@ const setPublic = async (recipeId, toPublic) => {
   }
 };
 
+const searchMongoRecipe = async (
+  authorId,
+  userId,
+  keyword,
+  page,
+  userPageSize
+) => {
+  try {
+    let andOperation = [
+      { authorId: authorId },
+      { recipeName: { $regex: `${keyword}`, $options: "i" } },
+    ];
+    let isPublic = true;
+    if (userId != authorId) {
+      andOperation.push({ isPublic: isPublic });
+    }
+    let total = await Recipe.aggregate([
+      {
+        $match: {
+          $and: andOperation,
+        },
+      },
+      { $sort: { timeCreated: -1 } },
+      {
+        $project: {
+          recipeImage: 1,
+          recipeName: 1,
+          ingredients: 1,
+          isPublic: 1,
+          total: 1,
+        },
+      },
+      { $group: { _id: null, count: { $count: {} } } },
+    ]);
+    total = total[0].count;
+    const result = await Recipe.aggregate([
+      {
+        $match: {
+          $and: andOperation,
+        },
+      },
+      { $sort: { timeCreated: -1 } },
+      {
+        $project: {
+          recipeImage: 1,
+          recipeName: 1,
+          ingredients: 1,
+          isPublic: 1,
+        },
+      },
+      { $skip: userPageSize * (page - 1) },
+      { $limit: userPageSize },
+    ]);
+    return { total, result };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const searchMongoFavorite = async (authorId, keyword, page, userPageSize) => {
+  try {
+    const response = await User.aggregate([
+      { $match: { userId: authorId } },
+      {
+        $lookup: {
+          from: "recipes",
+          localField: "userFavorites",
+          foreignField: "_id",
+          pipeline: [
+            { $match: { recipeName: { $regex: `${keyword}`, $options: "i" } } },
+            {
+              $project: {
+                recipeImage: 1,
+                recipeName: 1,
+                ingredients: 1,
+                isPublic: 1,
+              },
+            },
+          ],
+          as: "recipe",
+        },
+      },
+    ]);
+    let total = response[0].recipe.length;
+    //if isPublic is private, replace relevant field info
+    let result = [];
+    let start = userPageSize * (page - 1);
+    let end = userPageSize * page > total ? total : userPageSize * page;
+    for (let i = start; i < end; i++) {
+      let recipe = response[0].recipe[i];
+      if (!recipe.isPublic) {
+        recipe._id = "";
+        recipe.recipeImage = `https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/private.jpeg`;
+        recipe.ingredients = [
+          "Top secret",
+          "Top secret",
+          "Top secret",
+          "Top secret",
+        ];
+      }
+      result.push(recipe);
+    }
+    return { total, result };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   searchIngredient,
   searchRecipe,
@@ -307,4 +417,6 @@ module.exports = {
   getPublicRecipeByUserId,
   getFavorite,
   setPublic,
+  searchMongoRecipe,
+  searchMongoFavorite,
 };

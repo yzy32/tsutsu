@@ -42,10 +42,10 @@ const userSchema = new mongoose.Schema({
   following: { type: [String], default: [] },
   follower: { type: [String], default: [] },
   userFavorites: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
-  userRecipes: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
+  // userRecipes: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
 });
 
-userSchema.index({ userId: 1 });
+// userSchema.index({ userId: 1 });
 
 const recipeSchema = new mongoose.Schema({
   timeCreated: { type: Date, default: Date.now },
@@ -85,6 +85,8 @@ const recipeSchema = new mongoose.Schema({
   author: { type: String, required: true },
   authorId: { type: String, required: true },
 });
+
+// recipeSchema.index({ recipeName: "text" });
 
 //change review schema (userid, documentid)
 const reviewSchema = new mongoose.Schema({

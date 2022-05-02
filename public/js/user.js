@@ -146,6 +146,18 @@ $(async function () {
         if (!toPage) {
           return;
         }
+        //search page: click but not change URL, only rerender
+        if ($("#searchInput").val() && profileType == "recipes") {
+          let keyword = $("#searchInput").val();
+          renderRecipe(authorId, toPage, jwtToken, pageSize, keyword);
+          return;
+        }
+        if ($("#searchInput").val() && profileType == "favorites") {
+          let keyword = $("#searchInput").val();
+          console.log(toPage);
+          renderFavorite(authorId, toPage, pageSize, keyword);
+          return;
+        }
         //change URL based on set searchParams based on page number that user click
         newUrl.searchParams.set("page", toPage);
         window.history.pushState({}, "", newUrl);
@@ -160,7 +172,7 @@ $(async function () {
       }
     });
 
-    //FIXME: set private (when change to next page, cannot set)
+    //set private
     $(document).on("click", ".setPublic", async (e) => {
       let toPublic = true;
       let recipeId = $(e.target).data("recipeid");
@@ -279,26 +291,55 @@ $(async function () {
         }
       }
     });
+    //TODO: search author's recipe
+    $("#searchAuthor").on("click", async (e) => {
+      // refresh url in case there is page number in the url
+      let newUrl = new URL(
+        `${window.location.origin}${window.location.pathname}`
+      );
+      window.history.pushState({}, "", newUrl);
+      let keyword = $("#searchInput").val();
+      let page = 1;
+      if (profileType == "recipes") {
+        await renderRecipe(authorId, page, jwtToken, pageSize, keyword);
+        return;
+      } else if (profileType == "favorites") {
+        await renderFavorite(authorId, page, pageSize, keyword);
+        return;
+      }
+    });
   } catch (error) {
     console.log(error);
   }
 });
 
 // -----------------function-----------------
-async function renderRecipe(authorId, page, jwtToken, pageSize) {
+async function renderRecipe(authorId, page, jwtToken, pageSize, keyword) {
   try {
     if (!page) {
       page = 1;
     }
-    //recipe
-    const recipeResponse = await axios.get(
-      `/api/1.0/user/${authorId}/recipes?page=${page}`,
-      {
-        headers: {
-          Authorization: "Bearer " + jwtToken,
-        },
-      }
-    );
+    let recipeResponse = null;
+    //if there is keyword, search recipe, if no, just render the author's recipe
+    if (keyword) {
+      recipeResponse = await axios.get(
+        `/api/1.0/user/${authorId}/search/recipes?q=${keyword}&page=${page}`,
+        {
+          headers: {
+            Authorization: "Bearer " + jwtToken,
+          },
+        }
+      );
+    } else {
+      recipeResponse = await axios.get(
+        `/api/1.0/user/${authorId}/recipes?page=${page}`,
+        {
+          headers: {
+            Authorization: "Bearer " + jwtToken,
+          },
+        }
+      );
+    }
     const recipe = recipeResponse.data.recipe;
     console.log(recipe);
     // myrecipe btn
@@ -384,14 +425,21 @@ async function renderRecipe(authorId, page, jwtToken, pageSize) {
   }
 }
 
-async function renderFavorite(authorId, page, pageSize) {
+async function renderFavorite(authorId, page, pageSize, keyword) {
   try {
     if (!page) {
       page = 1;
     }
-    const favoriteResponse = await axios.get(
-      `/api/1.0/user/${authorId}/favorites?page=${page}`
-    );
+    let favoriteResponse = null;
+    if (keyword) {
+      favoriteResponse = await axios.get(
+        `/api/1.0/user/${authorId}/search/favorites?q=${keyword}&page=${page}`
+      );
+    } else {
+      favoriteResponse = await axios.get(
+        `/api/1.0/user/${authorId}/favorites?page=${page}`
+      );
+    }
     let favorite = favoriteResponse.data.favorite;
     console.log(favorite);
     $("#myfavorites").text(`${favorite.total} Favorites`);

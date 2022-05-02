@@ -157,7 +157,7 @@ $(async function () {
       }
     });
     // click to unfollow
-    $(document).on("click", async (e) => {
+    $(document).on("click", ".toUnFollow", async (e) => {
       e.preventDefault();
       try {
         console.log($(e.target).data("userid"));

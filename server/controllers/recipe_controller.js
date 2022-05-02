@@ -9,6 +9,8 @@ const {
   getPublicRecipeByUserId,
   getFavorite,
   setPublic,
+  searchMongoRecipe,
+  searchMongoFavorite,
 } = require("../models/recipe_model");
 const { isFollow, isFavorite } = require("../models/user_model");
 
@@ -19,7 +21,7 @@ const mongoose = require("mongoose");
 const es = require("../../utils/es");
 const { nextTick } = require("process");
 const pageSize = 10; //search
-const userPageSize = 10;
+const userPageSize = 10; //need to be the same as user contoller's
 const desiredReviewQty = 5;
 
 const getSearchRecipe = async (req, res) => {
@@ -331,6 +333,48 @@ const setRecipePublic = async (req, res) => {
   return;
 };
 
+const searchUserRecipe = async (req, res) => {
+  // if (!req.query.q) {
+  //   return res.status(400).json({ error: "Search input cannot be empty" });
+  // }
+  if (!req.params.id) {
+    console.log("search user recipe need to has authorId");
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  let keyword = req.query.q;
+  let page = req.query.page ? req.query.page : 1;
+  let userId = req.user ? req.user.userId : null;
+  let authorId = req.params.id;
+
+  let result = await searchMongoRecipe(
+    authorId,
+    userId,
+    keyword,
+    page,
+    userPageSize
+  );
+  result.setPublic = false;
+  if (authorId == userId) {
+    result.setPublic = true;
+  }
+  res.status(200).json({ recipe: result });
+  return;
+};
+
+const searchUserFavorite = async (req, res) => {
+  if (!req.params.id) {
+    console.log("search user favorite need to has authorId");
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  let keyword = req.query.q;
+  let page = req.query.page ? req.query.page : 1;
+  let authorId = req.params.id;
+
+  let result = await searchMongoFavorite(authorId, keyword, page, userPageSize);
+  res.status(200).json({ favorite: result });
+  return;
+};
+
 module.exports = {
   getSearchRecipe,
   createRecipe,
@@ -340,4 +384,6 @@ module.exports = {
   getUserRecipe,
   getUserFavorite,
   setRecipePublic,
+  searchUserRecipe,
+  searchUserFavorite,
 };

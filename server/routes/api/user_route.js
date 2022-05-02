@@ -15,6 +15,8 @@ const {
 const {
   getUserRecipe,
   getUserFavorite,
+  searchUserRecipe,
+  searchUserFavorite,
 } = require("../../controllers/recipe_controller");
 const { uploadProfile } = require("../../../utils/s3");
 const { auth, recipeAuth } = require("../../../utils/authentication");
@@ -39,6 +41,17 @@ router.put(
   auth,
   uploadProfile.single("userImage"),
   errorHandler(updateProfile)
+);
+
+router.get(
+  "/user/:id/search/recipes",
+  recipeAuth,
+  errorHandler(searchUserRecipe)
+);
+router.get(
+  "/user/:id/search/favorites",
+  recipeAuth,
+  errorHandler(searchUserFavorite)
 );
 
 module.exports = router;
