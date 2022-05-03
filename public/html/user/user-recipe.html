@@ -40,19 +40,12 @@
   </head>
   <body>
     <!-- Navbar section -->
-    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
-      <a class="navbar-brand ml-2 font-weight-bold" href="/"
-        ><span id="lightblue">TshinTshai</span><span id="blue">TsuTsu</span></a
-      >
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarColor"
-        aria-controls="navbarColor"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom container col-12">
+      <a class="navbar-brand ml-2 font-weight-bold" href="/">
+        <span class="font-weight-normal" style="color: #4a4a4a; font-size: 1.2rem; letter-spacing: -1px;">TshinTshai</span>
+        <span style="color: #f6ae2d; font-size: 2rem;">TsuTsu</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor" aria-controls="navbarColor" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarColor">
@@ -70,8 +63,14 @@
           </li>
           <li class="nav-item">
             <a id="link-user" class="nav-link" href="/user/signin">
-              <span id="signin-icon" class="fa fa-user-o"></span>
+              <span id="signin-icon" class="fa fa-user-o mr-1"></span>
               <span id="nav-userName" class="text">Sign In </span>
+            </a>
+          </li>
+          <li id="create" class="nav-item d-none">
+            <a class="nav-link" style="cursor: pointer" href="/user/recipe/edit">
+              <i class="fa-regular fa-square-plus mr-1"></i>
+              <span class="text">Create Recipe</span>
             </a>
           </li>
           <li id="logout" class="nav-item d-none">
@@ -80,12 +79,12 @@
               <span class="text">Sign Out</span>
             </a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="#"
-              ><span class="fa-solid fa-bars"></span
+              ><span class="fa-solid fa-bars mr-1"></span
               ><span class="text">Category</span></a
             >
-          </li>
+          </li> -->
         </ul>
       </div>
     </nav>
@@ -134,7 +133,7 @@
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a id="myrecipes" class="nav-link" href="#recipe-section" data-toggle="tab">My Recipes</a></li>
                   <li class="nav-item"><a id="myfavorites" class="nav-link" href="#favorite-section" data-toggle="tab">My Favorites</a></li>
-                  <li class="nav-item"><a id="createRecipe" class="nav-link" href="#createRecipe-section" data-toggle="tab"><i class="fa-solid fa-plus fa-xs mr-1"></i>Create Recipe</a></li>
+                  <!-- <li class="nav-item"><a id="createRecipe" class="nav-link" href="#createRecipe-section" data-toggle="tab"><i class="fa-solid fa-plus fa-xs mr-1"></i>Create Recipe</a></li> -->
                   <li class="nav-item"><a id="settings" class="nav-link" href="#setting-section" data-toggle="tab"><i class="fa-solid fa-gear fa-xs mr-1"></i>Settings</a></li>
                   <li class="nav-item ml-auto mt-1 mr-3">
                     <div class="card-tools">
@@ -262,7 +261,7 @@
                     </nav>
                     <!-- end of favorite pagination -->
                   </div>
-                  <div class="tab-pane col-12" id="createRecipe-section" ></div>
+                  <!-- <div class="tab-pane col-12" id="createRecipe-section" ></div> -->
                   <!-- setting section -->
                   <div class="tab-pane col-12" id="setting-section" >
                     <div class="card bg-light">

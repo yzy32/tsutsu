@@ -138,7 +138,10 @@ async function search() {
     searchResults.innerHTML = "";
     let recipe = "";
     for (let i = 0; i < data.recipes.length; i++) {
-      let tags = data.recipes[i].tags.join("&#160;&#160;&#124;&#160;&#160;");
+      let tags = "";
+      if (data.recipes[i].tags) {
+        tags = data.recipes[i].tags.join("&#160;&#160;&#124;&#160;&#160;");
+      }
       if (!data.recipes[i].recipeImage) {
         data.recipes[i].recipeImage =
           "https://s23209.pcdn.co/wp-content/uploads/2018/06/211129_DAMN-DELICIOUS_Lemon-Herb-Roasted-Chx_068.jpg";

@@ -7,6 +7,7 @@ $(function () {
     userId = user.user.userId;
     $("#nav-userName").text(` ${userName} `);
     $("#link-user").attr("href", `/user/${userId}/recipes`);
+    $("#create").removeClass("d-none");
     $("#logout").removeClass("d-none");
   }
   $("#logout").on("click", (e) => {

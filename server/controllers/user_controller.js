@@ -114,7 +114,7 @@ const getProfile = async (req, res) => {
   let userId = req.user ? req.user.userId : null;
   const result = await getUserProfile(req.params.id, userId);
   delete result._id;
-  if ((result.userImage = "default")) {
+  if (result.userImage == "default") {
     result.userImage =
       "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/user.png";
   }

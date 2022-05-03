@@ -6,12 +6,14 @@ $(function () {
       e.preventDefault();
     }
   });
+  // $("#recipe-form").validate({ debug: true });
   $("#submit").on("click", async (e) => {
     try {
       e.preventDefault();
+      console.log("click");
       // const recipe = $("#recipe-form").serializeArray();
       const recipe = $("#recipe-form");
-      // console.log(recipe[0]);
+      recipe[0].reportValidity();
       const recipeForm = new FormData(recipe[0]);
       const user = JSON.parse(localStorage.getItem("user"));
       let jwtToken = null;
@@ -29,6 +31,7 @@ $(function () {
       }
     } catch (error) {
       console.log(error);
+      console.log(error.response);
       // if (error.response.data.redirectUrl) {
       //   const redirectUrl = error.response.data.redirectUrl;
       //   document.location = redirectUrl;
@@ -71,7 +74,7 @@ $(function () {
   //   }
   // });
 
-  //add new ingredient input, TODO: remove
+  //add new ingredient input
   $("#addIngredient").on("click", (e) => {
     let ingredientsSection = $("#ingredients-group-section");
     let newIngredients = `                     
@@ -83,14 +86,14 @@ $(function () {
     </div>`;
     ingredientsSection.append(newIngredients);
   });
-  //add new step input, TODO: remove
-  $("#addStep").on("click", (e) => {
+  //add new step input
+  $(document).on("click", "#addStep", (e) => {
+    $("#removeStep").removeClass("d-none");
     let stepsSection = $("#recipeSteps-group-section");
-    let stepNum = stepsSection.length + 1;
+    let stepNum = stepsSection.children().length + 1;
     let newStep = `
     <div class="input-group mb-3 recipeSteps-group">
       <div class="mb-1">
-        <button type="button" class="remove btn btn-outline-secondary btn-sm pull-left mr-2">&minus;</button>
         <label>Step ${stepNum}</label>
       </div>
       <!-- image -->
@@ -102,15 +105,25 @@ $(function () {
       </div>
       <!-- step -->
       <div class="input-group">
-        <textarea name="recipeSteps" type="text" class="form-control recipeSteps" placeholder="click - to remove new step" required></textarea>
+        <textarea name="recipeSteps" type="text" class="form-control recipeSteps" placeholder="click -Step to remove new step" required></textarea>
       </div>
     </div>
     `;
     stepsSection.append(newStep);
   });
-  //remove element
+  //remove ingredients
   $(document).on("click", ".remove", (e) => {
     $(e.target).parent().parent().remove();
+  });
+
+  //remove steps
+  $(document).on("click", "#removeStep", (e) => {
+    e.preventDefault();
+    let stepsSection = $("#recipeSteps-group-section");
+    if (stepsSection.children().length <= 2) {
+      return;
+    }
+    $(e.target).parent().prev().children().last().remove();
   });
 
   //create Tag

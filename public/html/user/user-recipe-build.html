@@ -42,19 +42,12 @@
   </head>
   <body>
     <!-- Navbar section -->
-    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
-      <a class="navbar-brand ml-2 font-weight-bold" href="/"
-        ><span id="lightblue">TshinTshai</span><span id="blue">TsuTsu</span></a
-      >
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarColor"
-        aria-controls="navbarColor"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom container col-12">
+      <a class="navbar-brand ml-2 font-weight-bold" href="/">
+        <span class="font-weight-normal" style="color: #4a4a4a; font-size: 1.2rem; letter-spacing: -1px;">TshinTshai</span>
+        <span style="color: #f6ae2d; font-size: 2rem;">TsuTsu</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor" aria-controls="navbarColor" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarColor">
@@ -72,8 +65,14 @@
           </li>
           <li class="nav-item">
             <a id="link-user" class="nav-link" href="/user/signin">
-              <span id="signin-icon" class="fa fa-user-o"></span>
+              <span id="signin-icon" class="fa fa-user-o mr-1"></span>
               <span id="nav-userName" class="text">Sign In </span>
+            </a>
+          </li>
+          <li id="create" class="nav-item d-none">
+            <a class="nav-link" style="cursor: pointer" href="/user/recipe/edit">
+              <i class="fa-regular fa-square-plus mr-1"></i>
+              <span class="text">Create Recipe</span>
             </a>
           </li>
           <li id="logout" class="nav-item d-none">
@@ -84,7 +83,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#"
-              ><span class="fa-solid fa-bars"></span
+              ><span class="fa-solid fa-bars mr-1"></span
               ><span class="text">Category</span></a
             >
           </li>
@@ -100,7 +99,7 @@
             <!-- general form elements -->
             <div class="card card-primary my-5">
               <div class="card-header">
-                <h3 class="card-title font-weight-bold">Recipe Upload</h3>
+                <h3 class="card-title font-weight-bold" style="font-size: 1.5rem;">Upload Recipe</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -134,7 +133,7 @@
                         <span class="input-group-text"><i class="fa-regular fa-image"></i></span>
                       </div>
                       <div class="custom-file">
-                        <input name="recipeImage" id="recipeImage" type="file" class="custom-file-input" name="imgS3 required">
+                        <input name="recipeImage" id="recipeImage" type="file" class="custom-file-input" required>
                         <label class="custom-file-label" for="recipeImage">Choose Image</label>
                       </div>
                     </div>
@@ -147,7 +146,7 @@
                       <!-- <div class="input-group-prepend">
                         <span class="input-group-text"><i class="far fa-clock"></i></span>
                       </div> -->
-                      <input name="cookTime" type="text" class="form-control" placeholder="10 (integer only)" required>
+                      <input name="cookTime" type="number" class="form-control" placeholder="10 (integer only)" required>
                       <div class="input-group-append">
                         <span class="input-group-text">minutes</span>
                       </div>
@@ -161,7 +160,7 @@
                       <!-- <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa-regular fa-user"></i></span>
                       </div> -->
-                      <input name="servings" type="text" class="form-control" placeholder="5 (integer only)">
+                      <input name="servings" type="number" class="form-control" placeholder="5 (integer only)">
                       <div class="input-group-append">
                         <span class="input-group-text">servings</span>
                       </div>
@@ -237,6 +236,7 @@
                     <!-- add step btn -->
                     <div class="input-group">
                       <button id="addStep" type="button" class="btn btn-tsutsu" style="width: 100%;">&plus; Step</button>
+                      <button id="removeStep" type="button" class="btn btn-tsutsu mt-3 d-none" style="width: 100%;">&minus; Step</button>
                     </div>
                   </div>
                   <!-- tags -->
@@ -256,7 +256,7 @@
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button id="submit" type="submit" class="btn btn-orange" style="width: 100%;">Submit</button>
+                  <button id="submit" type="submit" class="btn btn-orange font-weight-bold" style="width: 100%;">CREATE</button>
                 </div>
               </form>
             </div>

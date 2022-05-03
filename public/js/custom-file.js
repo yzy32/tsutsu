@@ -6,6 +6,9 @@
 $(document).ready(function () {
   bsCustomFileInput.init();
 });
+// $(document).on("click", "#addStep", (e) => {
+//   bsCustomFileInput.init();
+// });
 !(function (e, t) {
   "object" == typeof exports && "undefined" != typeof module
     ? (module.exports = t())

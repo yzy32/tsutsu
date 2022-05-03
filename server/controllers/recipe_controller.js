@@ -19,7 +19,7 @@ const { arrayToString } = require("../../utils/util.js");
 const { Recipe, Review } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const es = require("../../utils/es");
-const { nextTick } = require("process");
+const validator = require("../../utils/validator");
 const pageSize = 10; //search
 const userPageSize = 10; //need to be the same as user contoller's
 const desiredReviewQty = 5;
@@ -92,7 +92,7 @@ const getSearchRecipe = async (req, res) => {
         authorId: result.hits[i]._source.authorId,
         author: result.hits[i]._source.author,
         cookTime: result.hits[i]._source.cookTime,
-        favoriteCount: result.hits[i]._source.favoriteCount,
+        favoriteCount: result.hits[i]._source.favoriteCount || 0,
         ingredients: result.hits[i]._source.ingredients,
         tags: result.hits[i]._source.tags,
         ingrMatchedCount: result.hits[i].highlight.ingredients.length,
@@ -187,12 +187,22 @@ const createRecipe = async (req, res) => {
     let tags = Array.isArray(req.body.tags) ? req.body.tags : [req.body.tags];
     recipe.tags = tags;
   }
-  //TODO: split db operation to model
+  // data validation
+  let { recipeName, description, cookTime, servings, ingredients } = recipe;
+  const validate = await validator.createRecipe.validateAsync({
+    recipeName,
+    description,
+    cookTime,
+    servings,
+    ingredients,
+  });
+
   let recipeInserted = await Recipe.create(recipe);
   let result = await recipeInserted.save();
   console.log("recipe", recipe);
   console.log("mongo result for saving: ", result);
   let recipeES = recipe; //shallow copy
+  recipeES.favoriteCount = 0;
   delete recipeES.servings;
   delete recipeES.recipeSteps;
   let esResult = await es.index({

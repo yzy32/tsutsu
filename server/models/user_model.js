@@ -14,7 +14,6 @@ const createUser = async (userName, userId, type, email, password) => {
       type: type,
       email: email,
       password: hashedPwd,
-      userImage: "default",
     };
     const accessToken = jwt.sign(
       {

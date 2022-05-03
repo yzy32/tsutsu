@@ -40,7 +40,7 @@ $(async function () {
     console.log("author: ", author);
     //author info
     if (!jwtToken || authorId != userId) {
-      $("#createRecipe").addClass("d-none");
+      // $("#createRecipe").addClass("d-none");
       $("#settings").addClass("d-none");
     }
     $("#userName").text(author.userName);
@@ -66,8 +66,8 @@ $(async function () {
       $("#favorite-section").removeClass("active");
       $("#settings").removeClass("active");
       $("#setting-section").removeClass("active");
-      $("#createRecipe").removeClass("active");
-      $("#createRecipe-section").removeClass("active");
+      // $("#createRecipe").removeClass("active");
+      // $("#createRecipe-section").removeClass("active");
     } else if (profileType == "favorites") {
       $("#myrecipes").removeClass("active");
       $("#recipe-section").removeClass("active");
@@ -75,8 +75,8 @@ $(async function () {
       $("#favorite-section").addClass("active");
       $("#settings").removeClass("active");
       $("#setting-section").removeClass("active");
-      $("#createRecipe").removeClass("active");
-      $("#createRecipe-section").removeClass("active");
+      // $("#createRecipe").removeClass("active");
+      // $("#createRecipe-section").removeClass("active");
     } else if (profileType == "settings") {
       $("#myrecipes").removeClass("active");
       $("#recipe-section").removeClass("active");
@@ -84,8 +84,8 @@ $(async function () {
       $("#favorite-section").removeClass("active");
       $("#settings").addClass("active");
       $("#setting-section").addClass("active");
-      $("#createRecipe").removeClass("active");
-      $("#createRecipe-section").removeClass("active");
+      // $("#createRecipe").removeClass("active");
+      // $("#createRecipe-section").removeClass("active");
     } else if (profileType == "create") {
       $("#myrecipes").removeClass("active");
       $("#recipe-section").removeClass("active");
@@ -93,8 +93,8 @@ $(async function () {
       $("#favorite-section").removeClass("active");
       $("#settings").removeClass("active");
       $("#setting-section").removeClass("active");
-      $("#createRecipe").addClass("active");
-      $("#createRecipe-section").addClass("active");
+      // $("#createRecipe").addClass("active");
+      // $("#createRecipe-section").addClass("active");
     }
     // render setting form
     $("#form-email").val(author.email);

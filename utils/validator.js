@@ -7,11 +7,15 @@ const signup = Joi.object({
   password: Joi.string().min(4).required(),
 });
 
-// const createRecipe = Joi.object({
-
-// });
+const createRecipe = Joi.object({
+  recipeName: Joi.string().required(),
+  description: Joi.string().required(),
+  cookTime: Joi.number().required(),
+  servings: Joi.number().required(),
+  ingredients: Joi.array().items(Joi.string().required()),
+});
 
 module.exports = {
   signup,
-  // createRecipe,
+  createRecipe,
 };
