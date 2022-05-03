@@ -25,6 +25,7 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../../js/nav.js"></script>
+    <link rel="stylesheet" href="../../css/nav.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="../css/search-v2.css" />
@@ -86,66 +87,72 @@
       <form action="/recipe/search" method="get" id="searchForm">
         <div class="row">
           <section id="sidebar" class="col-3">
-            <div class="border-bottom pb-2 ml-2">
-              <h4 id="lightblue">Filters</h4>
+            <div class="pb-2 ml-2">
+              <h4 class="font-weight-bold">Filters</h4>
             </div>
-            <div class="py-2 border-bottom ml-3" id="filter-group">
+            <hr>
+            <div class="py-2 ml-3" id="filter-group">
                 <div class="form-group">
-                  <h5>Include Ingredients</h5>
+                  <h5 class="font-weight-bold text-darkgrey">Include Ingredients</h5>
                       <input
                         type="text"
                         id="searchIngrIncl"
                         name="ingrIncl"
-                        class="bg-light search-input"
+                        class="bg-light search-input p-2"
+                        style="width: 90%;"
                         placeholder="Include Ingredients"
                       />
                       <ul id="showIngrIncl" class="tag-list">
                       </ul>
                 </div>
                 <div class="form-group">
-                  <h5>Exclude Ingredients</h5>
+                  <h5 class="font-weight-bold text-darkgrey">Exclude Ingredients</h5>
                       <input
                         type="text"
                         id="searchIngrExcl"
                         name="ingrExcl"
-                        class="bg-light search-input"
+                        class="bg-light search-input p-2"
+                        style="width: 90%;"
                         placeholder="Exclude Ingredients"
                       />
                       <ul id="showIngrExcl" class="tag-list">
                       </ul>
                 </div>
                 <div class="form-group">
-                  <h5>Other Keywords</h5>
+                  <h5 class="font-weight-bold text-darkgrey">Other Keywords</h5>
                       <input
                         type="text"
                         id="searchOtherKeyword"
                         name="otherKeyword"
-                        class="bg-light search-input"
+                        class="bg-light search-input p-2"
+                        style="width: 90%;"
                         placeholder="Other Keywords"
                       />
                       <ul id="showOtherKeyword" class="tag-list">
                       </ul>
                 </div>
                 <div class="form-group">
-                  <h5>Cooking Time within</h5>
+                  <h5 class="font-weight-bold text-darkgrey">Cooking Time within</h5>
                       <input
                         type="text"
                         id="cookTime"
                         name="cookTime"
-                        class="bg-light search-input"
+                        class="bg-light search-input p-2"
+                        style="width: 90%;"
                         placeholder="mins"
                       />
                 </div>
                 <!-- search myrecipe: show up only after login -->
                 <div class="form-group" style="display: none;" id="myrecipeGroup">
-                  <h5>Only Search My Recipe</h5>
+                  <h5 class="font-weight-bold text-darkgrey">Only Search My Recipe</h5>
                     <div class="form-check">
                       <input type="checkbox" class="form-check-input" id="myrecipe" name="myrecipe" value="true">
                       <label class="form-check-label" for="myrecipe">Only search my recipe</label>
                     </div>            
                 </div>
             </div>
-            <button type="submit" class="btn btn-light btn-block mt-2" style="max-width: 250px;"><i class="fa-solid fa-magnifying-glass mr-3"></i> Search </button>
+            <hr>
+            <button type="submit" class="btn btn-lightgrey btn-block mt-2" style="max-width: 250px;"><i class="fa-solid fa-magnifying-glass mr-3"></i> Search </button>
             <!-- <button class="fa fa-search text-muted" type="submit" display="inline" style="background-color: rgba(255, 255, 255, 0); border: none"></span></button>            -->
           </section>
           <!-- search section -->

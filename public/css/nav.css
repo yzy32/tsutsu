@@ -480,6 +480,11 @@ h6 {
   color: white !important;
 }
 
+.btn-lightgrey {
+  background-color: #ecebe9 !important;
+  color: #4a4a4a !important;
+}
+
 .btn-orange-click {
   background-color: #f6ae2d !important;
   color: white !important;

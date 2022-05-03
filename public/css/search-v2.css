@@ -466,7 +466,7 @@ ul.tag-list li {
   float: left;
   font-size: 0.835rem;
   text-transform: capitalize;
-  background-color: #f0e3ca;
+  background-color: #f6b02d57;
   line-height: 1rem;
   padding: 0.5rem 2rem 0.5rem 1rem;
   border-radius: 1rem;
@@ -486,13 +486,13 @@ ul.tag-list li > span.rmTag {
   font-size: 1.25rem;
   line-height: 1.5rem;
   text-align: center;
-  background-color: #b9ac92;
+  background-color: #f6b02db2;
   cursor: pointer;
   -webkit-transition: 0.3s all;
   transition: 0.3s all;
 }
 ul.tag-list li > span.rmTag:hover {
-  background-color: #ef9a9a;
+  background-color: #f6ae2d;
 }
 
 #page > li {
