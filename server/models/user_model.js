@@ -125,7 +125,7 @@ const removeFavorite = async (userId, recipeId) => {
 
 const addFollowing = async (followerId, followingId) => {
   try {
-    console.log(followerId, followingId);
+    // console.log(followerId, followingId);
     const updateFollowing = await User.updateOne(
       { userId: followerId },
       { $addToSet: { following: followingId } }
@@ -148,7 +148,7 @@ const addFollowing = async (followerId, followingId) => {
 
 const removeFollowing = async (followerId, followingId) => {
   try {
-    console.log(followerId, followingId);
+    // console.log(followerId, followingId);
     const removeFollowing = await User.updateOne(
       { userId: followerId },
       { $pull: { following: followingId } }
@@ -270,8 +270,6 @@ const getFollowing = async (userId, authorId, page, followPageSize) => {
       })
         .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
         .lean();
-      console.log("followingId: ", followingResult[0].followingId[i]);
-      console.log("following: ", following);
       following.isFollowing = false;
       // login user
       if (userId == authorId) {
@@ -361,7 +359,7 @@ const searchFollower = async (authorId, userId, searchId) => {
 const searchFollowing = async (authorId, userId, searchId) => {
   //TODO:
   try {
-    // get author's follower
+    // get author's following
     const followingResult = await User.aggregate([
       { $match: { userId: authorId } },
       {
@@ -382,22 +380,22 @@ const searchFollowing = async (authorId, userId, searchId) => {
     }
     let result = [];
     if (followingResult[0].search == true) {
-      let follower = await User.findOne({
+      let following = await User.findOne({
         userId: searchId,
       })
         .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
         .lean();
-      follower.isFollowing = false;
+      following.isFollowing = false;
       // login user
       if (userId == authorId) {
         following.isFollowing = true;
       } else if (
         userFollowings &&
-        userFollowings.following.includes(follower.userId)
+        userFollowings.following.includes(following.userId)
       ) {
-        follower.isFollowing = true;
+        following.isFollowing = true;
       }
-      result.push(follower);
+      result.push(following);
     }
     return result;
   } catch (error) {

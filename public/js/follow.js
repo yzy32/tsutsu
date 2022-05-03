@@ -147,9 +147,10 @@ $(async function () {
           });
           $(e.target).addClass("d-none");
           $(e.target).next().removeClass("d-none");
-          //TODO:
-          followerNew += 1;
-          $("#follower").text(`${followerNew} follower`);
+          if (followingId == authorId) {
+            followerNew += 1;
+            $("#follower").text(`${followerNew} follower`);
+          }
           console.log("follow result: ", response.data);
         }
       } catch (error) {
@@ -180,7 +181,6 @@ $(async function () {
           $(e.target).addClass("d-none");
           $(e.target).prev().removeClass("d-none");
           if (unfollowingId == authorId) {
-            //TODO:
             followerNew -= 1;
             $("#follower").text(`${followerNew} follower`);
           }
@@ -262,9 +262,9 @@ async function renderFollow(
       // set follow, unfollow btn basedon isFollowing = true/fasle
       let followBtnGroup = "";
       let followBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-orange-click btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
+  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-solid fa-bell mr-1"></i> Follow</button>`;
       let unFollowBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-orange-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning "><i class="fa-regular fa-bell mr-1"></i> Follow</button>`;
+  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning "><i class="fa-solid fa-bell mr-1"></i> Follow</button>`;
       if (follow[i].isFollowing) {
         followBtnGroup += unFollowBtn;
       } else {
