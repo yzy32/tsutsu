@@ -14,11 +14,18 @@ const {
 } = require("../models/user_model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const validator = require("../../utils/validator");
 const followPageSize = 20;
 
 const signUp = async (req, res) => {
-  //TODO: data validation
   const { userName, userId, email, password } = req.body;
+  //data validation
+  await validator.signup.validateAsync({
+    userName,
+    userId,
+    email,
+    password,
+  });
   const type = "native";
   const result = await createUser(userName, userId, type, email, password);
   if (result.error) {
@@ -40,8 +47,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const { type, email, password } = req.body;
-  console.log(type, email, password);
-  //TODO: validate, wrong format: return 400
+  console.log("User signin", type, email, password);
 
   //get password from mongo based on type and email (model)
   const result = await getUserInfo(type, email);
@@ -108,6 +114,10 @@ const getProfile = async (req, res) => {
   let userId = req.user ? req.user.userId : null;
   const result = await getUserProfile(req.params.id, userId);
   delete result._id;
+  if ((result.userImage = "default")) {
+    result.userImage =
+      "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/user.png";
+  }
   res.status(200).json({ user: result });
   return;
 };

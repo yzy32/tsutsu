@@ -74,17 +74,12 @@
       </div>
     </nav>
       <!-- signin form  -->
-      <div class="container my-5">
+      <div class="container my-5 col-8" style="max-width: 600px;">
         <div class="card bg-light">
           <article class="card-body mx-auto" style="max-width: 400px;">
-            <h4 class="card-title mt-3 text-center">Sign In</h4>
+            <h3 class="card-title mt-3 text-center text-darkgrey font-weight-bold">SIGN IN</h3>
             <p class="text-center">Get started your journey with TsuTsu</p>
-            <p>
-              <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
-            </p>
-            <p class="divider-text">
-                  <span class="bg-light">OR</span>
-              </p>
+            <hr>
             <form>
               <div class="form-group input-group">
                 <div class="input-group-prepend">
@@ -97,12 +92,14 @@
                   <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
               </div>
                   <input name="password" id="password" class="form-control" placeholder="Password" type="password">
-              </div> <!-- form-group// --> 
-              <span id="error" class="error text-danger"></span>                                  
+              </div> <!-- form-group// -->                            
               <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-block" id="submit"> Sign In  </button>
+                  <button type="submit" class="btn btn-orange btn-block" id="submit"> SIGN IN  </button>
               </div> <!-- form-group// -->      
-              <p class="text-center">Doesn't have an account? <a href="/user/signup">Sign Up</a> </p>                                                                 
+              <p class="text-center">Doesn't have an account? <a href="/user/signup" class="text-orange">Sign Up</a> </p>
+              <div class="my-3 text-center">
+                <span id="error" class="error text-danger"></span>  
+              </div>                                                                                                                                 
           </form>
           </article>
         </div> 

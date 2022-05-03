@@ -391,7 +391,7 @@ async function renderRecipe(authorId, page, jwtToken, pageSize, keyword) {
       let recipeHTML = `
       <div class="card card-outline card-warning">
         <div class="card-header">
-          <h3 class="card-title">${recipe.result[i].recipeName}</h3>
+          <h3 class="card-title font-weight-bold" style="font-size: 1.5rem"">${recipe.result[i].recipeName}</h3>
           ${publicBtn}
         </div>
         <div class="card-body">
@@ -465,7 +465,7 @@ async function renderFavorite(authorId, page, pageSize, keyword) {
       let favoriteHTML = `
       <div class="card card-outline card-warning">
         <div class="card-header">
-          <h3 class="card-title">${favorite.result[i].recipeName}</h3>
+          <h3 class="card-title font-weight-bold" style="font-size: 1.5rem">${favorite.result[i].recipeName}</h3>
         </div>
         <div class="card-body">
           <a href="${recipeUrl}" class="text-dark">

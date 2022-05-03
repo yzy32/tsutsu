@@ -97,9 +97,9 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header h2 font-weight-bold">
-                <span id="recipeName"></span>
-                <button id="favoriteBtn" type="button" class="btn btn-tsutsu float-right d-none"><i class="fa-regular fa-bookmark mr-2"></i>Add to Favorite</button>
-                <button id="unfavoriteBtn" type="button" class="btn btn-tsutsu-click float-right d-none"><i class="fa-regular fa-bookmark mr-2"></i>Remove from Favorite</button>
+                <span id="recipeName" class="text-darkgrey"></span>
+                <button id="favoriteBtn" type="button" class="btn btn-lightgrey-click float-right d-none"><i class="fa-regular fa-bookmark mr-2"></i>Add to Favorite</button>
+                <button id="unfavoriteBtn" type="button" class="btn btn-orange-click float-right d-none"><i class="fa-regular fa-bookmark mr-2"></i>Favorite</button>
               </div>
               <div class="card-body">
                 <div class="media">
@@ -112,7 +112,7 @@
                     <!-- end of recipe intro -->
                     <!-- tag list -->
                     <div class="mt-2">
-                      <ul id="tagList">
+                      <ul id="tagList" class="text-brown">
                       </ul>  
                     </div>
                     <!-- end of tag list -->
@@ -123,8 +123,8 @@
                       <a id="author-link" href="#" class="text-secondary mr-2">
                         <span id="author"></span>
                       </a>
-                      <button id="followBtn" type="button" class="btn btn-tsutsu btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-                      <button id="unfollowBtn" type="button" class="btn btn-tsutsu-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>
+                      <button id="followBtn" type="button" class="btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+                      <button id="unfollowBtn" type="button" class="btn btn-orange-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
                     </div>
                     <!-- end of follow -->
                   </div>
@@ -185,7 +185,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header h3">Reviews
-                <button id="reviewBtn" type="button" data-remote="false" class="btn btn-outline-secondary float-right" data-toggle="modal" data-target="#review-modal"><i class="fa-solid fa-plus mr-2"></i> Leave a Review </button>
+                <button id="reviewBtn" type="button" data-remote="false" class="btn btn-tsutsu float-right" data-toggle="modal" data-target="#review-modal"><i class="fa-solid fa-plus mr-2"></i> Leave a Review </button>
               </div>
               <div id="reviewList" class="card-body">
               </div>
@@ -230,8 +230,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button id="submitReview" type="button" class="btn btn-primary">Submit</button>
-            <button id="signin" type="button" class="btn btn-primary d-none">Sign In</button>
+            <button id="submitReview" type="button" class="btn btn-orange">Submit</button>
+            <button id="signin" type="button" class="btn btn-orange d-none">Sign In</button>
           </div>
         </div>
       </div>

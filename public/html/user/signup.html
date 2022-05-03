@@ -74,46 +74,44 @@
       </div>
     </nav>
         <!-- signin form  -->
-        <div class="container my-5">
+        <div class="container my-5 col-8" style="max-width: 600px;">
           <div class="card bg-light">
-            <article class="card-body mx-auto" style="max-width: 400px;">
-              <h4 class="card-title mt-3 text-center">Create Account</h4>
+            <article class="card-body mx-auto col-6" style="max-width: 400px;">
+              <h3 class="card-title mt-3 text-center text-darkgrey font-weight-bold">CREATE ACCOUNT</h3>
               <p class="text-center">Get started with your free account</p>
-              <p>
-                <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
-              </p>
-              <p class="divider-text">
-                    <span class="bg-light">OR</span>
-                </p>
+              <hr>
               <form>
                 <div class="form-group input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                   </div>
-                    <input name="userName" id="userName" class="form-control" placeholder="User name" type="text">
+                    <input name="userName" id="userName" class="form-control" placeholder="User name" type="text" required>
                 </div> <!-- form-group// -->
                 <div class="form-group input-group">
                   <div class="input-group-prepend">
                       <span class="input-group-text"> <i class="fa-solid fa-utensils"></i> </span>
                   </div>
-                      <input name="userId" id="userId" class="form-control" placeholder="TsuTsu ID" type="text">
+                      <input name="userId" id="userId" class="form-control" placeholder="TsuTsu ID (case insensitive)" type="text" required>
                 </div> <!-- form-group// -->
                 <div class="form-group input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                  </div>
-                    <input name="email" id="email" class="form-control" placeholder="Email address" type="email">
+                    <input name="email" id="email" class="form-control" placeholder="Email address" type="email" required>
                 </div> <!-- form-group// -->
                 <div class="form-group input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                 </div>
-                    <input name="password" id="password" class="form-control" placeholder="Create password" type="password">
+                    <input name="password" id="password" class="form-control" placeholder="Create password" type="password" required>
                 </div> <!-- form-group// -->                                
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block" id="submit"> Create Account  </button>
+                    <button type="submit" class="btn btn-orange btn-block" id="submit"> GET STARTED !  </button>
                 </div> <!-- form-group// -->      
-                <p class="text-center">Have an account? <a href="/user/signin">Log In</a> </p>                                                                 
+                <p class="text-center">Have an account? <a href="/user/signin" class="text-orange">Log In</a> </p> 
+                <div class="my-3 text-center">
+                  <span id="error" class="error text-danger"></span>  
+                </div>                                                                
             </form>
             </article>
           </div> 
@@ -123,21 +121,48 @@
             try {
             e.preventDefault();
             const userName = document.getElementById("userName").value;
-            const userId = document.getElementById("userId").value;
+            let userId = document.getElementById("userId").value;
+            userId = userId.toLowerCase();
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-            console.log(userName, userId, email, password);
+            // console.log(userName, userId, email, password);
+            if (userName.length < 4){
+              document.getElementById("error").innerText = "User name has to be longer than 4 characters";
+              return
+            }
+            if (userId.length <4){
+              document.getElementById("error").innerText = "TsuTsu ID has to be longer than 4 characters";
+              return
+            }
+            if (email.length ==0 ){
+              document.getElementById("error").innerText = "Email cannot be empty";
+              return
+            }
+            if (password.length <4){
+              document.getElementById("error").innerText = "Password have to be longer than 4 characters";
+              return
+            }
+            if (userId.indexOf(" ")>=0){
+              document.getElementById("error").innerText = "No whitespace is allowed in TsuTsu ID";
+              return
+            }
+            if (userId.indexOf("@")>0){
+              document.getElementById("error").innerText = "Please provide valid email";
+              return
+            }
+            console.log("here");
             const response = await axios.post("/api/1.0/user/signup", {
               userName: userName,
               userId: userId,
               email: email,
               password: password
             });
-            //FIXME:will window.location.origin affected by proxy? 
+            console.log("here here");
             window.location = `${window.location.origin}/user/${response.data.user.userId}/recipes`
             localStorage.setItem("user", JSON.stringify(response.data));            
             } catch (error) {
               console.log(error);
+              console.log(error.response);
             }
           })
         </script>

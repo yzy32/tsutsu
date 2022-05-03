@@ -69,7 +69,7 @@ $(async function () {
     );
     let tagList = $("#tagList");
     recipe.tags.map((t) => {
-      let tag = `<li><a href="/recipe/search?q=${t}" class="text-orange">&num;&nbsp;${t}</a></li>`;
+      let tag = `<li><a href="/recipe/search?q=${t}" class="text-brown">&num;&nbsp;${t}</a></li>`;
       tagList.append(tag);
     });
     // ingredients

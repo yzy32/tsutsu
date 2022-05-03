@@ -455,8 +455,7 @@ h6 {
   background-color: #ecebe9 !important;
   color: #4a4a4a !important;
 }
-/* .btn-tsutsu:active, */
-/* .btn-tsutsu:focus,  */
+
 .btn-tsutsu:hover {
   background-color: #4a4a4a !important;
   color: #ecebe9 !important;
@@ -471,30 +470,75 @@ h6 {
   color: #4a4a4a !important;
 }
 
+.btn-darkgrey {
+  background-color: #4a4a4a !important;
+  color: #ecebe9 !important;
+}
+
 .btn-orange {
-  background-color: #f0a500 !important;
+  background-color: #f6ae2d !important;
+  color: white !important;
+}
+
+.btn-orange-click {
+  background-color: #f6ae2d !important;
+  color: white !important;
+}
+
+.btn-orange-click:hover {
+  background-color: #ecebe9 !important;
+  color: #4a4a4a !important;
+}
+
+.btn-lightgrey-click {
+  background-color: #ecebe9 !important;
+  color: #4a4a4a !important;
+}
+
+.btn-lightgrey-click:hover {
+  background-color: #f6ae2d !important;
   color: white !important;
 }
 
 /* ----------theme pagination---------- */
-.page-item.acitve .page-link {
-  color: #ecebe9 !important;
-  background-color: #4a4a4a !important;
-  border-color: #4a4a4a !important;
+.page-link {
+  color: #4a4a4a !important ;
 }
 
-.page-link {
+.page-item.active .page-link {
+  background-color: #ecebe9 !important;
+  border-color: #ecebe9 !important;
   color: #4a4a4a !important;
-  /* background-color: #ecebe9 !important; */
 }
 
 /* ----------theme card---------- */
 .card-warning.card-outline {
-  border-top: 5px solid #f0a500 !important;
+  border-top: 5px solid #ee9b00 !important;
 }
 
 /* ----------theme nav---------- */
-.nav-pills .nav-link.active {
-  background-color: #4a4a4a !important;
-  color: #ecebe9 !important;
+.nav-pills .nav-link:hover {
+  color: #f6ae2d !important;
 }
+.nav-pills .nav-link.active {
+  background-color: #f6ae2d !important;
+  color: white !important;
+}
+
+/* theme text */
+.text-orange {
+  color: #f6ae2d !important;
+}
+.text-darkgrey {
+  color: #4a4a4a !important;
+}
+
+.text-brown {
+  color: #7f5539 !important;
+}
+
+.text-darkblue {
+  color: #33658a !important;
+}
+
+/* theme nav */
