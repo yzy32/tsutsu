@@ -223,7 +223,10 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
         .lean();
       follower.isFollowing = false;
       // login user
-      if (userId && userFollowings.following.includes(follower.userId)) {
+      if (
+        userFollowings &&
+        userFollowings.following.includes(follower.userId)
+      ) {
         follower.isFollowing = true;
       }
       result.push(follower);
@@ -275,7 +278,7 @@ const getFollowing = async (userId, authorId, page, followPageSize) => {
       if (userId == authorId) {
         following.isFollowing = true;
       } else if (
-        userId &&
+        userFollowings &&
         userFollowings.following.includes(following.userId)
       ) {
         following.isFollowing = true;
@@ -311,6 +314,99 @@ const updateUserProfile = async (userId, update) => {
   }
 };
 
+const searchFollower = async (authorId, userId, searchId) => {
+  try {
+    // get author's follower
+    const followerResult = await User.aggregate([
+      { $match: { userId: authorId } },
+      {
+        $project: {
+          search: {
+            $in: [searchId, "$follower"],
+          },
+        },
+      },
+    ]);
+    // get signin user's following list
+    let userFollowings = null;
+    if (userId) {
+      userFollowings = await User.findOne({ userId: userId })
+        .select({ following: 1, _id: 0 })
+        .lean();
+      userFollowings.following.push(userId);
+    }
+    let result = [];
+    if (followerResult[0].search == true) {
+      let follower = await User.findOne({
+        userId: searchId,
+      })
+        .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
+        .lean();
+      follower.isFollowing = false;
+      // login user
+      if (
+        userFollowings &&
+        userFollowings.following.includes(follower.userId)
+      ) {
+        follower.isFollowing = true;
+      }
+      result.push(follower);
+    }
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const searchFollowing = async (authorId, userId, searchId) => {
+  //TODO:
+  try {
+    // get author's follower
+    const followingResult = await User.aggregate([
+      { $match: { userId: authorId } },
+      {
+        $project: {
+          search: {
+            $in: [searchId, "$following"],
+          },
+        },
+      },
+    ]);
+    // get signin user's following list
+    let userFollowings = null;
+    if (userId) {
+      userFollowings = await User.findOne({ userId: userId })
+        .select({ following: 1, _id: 0 })
+        .lean();
+      userFollowings.following.push(userId);
+    }
+    let result = [];
+    if (followingResult[0].search == true) {
+      let follower = await User.findOne({
+        userId: searchId,
+      })
+        .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
+        .lean();
+      follower.isFollowing = false;
+      // login user
+      if (userId == authorId) {
+        following.isFollowing = true;
+      } else if (
+        userFollowings &&
+        userFollowings.following.includes(follower.userId)
+      ) {
+        follower.isFollowing = true;
+      }
+      result.push(follower);
+    }
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserInfo,
@@ -324,4 +420,6 @@ module.exports = {
   getFollower,
   getFollowing,
   updateUserProfile,
+  searchFollower,
+  searchFollowing,
 };

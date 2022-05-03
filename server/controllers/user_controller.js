@@ -9,6 +9,8 @@ const {
   getFollower,
   getFollowing,
   updateUserProfile,
+  searchFollower,
+  searchFollowing,
 } = require("../models/user_model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -111,6 +113,10 @@ const getProfile = async (req, res) => {
 };
 
 const getUserFollower = async (req, res) => {
+  if (!req.params.id) {
+    console.log("get follower need to has authorId");
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
   const result = await getFollower(userId, req.params.id, page, followPageSize);
@@ -119,6 +125,10 @@ const getUserFollower = async (req, res) => {
 };
 
 const getUserFollowing = async (req, res) => {
+  if (!req.params.id) {
+    console.log("get following need to has authorId");
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
   const result = await getFollowing(
@@ -143,16 +153,42 @@ const updateProfile = async (req, res) => {
   if (Object.keys(update).length === 0) {
     return res.status(400).json({ error: "User must have input" });
   }
-  console.log(update);
+  // console.log(update);
   const result = await updateUserProfile(userId, update);
   let user = {
     userId: userId,
     userImage: result.userImage,
     introduction: result.introduction,
   };
-  console.log(user);
-  //TODO: return image url and intro text to rerender
+  // console.log(user);
   res.status(200).json({ update: user });
+  return;
+};
+
+const searchUserFollower = async (req, res) => {
+  if (!req.params.id) {
+    console.log("search follower need to has authorId");
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  let authorId = req.params.id;
+  let userId = req.user ? req.user.userId : null;
+  let searchId = req.query.q;
+  const result = await searchFollower(authorId, userId, searchId);
+  res.status(200).json({ follow: result });
+  return;
+};
+
+const searchUserFollowing = async (req, res) => {
+  //TODO:
+  if (!req.params.id) {
+    console.log("search follower need to has authorId");
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  let authorId = req.params.id;
+  let userId = req.user ? req.user.userId : null;
+  let searchId = req.query.q;
+  const result = await searchFollowing(authorId, userId, searchId);
+  res.status(200).json({ follow: result });
   return;
 };
 
@@ -167,4 +203,6 @@ module.exports = {
   getUserFollower,
   getUserFollowing,
   updateProfile,
+  searchUserFollower,
+  searchUserFollowing,
 };

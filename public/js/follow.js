@@ -185,6 +185,26 @@ $(async function () {
         }
       }
     });
+    //TODO: search author's recipe
+    $("#searchId").on("click", async (e) => {
+      // refresh url in case there is page number in the url
+      let newUrl = new URL(
+        `${window.location.origin}${window.location.pathname}`
+      );
+      window.history.pushState({}, "", newUrl);
+      let searchId = $("#searchInput").val();
+      console.log(searchId);
+      let page = 1;
+      await renderFollow(
+        profileType,
+        authorId,
+        page,
+        jwtToken,
+        pageSize,
+        author.follower.length,
+        searchId
+      );
+    });
   } catch (error) {
     console.log(error);
   }
@@ -196,20 +216,34 @@ async function renderFollow(
   page,
   jwtToken,
   pageSize,
-  totalCount
+  totalCount,
+  searchId
 ) {
   try {
     if (!page) {
       page = 1;
     }
-    const followResponse = await axios.get(
-      `/api/1.0/user/${authorId}/${profileType}?page=${page}`,
-      {
-        headers: {
-          Authorization: "Bearer " + jwtToken,
-        },
-      }
-    );
+    let followResponse = null;
+    if (searchId) {
+      followResponse = await axios.get(
+        `/api/1.0/user/${authorId}/search/${profileType}?q=${searchId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + jwtToken,
+          },
+        }
+      );
+    } else {
+      followResponse = await axios.get(
+        `/api/1.0/user/${authorId}/${profileType}?page=${page}`,
+        {
+          headers: {
+            Authorization: "Bearer " + jwtToken,
+          },
+        }
+      );
+    }
+
     const follow = followResponse.data.follow;
     console.log("follow: ", follow);
     // render follow lsit

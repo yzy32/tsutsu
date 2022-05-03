@@ -45,7 +45,7 @@ app.listen(process.env.PORT, () => {
 
 // Error handling
 app.use(function (err, req, res, next) {
-  console.log(err);
+  // console.log(err);
   let msg = err.message || "Internal Server Error";
   res.status(err.status || 500).send({ error: msg });
 });

@@ -11,6 +11,8 @@ const {
   getUserFollower,
   getUserFollowing,
   updateProfile,
+  searchUserFollower,
+  searchUserFollowing,
 } = require("../../controllers/user_controller");
 const {
   getUserRecipe,
@@ -52,6 +54,18 @@ router.get(
   "/user/:id/search/favorites",
   recipeAuth,
   errorHandler(searchUserFavorite)
+);
+
+router.get(
+  "/user/:id/search/followers",
+  recipeAuth,
+  errorHandler(searchUserFollower)
+);
+
+router.get(
+  "/user/:id/search/followings",
+  recipeAuth,
+  errorHandler(searchUserFollowing)
 );
 
 module.exports = router;
