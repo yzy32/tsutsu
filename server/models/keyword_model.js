@@ -3,7 +3,7 @@ const { Keyword } = require("../../utils/mongo");
 const storeKeywords = async (documents) => {
   try {
     const result = await Keyword.insertMany(documents);
-    console.log("insert keyword result: ", result);
+    // console.log("insert keyword result: ", result);
   } catch (error) {
     console.log(error);
     return error;

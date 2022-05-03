@@ -140,7 +140,7 @@ const searchRecipe = async (
     }
     const result = await es.search(searchInput);
     // console.log(searchInput);
-    console.log(result.hits.hits);
+    // console.log(result.hits.hits);
     // console.log(result.hits.total.value);
     return result.hits;
   } catch (error) {

@@ -516,6 +516,11 @@ h6 {
   border-top: 5px solid #ee9b00 !important;
 }
 
+/* callout */
+.callout.callout-warning {
+  border-left-color: #ee9b00 !important;
+}
+
 /* ----------theme nav---------- */
 .nav-pills .nav-link:hover {
   color: #f6ae2d !important;

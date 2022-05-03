@@ -25,8 +25,8 @@ const userPageSize = 10; //need to be the same as user contoller's
 const desiredReviewQty = 5;
 
 const getSearchRecipe = async (req, res) => {
-  // console.log("user in search: ", req.user);
-  // console.log("login status in search: ", req.loginStatus);
+  console.log("user in search: ", req.user);
+  console.log("login status in search: ", req.loginStatus);
   try {
     let {
       q,
@@ -44,6 +44,7 @@ const getSearchRecipe = async (req, res) => {
     // ingrExcl = arrayToString(ingrExcl);
     // otherKeyword = arrayToString(otherKeyword);
     console.log(
+      "search requirement: ",
       q,
       ingrIncl,
       ingrExcl,
@@ -88,7 +89,7 @@ const getSearchRecipe = async (req, res) => {
       recipe = {
         recipeId: result.hits[i]._id,
         recipeName: result.hits[i]._source.recipeName,
-        recipeImage: null,
+        recipeImage: result.hits[i]._source.recipeImage || null,
         authorId: result.hits[i]._source.authorId,
         author: result.hits[i]._source.author,
         cookTime: result.hits[i]._source.cookTime,

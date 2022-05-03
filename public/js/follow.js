@@ -42,6 +42,7 @@ $(async function () {
       $("#createRecipe").addClass("d-none");
       $("#settings").addClass("d-none");
     }
+    let followerNew = author.follower.length; //for counting user add new follower
     $("#userName").text(author.userName);
     $("#user-recipe").attr("href", `/user/${author.userId}/recipes`);
     $("#userImage").attr("src", author.userImage);
@@ -146,6 +147,9 @@ $(async function () {
           });
           $(e.target).addClass("d-none");
           $(e.target).next().removeClass("d-none");
+          //TODO:
+          followerNew += 1;
+          $("#follower").text(`${followerNew} follower`);
           console.log("follow result: ", response.data);
         }
       } catch (error) {
@@ -175,6 +179,11 @@ $(async function () {
           });
           $(e.target).addClass("d-none");
           $(e.target).prev().removeClass("d-none");
+          if (unfollowingId == authorId) {
+            //TODO:
+            followerNew -= 1;
+            $("#follower").text(`${followerNew} follower`);
+          }
           console.log("unfollow result: ", response.data);
         }
       } catch (error) {
@@ -252,17 +261,17 @@ async function renderFollow(
     for (let i = 0; i < follow.length; i++) {
       // set follow, unfollow btn basedon isFollowing = true/fasle
       let followBtnGroup = "";
-      let followBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
-      let unFollowBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-outline-secondary btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
-  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-secondary btn-sm mr-2 toastrDefaultWarning "><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
+      let followBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-orange-click btn-sm mr-2 toastrDefaultWarning"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Unfollow</button>`;
+      let unFollowBtn = `<button data-userid="${follow[i].userId}" type="button" class="toFollow btn btn-orange-click btn-sm mr-2 toastrDefaultWarning d-none"><i class="fa-regular fa-bell mr-1"></i> Follow</button>
+  <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning "><i class="fa-regular fa-bell mr-1"></i> Follow</button>`;
       if (follow[i].isFollowing) {
         followBtnGroup += unFollowBtn;
       } else {
         followBtnGroup += followBtn;
       }
       let followHTML = `
-    <div class="col-5 ml-5 callout callout-info my-4 mx-4">
+    <div class="col-5 ml-5 callout callout-warning my-4 mx-4">
       <div class="media p-3">
         <img class="align-self-center mr-3 profile-user-img img-fluid img-circle" src="${follow[i].userImage}" alt="profile image" style="object-fit: cover; height: 100px;">
         <div class="media-body col-10">
