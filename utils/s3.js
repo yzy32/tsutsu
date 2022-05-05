@@ -64,6 +64,8 @@ var uploadProfile = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
+      //FIXME: test time
+      console.log("1.recipte creation in multer: ", new Date());
       // const customFileName = crypto
       //   .randomBytes(18)
       //   .toString("hex")

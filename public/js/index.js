@@ -3,7 +3,7 @@ $(async function () {
     const response = await axios.get("/api/1.0/keyword/trending");
     let keywords = response.data;
     for (let i = 0; i < keywords.length; i++) {
-      $(".keyword").eq(i).text(keywords[i].keyword.toUpperCase());
+      $(".keyword").eq(i).text(`# ${keywords[i].keyword.toUpperCase()}`);
       for (let j = 0; j < keywords[i].recipes.length; j++) {
         let card = `
       <div class="card" style="height: 300px;">
