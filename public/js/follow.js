@@ -83,8 +83,8 @@ $(async function () {
         author.following.length
       );
     } else {
-      //TODO:
       console.log("redirect to 404");
+      window.location("/html/redirect/404.html");
     }
 
     // click on pagination to new page
@@ -122,8 +122,8 @@ $(async function () {
             author.following.length
           );
         } else {
-          //TODO:
           console.log("redirect to 404");
+          window.location("/html/redirect/404.html");
         }
       } catch (error) {
         console.log(error);

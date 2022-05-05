@@ -21,7 +21,7 @@ const searchIngredient = async (keyword) => {
     return result.hits.total.value;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -145,7 +145,7 @@ const searchRecipe = async (
     return result.hits;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -155,7 +155,7 @@ const getRecipeById = async (id) => {
     return result;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -172,7 +172,7 @@ const getReviewByRecipeId = async (id, skip, desiredQty) => {
     return result;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -190,7 +190,7 @@ const insertReview = async (recipeReview) => {
     return true;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 
@@ -210,7 +210,7 @@ const getRecipeByUserId = async (userId, page, userPageSize) => {
     return { total, result };
   } catch (error) {
     console.log(error);
-    return { error };
+    throw error;
   }
 };
 
@@ -230,7 +230,7 @@ const getPublicRecipeByUserId = async (authorId, page, userPageSize) => {
     return { total, result };
   } catch (error) {
     console.log(error);
-    return { error };
+    throw error;
   }
 };
 
@@ -272,7 +272,7 @@ const getFavorite = async (authorId, page, userPageSize) => {
     return { total, result };
   } catch (error) {
     console.log(error);
-    return { error };
+    throw error;
   }
 };
 

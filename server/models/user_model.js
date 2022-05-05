@@ -67,7 +67,7 @@ const isFavorite = async (userId, recipeId) => {
     return result;
   } catch (error) {
     console.log(error);
-    return error;
+    throw error;
   }
 };
 

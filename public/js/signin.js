@@ -38,11 +38,11 @@ document.getElementById("submit").addEventListener("click", async (e) => {
     localStorage.setItem("user", JSON.stringify(response.data));
   } catch (error) {
     console.log(error);
-    if (error.response.status == 403) {
-      document.getElementById("error").innerText =
-        "Wrong sign in info. Please try again";
-    } else if (error.response.status == 400) {
-      document.getElementById("error").innerText = "All fields are required";
+    if (error.response && error.response.status !== 500) {
+      document.getElementById("error").innerText = `${error.response.error}`;
+    } else if (error.response && error.response.status == 500) {
+      //TODO: redirect to 500 page
+      window.location("/html/redirect/500.html");
     }
   }
 });

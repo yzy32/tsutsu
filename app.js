@@ -39,9 +39,9 @@ app.listen(process.env.PORT, () => {
 });
 
 // Page not found
-// app.use(function (req, res, next) {
-//   res.status(404).sendFile(__dirname + "/public/404.html");
-// });
+app.use(function (req, res, next) {
+  res.status(404).sendFile(__dirname + "/public/html/redirect/404.html");
+});
 
 // Error handling
 app.use(function (err, req, res, next) {

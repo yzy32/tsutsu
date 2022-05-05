@@ -310,6 +310,9 @@ $(async function () {
     });
   } catch (error) {
     console.log(error);
+    if (error.response && error.status == 500) {
+      window.location("/html/redirect/500.html");
+    }
   }
 });
 

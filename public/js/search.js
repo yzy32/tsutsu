@@ -196,6 +196,9 @@ async function search() {
     //   document.location = redirectUrl;
     // }
     console.log(error);
+    if (error.response && error.status == 500) {
+      window.location("/html/redirect/500.html");
+    }
   }
 }
 

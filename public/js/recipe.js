@@ -107,8 +107,8 @@ $(async function () {
     // review pagination
     let currentPage = 1;
     let pageSize = 5;
-    let totalPage =
-      recipe.reviewCount == 0 ? 0 : Math.ceil(recipe.reviewCount / pageSize);
+    // let totalPage =
+    //   recipe.reviewCount == 0 ? 0 : Math.ceil(recipe.reviewCount / pageSize);
     renderReviewPagination(currentPage, pageSize, recipe.reviewCount);
     // ------- end of recipe page -----------
 
@@ -310,6 +310,7 @@ $(async function () {
         $("#reviewCount").append(
           `<i class="fa-regular fa-comment fa-lg mr-3"></i>${recipe.reviewCount} Reviews`
         );
+        renderReviewPagination(currentPage, pageSize, recipe.reviewCount);
       } catch (error) {
         console.log(error);
       }
@@ -320,6 +321,11 @@ $(async function () {
     });
   } catch (error) {
     console.log(error);
+    if (error.response && error.status == 403) {
+      window.location("/html/redirect/403.html");
+    } else if (error.response && error.status == 500) {
+      window.location("/html/redirect/500.html");
+    }
   }
 });
 
@@ -328,6 +334,8 @@ function renderReviewPagination(currentPage, pageSize, reviewCount) {
   // let pageSize = 5;
   // let totalPage = Math.ceil(recipe.reviewCount / pageSize);
   let totalPage = reviewCount == 0 ? 0 : Math.ceil(reviewCount / pageSize);
+  console.log("render review, review count: ", reviewCount);
+  console.log("render review, totalPage: ", totalPage);
   let pageGroup = $("#pageGroup");
   let toFirstPage = $("#to-first");
   pageGroup.children().slice(1).remove(); //empty all pagination except to first page
@@ -338,7 +346,6 @@ function renderReviewPagination(currentPage, pageSize, reviewCount) {
     </a>
   </li>
   `;
-  console.log("total page: ", totalPage);
   if (totalPage == 0 || isNaN(totalPage)) {
     $(toFirstPage).addClass("d-none");
     return;

@@ -62,18 +62,6 @@ const recipeSchema = new mongoose.Schema({
     ],
     required: true,
   },
-  // recipeReviews: {
-  //   type: [
-  //     {
-  //       userName: { type: String, required: true },
-  //       userId: { type: mongoose.SchemaTypes.ObjectId, required: true },
-  //       review: { type: String, required: true },
-  //       timeCreated: { type: Date, default: Date.now },
-  //       _id: false,
-  //     },
-  //   ],
-  //   default: [],
-  // },
   reviewCount: { type: Number, default: 0 },
   recipeName: { type: String, required: true },
   description: { type: String, default: null },

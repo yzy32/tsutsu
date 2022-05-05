@@ -25,103 +25,90 @@ const userPageSize = 10; //need to be the same as user contoller's
 const desiredReviewQty = 5;
 
 const getSearchRecipe = async (req, res) => {
-  console.log("user in search: ", req.user);
-  console.log("login status in search: ", req.loginStatus);
-  try {
-    let {
-      q,
-      ingrIncl,
-      ingrExcl,
-      otherKeyword,
-      cookTime,
-      sort,
-      myrecipe,
-      page,
-    } = req.query;
-    page = parseInt(page) || 1;
-    cookTime = parseInt(cookTime);
-    // ingrIncl = arrayToString(ingrIncl);
-    // ingrExcl = arrayToString(ingrExcl);
-    // otherKeyword = arrayToString(otherKeyword);
-    console.log(
-      "search requirement: ",
-      q,
-      ingrIncl,
-      ingrExcl,
-      otherKeyword,
-      cookTime,
-      sort,
-      myrecipe,
-      page
-    );
-    let result;
-    if (q) {
-      console.log("home page");
-      let qArray = q.split(" ");
-      const keywords = await categorizeKeywords(qArray);
-      console.log("cagegorize keywords: ", keywords);
-      ingrIncl = keywords.ingrIncl;
-      otherKeyword = keywords.otherKeywords;
-      ingrExcl = "";
-    }
-
-    if (myrecipe && req.loginStatus) {
-      myrecipe = req.user.userId;
-    }
-    result = await searchRecipe(
-      ingrIncl,
-      ingrExcl,
-      otherKeyword,
-      cookTime,
-      sort,
-      myrecipe,
-      page,
-      pageSize
-    );
-    // console.log(result);
-    let recipes = [];
-    for (let i = 0; i < result.hits.length; i++) {
-      if (!result.hits[i].highlight) {
-        result.hits[i].highlight = {
-          ingredients: [],
-        };
-      }
-      recipe = {
-        recipeId: result.hits[i]._id,
-        recipeName: result.hits[i]._source.recipeName,
-        recipeImage: result.hits[i]._source.recipeImage || null,
-        authorId: result.hits[i]._source.authorId,
-        author: result.hits[i]._source.author,
-        cookTime: result.hits[i]._source.cookTime,
-        favoriteCount: result.hits[i]._source.favoriteCount || 0,
-        ingredients: result.hits[i]._source.ingredients,
-        tags: result.hits[i]._source.tags,
-        ingrMatchedCount: result.hits[i].highlight.ingredients.length,
-      };
-
-      recipes.push(recipe);
-    }
-    //record keyword (eliminate await)
-    keywordsToMongo(req);
-
-    //pagination
-    let totalPage = Math.ceil(result.total.value / pageSize);
-    res.status(200).json({
-      recipes: recipes,
-      recipeCount: result.total.value,
-      filter: {
-        ingrIncl: ingrIncl,
-        ingrExcl: ingrExcl,
-        otherKeyword: otherKeyword,
-        cookTime: cookTime,
-      },
-      totalPage: totalPage,
-      loginStatus: req.loginStatus,
-    });
-  } catch (error) {
-    console.log(error);
-    return error;
+  // console.log("user in search: ", req.user);
+  // console.log("login status in search: ", req.loginStatus);
+  let { q, ingrIncl, ingrExcl, otherKeyword, cookTime, sort, myrecipe, page } =
+    req.query;
+  page = parseInt(page) || 1;
+  cookTime = parseInt(cookTime);
+  // ingrIncl = arrayToString(ingrIncl);
+  // ingrExcl = arrayToString(ingrExcl);
+  // otherKeyword = arrayToString(otherKeyword);
+  console.log(
+    "search requirement: ",
+    q,
+    ingrIncl,
+    ingrExcl,
+    otherKeyword,
+    cookTime,
+    sort,
+    myrecipe,
+    page
+  );
+  let result;
+  if (q) {
+    console.log("home page");
+    let qArray = q.split(" ");
+    const keywords = await categorizeKeywords(qArray);
+    console.log("cagegorize keywords: ", keywords);
+    ingrIncl = keywords.ingrIncl;
+    otherKeyword = keywords.otherKeywords;
+    ingrExcl = "";
   }
+
+  if (myrecipe && req.loginStatus) {
+    myrecipe = req.user.userId;
+  }
+  result = await searchRecipe(
+    ingrIncl,
+    ingrExcl,
+    otherKeyword,
+    cookTime,
+    sort,
+    myrecipe,
+    page,
+    pageSize
+  );
+  // console.log(result);
+  let recipes = [];
+  for (let i = 0; i < result.hits.length; i++) {
+    if (!result.hits[i].highlight) {
+      result.hits[i].highlight = {
+        ingredients: [],
+      };
+    }
+    recipe = {
+      recipeId: result.hits[i]._id,
+      recipeName: result.hits[i]._source.recipeName,
+      recipeImage: result.hits[i]._source.recipeImage || null,
+      authorId: result.hits[i]._source.authorId,
+      author: result.hits[i]._source.author,
+      cookTime: result.hits[i]._source.cookTime,
+      favoriteCount: result.hits[i]._source.favoriteCount || 0,
+      ingredients: result.hits[i]._source.ingredients,
+      tags: result.hits[i]._source.tags,
+      ingrMatchedCount: result.hits[i].highlight.ingredients.length,
+    };
+
+    recipes.push(recipe);
+  }
+  //record keyword (eliminate await)
+  keywordsToMongo(req);
+
+  //pagination
+  let totalPage = Math.ceil(result.total.value / pageSize);
+  res.status(200).json({
+    recipes: recipes,
+    recipeCount: result.total.value,
+    filter: {
+      ingrIncl: ingrIncl,
+      ingrExcl: ingrExcl,
+      otherKeyword: otherKeyword,
+      cookTime: cookTime,
+    },
+    totalPage: totalPage,
+    loginStatus: req.loginStatus,
+  });
 };
 
 const categorizeKeywords = async (keywords) => {

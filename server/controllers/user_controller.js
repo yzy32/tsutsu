@@ -40,17 +40,23 @@ const signUp = async (req, res) => {
   }
   delete result.user.password;
   delete result.error;
-  console.log("user sign up: ", result);
+  console.log("user sign up result: ", result);
   res.status(200).send(result);
   return;
 };
 
 const signIn = async (req, res) => {
   const { type, email, password } = req.body;
-  console.log("User signin", type, email, password);
+  console.log("User signin: ", type, email, password);
 
   //get password from mongo based on type and email (model)
   const result = await getUserInfo(type, email);
+
+  if (!result) {
+    res.status(401).send({
+      error: "This email hasn't been registered",
+    });
+  }
   //compare password and hased password
   const decoded = await bcrypt.compare(password, result.password);
   let user;
@@ -77,7 +83,7 @@ const signIn = async (req, res) => {
     process.env.TOKEN_SECRET
   );
   const accessExpired = process.env.TOKEN_EXPIRE;
-  console.log("user sign in: ", result);
+  console.log("user sign in success result: ", result);
   res.status(200).send({
     user: user,
     accessToken: accessToken,
@@ -189,7 +195,6 @@ const searchUserFollower = async (req, res) => {
 };
 
 const searchUserFollowing = async (req, res) => {
-  //TODO:
   if (!req.params.id) {
     console.log("search follower need to has authorId");
     return res.status(500).json({ error: "Internal Server Error" });
