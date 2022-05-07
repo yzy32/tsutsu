@@ -8,7 +8,11 @@ router.get("/user/signup", (req, res) => {
 router.get("/user/signin", (req, res) => {
   res.sendFile(path.join(__dirname, "../../../public/html/user/signin.html"));
 });
-router.get("/user/recipe/edit", (req, res) => {
+
+router.get("/user/recipe/edit", auth, (req, res) => {
+  if (!req.user) {
+    return res.redirect("/user/signin");
+  }
   res.sendFile(
     path.join(__dirname, "../../../public/html/user/user-recipe-build.html")
   );

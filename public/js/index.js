@@ -21,7 +21,7 @@ $(async function () {
       }
     }
     $(".keyword").on("click", (e) => {
-      let keyword = $(e.target).text();
+      let keyword = $(e.target).text().split(" ")[1];
       window.location = `recipe/search?q=${keyword}`;
     });
   } catch (error) {

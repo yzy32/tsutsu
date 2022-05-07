@@ -97,9 +97,12 @@ $(async function () {
       // $("#createRecipe-section").addClass("active");
     }
     // render setting form
-    $("#form-email").val(author.email);
-    $("#form-userId").val(author.userId);
-    $("#form-userName").val(author.userName);
+    if (userId == authorId) {
+      $("#setting-section").removeClass("d-none");
+      $("#form-email").val(author.email);
+      $("#form-userId").val(author.userId);
+      $("#form-userName").val(author.userName);
+    }
 
     // render recipe and favorites
     let currentPage = new URLSearchParams(window.location.search).get("page");

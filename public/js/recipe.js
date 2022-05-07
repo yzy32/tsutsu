@@ -321,10 +321,10 @@ $(async function () {
     });
   } catch (error) {
     console.log(error);
-    if (error.response && error.status == 403) {
-      window.location("/html/redirect/403.html");
-    } else if (error.response && error.status == 500) {
-      window.location("/html/redirect/500.html");
+    if (error.response && error.response.status == 403) {
+      window.location = "/html/redirect/403.html";
+    } else if (error.response && error.response.status == 500) {
+      window.location = "/html/redirect/500.html";
     }
   }
 });
