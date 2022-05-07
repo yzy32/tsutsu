@@ -1,4 +1,26 @@
 let tagListValue = [];
+validate();
+async function validate() {
+  try {
+    let user = JSON.parse(localStorage.getItem("user"));
+    let jwtToken = null;
+    if (user) {
+      jwtToken = user.accessToken;
+    } else {
+      window.location = "/user/signin";
+    }
+    await axios.get("/user/recipe/edit", {
+      headers: {
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status !== 500) {
+      document.location = error.response.data.redirectUrl;
+    }
+  }
+}
 
 $(function () {
   $("#recipe-form").on("keydown", (e) => {
@@ -10,10 +32,12 @@ $(function () {
   $("#submit").on("click", async (e) => {
     try {
       e.preventDefault();
-      console.log("click");
       // const recipe = $("#recipe-form").serializeArray();
       const recipe = $("#recipe-form");
-      recipe[0].reportValidity();
+      if (!recipe[0].checkValidity()) {
+        recipe[0].reportValidity();
+        return;
+      }
       const recipeForm = new FormData(recipe[0]);
       const user = JSON.parse(localStorage.getItem("user"));
       let jwtToken = null;
@@ -88,9 +112,10 @@ $(function () {
   });
   //add new step input
   $(document).on("click", "#addStep", (e) => {
-    $("#removeStep").removeClass("d-none");
     let stepsSection = $("#recipeSteps-group-section");
-    let stepNum = stepsSection.children().length + 1;
+    let stepNum = stepsSection.children().length;
+    $("#removeStep").removeClass("d-none");
+    stepNum += 1;
     let newStep = `
     <div class="input-group mb-3 recipeSteps-group">
       <div class="mb-1">
@@ -110,6 +135,8 @@ $(function () {
     </div>
     `;
     stepsSection.append(newStep);
+    bsCustomFileInput.destroy();
+    bsCustomFileInput.init();
   });
   //remove ingredients
   $(document).on("click", ".remove", (e) => {
@@ -120,10 +147,11 @@ $(function () {
   $(document).on("click", "#removeStep", (e) => {
     e.preventDefault();
     let stepsSection = $("#recipeSteps-group-section");
+    $(e.target).parent().prev().children().last().remove();
     if (stepsSection.children().length <= 2) {
+      $("#removeStep").addClass("d-none");
       return;
     }
-    $(e.target).parent().prev().children().last().remove();
   });
 
   //create Tag

@@ -7,6 +7,7 @@ $(document).ready(function () {
   bsCustomFileInput.init();
 });
 // $(document).on("click", "#addStep", (e) => {
+//   bsCustomFileInput.destroy();
 //   bsCustomFileInput.init();
 // });
 !(function (e, t) {
