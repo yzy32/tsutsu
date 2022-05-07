@@ -244,7 +244,11 @@ const getFavorite = async (authorId, page, userPageSize) => {
         $project: {
           favoriteCount: { $size: "$userFavorites" },
           favoriteId: {
-            $slice: ["$userFavorites", userPageSize * (page - 1), userPageSize],
+            $slice: [
+              { $reverseArray: "$userFavorites" },
+              userPageSize * (page - 1),
+              userPageSize,
+            ],
           },
         },
       },
