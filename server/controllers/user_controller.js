@@ -47,7 +47,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const { type, email, password } = req.body;
-  console.log("User signin: ", type, email, password);
+  console.log("User try to signin: ", type, email, password);
 
   //get password from mongo based on type and email (model)
   const result = await getUserInfo(type, email);
@@ -56,6 +56,7 @@ const signIn = async (req, res) => {
     res.status(401).send({
       error: "This email hasn't been registered",
     });
+    return;
   }
   //compare password and hased password
   const decoded = await bcrypt.compare(password, result.password);

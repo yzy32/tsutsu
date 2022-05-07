@@ -39,7 +39,9 @@ document.getElementById("submit").addEventListener("click", async (e) => {
   } catch (error) {
     console.log(error);
     if (error.response && error.response.status !== 500) {
-      document.getElementById("error").innerText = `${error.response.error}`;
+      document.getElementById(
+        "error"
+      ).innerText = `${error.response.data.error}`;
     } else if (error.response && error.response.status == 500) {
       //TODO: redirect to 500 page
       window.location("/html/redirect/500.html");
