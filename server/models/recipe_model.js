@@ -331,7 +331,7 @@ const searchMongoRecipe = async (
       },
       { $group: { _id: null, count: { $count: {} } } },
     ]);
-    total = total[0].count;
+    total = total[0] ? total[0].count : 0;
     const result = await Recipe.aggregate([
       {
         $match: {

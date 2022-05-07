@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="../../css/nav.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <title>TsuTsu | User - Recipe</title>
+    <title>TsuTsu | User - Recipe </title>
   </head>
   <body>
       <!-- Navbar section -->
@@ -131,9 +131,8 @@
             <div class="card">
               <div class="card-header p-2 justify-content-center">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a id="myrecipes" class="nav-link" href="#recipe-section" data-toggle="tab">My Recipes</a></li>
-                  <li class="nav-item"><a id="myfavorites" class="nav-link" href="#favorite-section" data-toggle="tab">My Favorites</a></li>
-                  <!-- <li class="nav-item"><a id="createRecipe" class="nav-link" href="#createRecipe-section" data-toggle="tab"><i class="fa-solid fa-plus fa-xs mr-1"></i>Create Recipe</a></li> -->
+                  <li class="nav-item"><a id="myrecipes" class="nav-link" href="#recipe-section" data-toggle="tab">Recipes</a></li>
+                  <li class="nav-item"><a id="myfavorites" class="nav-link" href="#favorite-section" data-toggle="tab">Favorites</a></li>
                   <li class="nav-item"><a id="settings" class="nav-link" href="#setting-section" data-toggle="tab"><i class="fa-solid fa-gear fa-xs mr-1"></i>Settings</a></li>
                   <li class="nav-item ml-auto mt-1 mr-3">
                     <div class="card-tools">
@@ -300,6 +299,9 @@
                           <div class="d-flex justify-content-center">
                             <button id="update" type="button" class="btn btn-tsutsu-click" style="width: 90%;">Submit</button>
                           </div>
+                          <div class="mt-2 text-center">
+                            <span id="error" class="error text-danger"></span>  
+                          </div>                                                                
                         </form>
                       </article>
                     </div> 

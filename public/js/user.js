@@ -43,14 +43,16 @@ $(async function () {
       // $("#createRecipe").addClass("d-none");
       $("#settings").addClass("d-none");
     }
+    let followerCount = author.follower.length;
     $("#userName").text(author.userName);
     $("#userImage").attr("src", author.userImage);
     $("#following").text(`${author.following.length} following`);
     $("#following-link").attr("href", `/user/${author.userId}/followings`);
-    $("#follower").text(`${author.follower.length} follower`);
+    $("#follower").text(`${followerCount} follower`);
     $("#follower-link").attr("href", `/user/${author.userId}/followers`);
     $("#userId").html(`&commat;${author.userId}`);
     $("#introduction").html(author.introduction);
+    $("#form-introduction").val(author.introduction);
     $("#author-follow").data("userid", author.userId);
     $("#author-unfollow").data("userid", author.userId);
     if (author.isFollowing) {
@@ -66,8 +68,6 @@ $(async function () {
       $("#favorite-section").removeClass("active");
       $("#settings").removeClass("active");
       $("#setting-section").removeClass("active");
-      // $("#createRecipe").removeClass("active");
-      // $("#createRecipe-section").removeClass("active");
     } else if (profileType == "favorites") {
       $("#myrecipes").removeClass("active");
       $("#recipe-section").removeClass("active");
@@ -75,8 +75,6 @@ $(async function () {
       $("#favorite-section").addClass("active");
       $("#settings").removeClass("active");
       $("#setting-section").removeClass("active");
-      // $("#createRecipe").removeClass("active");
-      // $("#createRecipe-section").removeClass("active");
     } else if (profileType == "settings") {
       $("#myrecipes").removeClass("active");
       $("#recipe-section").removeClass("active");
@@ -84,17 +82,6 @@ $(async function () {
       $("#favorite-section").removeClass("active");
       $("#settings").addClass("active");
       $("#setting-section").addClass("active");
-      // $("#createRecipe").removeClass("active");
-      // $("#createRecipe-section").removeClass("active");
-    } else if (profileType == "create") {
-      $("#myrecipes").removeClass("active");
-      $("#recipe-section").removeClass("active");
-      $("#myfavorites").removeClass("active");
-      $("#favorite-section").removeClass("active");
-      $("#settings").removeClass("active");
-      $("#setting-section").removeClass("active");
-      // $("#createRecipe").addClass("active");
-      // $("#createRecipe-section").addClass("active");
     }
     // render setting form
     if (userId == authorId) {
@@ -113,6 +100,7 @@ $(async function () {
     //tab url
     $("#myrecipes").on("click", async (e) => {
       console.log("click on myrecipes");
+      $("#searchInput").val("");
       window.history.pushState({}, "", `/user/${authorId}/recipes`);
       profileType = window.location.pathname.split("/").pop();
       // render recipe
@@ -121,19 +109,16 @@ $(async function () {
     });
     $("#myfavorites").on("click", async (e) => {
       console.log("click on myfavorites");
+      $("#searchInput").val("");
       window.history.pushState({}, "", `/user/${authorId}/favorites`);
       profileType = window.location.pathname.split("/").pop();
       // render favorite
       let currentPage = new URLSearchParams(window.location.search).get("page");
       await renderFavorite(authorId, currentPage, pageSize);
     });
-    $("#createRecipe").on("click", (e) => {
-      console.log("click on create recipe");
-      window.history.pushState({}, "", `/user/${authorId}/recipe/create`);
-      profileType = window.location.pathname.split("/").pop();
-    });
     $("#settings").on("click", (e) => {
       console.log("click on settings");
+      $("#searchInput").val("");
       window.history.pushState({}, "", `/user/${authorId}/settings`);
       profileType = window.location.pathname.split("/").pop();
     });
@@ -226,6 +211,8 @@ $(async function () {
           });
           $(e.target).addClass("d-none");
           $(e.target).next().removeClass("d-none");
+          followerCount += 1;
+          $("#follower").text(`${followerCount} follower`);
           console.log("follow result: ", response.data);
         }
       } catch (error) {
@@ -255,6 +242,8 @@ $(async function () {
           });
           $(e.target).addClass("d-none");
           $(e.target).prev().removeClass("d-none");
+          followerCount -= 1;
+          $("#follower").text(`${followerCount} follower`);
           console.log("unfollow result: ", response.data);
         }
       } catch (error) {
@@ -274,7 +263,7 @@ $(async function () {
           profileForm.get("introduction") == null &&
           profileForm.get("userImage".name) == ""
         ) {
-          toastr.warning("Either intro or image has to have input");
+          $("#error").text("Either intro or image cannot be empty");
           return;
         }
         const response = await axios.put("/api/1.0/user/profile", profileForm, {
@@ -290,7 +279,10 @@ $(async function () {
       } catch (error) {
         console.log(error);
         if (error.response && error.response.status == 400) {
-          toastr.warning("Either intro or image has to have input");
+          // toastr.warning("Either intro or image has to have input");
+          $("#error").text("Either intro or image cannot be empty");
+        } else if (error.response && error.response.status == 500) {
+          $("#error").text("Upload Failed");
         }
       }
     });
