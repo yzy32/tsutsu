@@ -218,9 +218,13 @@ const createRecipe = async (req, res) => {
 
 const getRecipePage = async (req, res) => {
   const isId = mongoose.isValidObjectId(req.params.id);
+  if (!isId) {
+    res.status(404).json({ error: "Recipe Not Found" });
+    return;
+  }
   let recipeResult = await getRecipeById(req.params.id);
   //if not a valid recipeId, return 404
-  if (!recipeResult || !isId) {
+  if (!recipeResult || recipeResult.length == 0) {
     res.status(404).json({ error: "Recipe Not Found" });
     return;
   }

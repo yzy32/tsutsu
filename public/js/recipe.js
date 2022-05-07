@@ -271,6 +271,7 @@ $(async function () {
       } else {
         $("#submitReview").addClass("d-none");
         $("#signin").removeClass("d-none");
+        $("#message-text").prop("disabled", true);
       }
     });
     // post review with jwt token
@@ -321,8 +322,12 @@ $(async function () {
     });
   } catch (error) {
     console.log(error);
+    console.log("here");
     if (error.response && error.response.status == 403) {
+      console.log("here here");
       window.location = "/html/redirect/403.html";
+    } else if (error.response && error.response.status == 404) {
+      window.location = "/html/redirect/404.html";
     } else if (error.response && error.response.status == 500) {
       window.location = "/html/redirect/500.html";
     }
