@@ -42,7 +42,8 @@ $(async function () {
       $("#createRecipe").addClass("d-none");
       $("#settings").addClass("d-none");
     }
-    let followerNew = author.follower.length; //for counting user add new follower
+    let followingNew = author.following.length;
+    let followerNew = author.follower.length;
     $("#userName").text(author.userName);
     $("#user-recipe").attr("href", `/user/${author.userId}/recipes`);
     $("#userImage").attr("src", author.userImage);
@@ -147,6 +148,10 @@ $(async function () {
           });
           $(e.target).addClass("d-none");
           $(e.target).next().removeClass("d-none");
+          if (userId == authorId) {
+            followingNew += 1;
+            $("#following").text(`${followingNew} following`);
+          }
           if (followingId == authorId) {
             followerNew += 1;
             $("#follower").text(`${followerNew} follower`);
@@ -180,6 +185,10 @@ $(async function () {
           });
           $(e.target).addClass("d-none");
           $(e.target).prev().removeClass("d-none");
+          if (userId == authorId) {
+            followingNew -= 1;
+            $("#following").text(`${followingNew} following`);
+          }
           if (unfollowingId == authorId) {
             followerNew -= 1;
             $("#follower").text(`${followerNew} follower`);
