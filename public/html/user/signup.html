@@ -140,35 +140,41 @@
               document.getElementById("error").innerText = "TsuTsu ID has to be longer than 4 characters";
               return
             }
+            if (userId.indexOf(" ")>=0){
+              document.getElementById("error").innerText = "Whitespace is not allowed in TsuTsu ID";
+              return
+            }
             if (email.length ==0 ){
               document.getElementById("error").innerText = "Email cannot be empty";
+              return
+            }
+            if (!userId.includes("@")<0){
+              document.getElementById("error").innerText = "Please provide valid email";
               return
             }
             if (password.length <4){
               document.getElementById("error").innerText = "Password have to be longer than 4 characters";
               return
             }
-            if (userId.indexOf(" ")>=0){
-              document.getElementById("error").innerText = "No whitespace is allowed in TsuTsu ID";
-              return
-            }
-            if (userId.indexOf("@")>0){
-              document.getElementById("error").innerText = "Please provide valid email";
-              return
-            }
-            console.log("here");
+
             const response = await axios.post("/api/1.0/user/signup", {
               userName: userName,
               userId: userId,
               email: email,
               password: password
             });
-            console.log("here here");
             window.location = `${window.location.origin}/user/${response.data.user.userId}/recipes`
             localStorage.setItem("user", JSON.stringify(response.data));            
             } catch (error) {
               console.log(error);
-              console.log(error.response);
+              if (error.response && error.response.status !== 500){
+                document.getElementById("error").innerText = error.response.data.error;
+              return
+              }
+              if (error.response && error.response.status == 500 && error.response.data.error){
+                document.getElementById("error").innerText = error.response.data.error;
+              return
+              }
             }
           })
         </script>

@@ -30,11 +30,20 @@ const signUp = async (req, res) => {
   const result = await createUser(userName, userId, type, email, password);
   if (result.error) {
     // create user failed
-    if (result.error.code === 11000) {
+    if (
+      result.error.code === 11000 &&
+      result.error.keyPattern.hasOwnProperty("userId")
+    ) {
       res.status(403).send({ error: "TsuTsu ID is already in use" });
       return;
+    } else if (
+      result.error.code === 11000 &&
+      result.error.keyPattern.hasOwnProperty("email")
+    ) {
+      res.status(403).send({ error: "Email is already in use" });
+      return;
     } else {
-      res.status(400).send({ error: "Failed to create TsuTsu account." });
+      res.status(500).send({ error: "Failed to create TsuTsu account." });
       return;
     }
   }
