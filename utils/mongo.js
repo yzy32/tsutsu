@@ -91,11 +91,10 @@ const keywordSchema = new mongoose.Schema({
   keyword: [{ type: String, required: true }],
 });
 
-const esLogTestSchema = new mongoose.Schema({
+const esLogSchema = new mongoose.Schema({
   timeCreated: { type: Date, default: Date.now },
   type: { type: String },
-  //FIXME: change to recipeId
-  documentId: { type: String, required: true },
+  recipeId: { type: String, required: true },
   errorMsg: { type: String },
   errorStatus: { type: Number },
 });
@@ -105,7 +104,7 @@ module.exports = {
   Recipe: mongoose.model("recipes", recipeSchema),
   Keyword: mongoose.model("keyword", keywordSchema),
   Review: mongoose.model("review", reviewSchema),
-  esLogTest: mongoose.model("esLogTest", esLogTestSchema),
+  esLog: mongoose.model("esLog", esLogSchema),
 };
 
 //mongo schema

@@ -1,5 +1,5 @@
 const es = require("../../utils/es");
-const { Recipe, Review, User, esLogTest } = require("../../utils/mongo");
+const { Recipe, Review, User, esLog } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const { storeESLog } = require("./log_model");
 
@@ -290,12 +290,6 @@ const setPublic = async (recipeId, toPublic) => {
       { isPublic: toPublic },
       { new: true }
     );
-    //set public in es
-    const esResult = es.update({
-      index: "recipes",
-      id: recipeId,
-      doc: { isPublic: toPublic },
-    });
     //TODO: test es error handling
     let count = 0;
     let errorMsg = null;
@@ -304,6 +298,13 @@ const setPublic = async (recipeId, toPublic) => {
       //retry 3 times (total: 4 times)
       count++;
       try {
+        //set public in es
+        const esResult = es.update({
+          index: "recipes",
+          id: recipeId,
+          doc: { isPublic: toPublic },
+        });
+        console.log("es success for setting public: ", esResult);
         const test = await es.index({
           index: "testerror",
           body: {
@@ -440,12 +441,7 @@ const searchMongoFavorite = async (authorId, keyword, page, userPageSize) => {
   }
 };
 
-const createRecipetoES = async (id, recipe) => {
-  // let esResult = await es.index({
-  //   index: "recipes",
-  //   id: id,
-  //   document: recipe,
-  // });
+const createRecipeinES = async (id, recipe) => {
   //TODO: test es error handling
   let count = 0;
   let errorMsg = null;
@@ -454,6 +450,16 @@ const createRecipetoES = async (id, recipe) => {
     //retry 3 times (total: 4 times)
     count++;
     try {
+      //FIXME: test time
+      console.log("5.recipte creation before es: ", new Date());
+      let esResult = await es.index({
+        index: "recipes",
+        id: id,
+        document: recipe,
+      });
+      //FIXME: test time
+      console.log("6.recipte creation after es: ", new Date());
+      console.log("es success for creating recipe in ES: ", esResult);
       const test = await es.index({
         index: "testerror",
         body: {
@@ -472,12 +478,18 @@ const createRecipetoES = async (id, recipe) => {
   }
   if (count == 4) {
     //TODO: after retry 3 times, record error log into mongodb
-    const mongoresult = await esLogTest.create({
-      type: "createRecipe",
-      // variable: toPublic,
-      errorMsg: errorMsg,
-      errorStatus: errorStatus,
-    });
+    const mongoresult = await storeESLog(
+      "createRecipe",
+      id,
+      errorMsg,
+      errorStatus
+    );
+    // const mongoresult = await esLog.create({
+    //   type: "createRecipe",
+    //   recipeId: id,
+    //   errorMsg: errorMsg,
+    //   errorStatus: errorStatus,
+    // });
     await mongoresult.save();
     console.log("store logs to mongo: ", mongoresult);
   }
@@ -495,4 +507,5 @@ module.exports = {
   setPublic,
   searchMongoRecipe,
   searchMongoFavorite,
+  createRecipeinES,
 };

@@ -1,12 +1,11 @@
 const es = require("../../utils/es");
-const { Recipe, Review, User, esLogTest } = require("../../utils/mongo");
+const { Recipe, Review, User, esLog } = require("../../utils/mongo");
 
 const storeESLog = async (type, recipeId, errorMsg, errorStatus) => {
   try {
-    const mongoresult = await esLogTest.create({
+    const mongoresult = await esLog.create({
       type: type,
-      //FIXME: change to recipeId
-      documentId: recipeId,
+      recipeId: recipeId,
       errorMsg: errorMsg,
       errorStatus: errorStatus,
     });

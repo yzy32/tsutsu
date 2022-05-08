@@ -11,6 +11,7 @@ const {
   setPublic,
   searchMongoRecipe,
   searchMongoFavorite,
+  createRecipeinES,
 } = require("../models/recipe_model");
 const { isFollow, isFavorite } = require("../models/user_model");
 
@@ -202,46 +203,42 @@ const createRecipe = async (req, res) => {
   recipeES.favoriteCount = 0;
   delete recipeES.servings;
   delete recipeES.recipeSteps;
+  await createRecipeinES(result.id, recipeES);
+  // let count = 0;
+  // let errorMsg = null;
+  // let errorStatus = null;
+  // while (count < 4) {
+  //   //retry 3 times (total: 4 times)
+  //   count++;
+  //   try {
+  //     let esResult = await es.index({
+  //       index: "recipes",
+  //       id: result.id,
+  //       document: recipeES,
+  //     });
+  //     console.log("es success result: ", esResult);
+  //     //TODO: test es error handling
+  //     const test = await es.index({
+  //       index: "testerror",
+  //       body: {
+  //         toPublic: "true",
+  //         recipeName: "test11",
+  //         favoriteCount: "string",
+  //       },
+  //     });
+  //     console.log("es success result: ", test);
+  //     break;
+  //   } catch (error) {
+  //     console.log(`es error ${count}: `, error);
+  //     errorMsg = error;
+  //     errorStatus = error.statusCode;
+  //   }
+  // }
+  // if (count == 4) {
+  //   //after retry 3 times, record error log into mongodb
+  //   await storeESLog("createRecipe", result.id, errorMsg, errorStatus);
+  // }
 
-  let count = 0;
-  let errorMsg = null;
-  let errorStatus = null;
-  while (count < 4) {
-    //retry 3 times (total: 4 times)
-    count++;
-    try {
-      //FIXME: test time
-      console.log("5.recipte creation in controller before es: ", new Date());
-      let esResult = await es.index({
-        index: "recipes",
-        id: result.id,
-        document: recipeES,
-      });
-      //TODO: test es error handling
-      const test = await es.index({
-        index: "testerror",
-        body: {
-          toPublic: "true",
-          recipeName: "test11",
-          favoriteCount: "string",
-        },
-      });
-      console.log("es success result: ", esResult);
-      console.log("es success result: ", test);
-      break;
-    } catch (error) {
-      console.log(`es error ${count}: `, error);
-      errorMsg = error;
-      errorStatus = error.statusCode;
-    }
-  }
-  if (count == 4) {
-    //after retry 3 times, record error log into mongodb
-    await storeESLog("createRecipe", result.id, errorMsg, errorStatus);
-  }
-  //FIXME: test time
-  console.log("6.recipte creation in controller after es: ", new Date());
-  console.log("es result for saving: ", esResult);
   res.status(200).json({ msg: "success" });
   return;
 };
