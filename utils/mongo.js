@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { number } = require("joi");
 const mongoose = require("mongoose");
 
 async function mongoConnection() {
@@ -45,7 +46,7 @@ const userSchema = new mongoose.Schema({
   // userRecipes: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
 });
 
-// userSchema.index({ userId: 1 });
+userSchema.index({ userId: 1 });
 
 const recipeSchema = new mongoose.Schema({
   timeCreated: { type: Date, default: Date.now },
@@ -74,8 +75,6 @@ const recipeSchema = new mongoose.Schema({
   authorId: { type: String, required: true },
 });
 
-// recipeSchema.index({ recipeName: "text" });
-
 //change review schema (userid, documentid)
 const reviewSchema = new mongoose.Schema({
   // userName: { type: String, required: true },
@@ -92,11 +91,21 @@ const keywordSchema = new mongoose.Schema({
   keyword: [{ type: String, required: true }],
 });
 
+const esLogTestSchema = new mongoose.Schema({
+  timeCreated: { type: Date, default: Date.now },
+  type: { type: String },
+  //FIXME: change to recipeId
+  documentId: { type: String, required: true },
+  errorMsg: { type: String },
+  errorStatus: { type: Number },
+});
+
 module.exports = {
   User: mongoose.model("user", userSchema),
   Recipe: mongoose.model("recipes", recipeSchema),
   Keyword: mongoose.model("keyword", keywordSchema),
   Review: mongoose.model("review", reviewSchema),
+  esLogTest: mongoose.model("esLogTest", esLogTestSchema),
 };
 
 //mongo schema
