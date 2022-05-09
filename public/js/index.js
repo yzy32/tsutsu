@@ -46,7 +46,7 @@ $(async function () {
       <div class="card" style="height: 300px;">
         <img src="${following.recipes[i].recipeImage}" class="card-img-top h-50" alt="recipe-image" style="object-fit:cover;">
         <div class="card-body h-50">
-          <a href="#" class="text-dark">
+          <a href="/recipe/${following.recipes[i]._id}" class="text-dark">
             <h5 class="card-title h5 text-truncate">${following.recipes[i].recipeName}</h5>
             <p class="card-text h-40 text-truncate">${following.recipes[i].description}</p>
           </a>
@@ -60,6 +60,28 @@ $(async function () {
       `;
       $("#new-add").append(card);
     }
+    const response3 = await axios.get("/api/1.0/recipe/popular");
+    let popular = response3.data;
+    for (let i = 0; i < popular.recipes.length; i++) {
+      let card = `
+      <div class="card" style="height: 300px;">
+        <img src="${popular.recipes[i].recipeImage}" class="card-img-top h-50" alt="recipe-image" style="object-fit:cover;">
+        <div class="card-body h-50">
+          <a href="/recipe/${popular.recipes[i]._id}" class="text-dark">
+            <h5 class="card-title h5 text-truncate">${popular.recipes[i].recipeName}</h5>
+            <p class="card-text h-40 text-truncate">${popular.recipes[i].description}</p>
+          </a>
+          <p class="card-text mt-3">
+            <a href="/user/${popular.recipes[i].authorId}/recipes">
+              <small class="text-muted font-italic">By ${popular.recipes[i].author}</small>
+            </a>
+          </p>
+        </div>
+      </div>
+      `;
+      $("#popular").append(card);
+    }
+    console.log(popular);
   } catch (error) {
     console.log(error);
   }

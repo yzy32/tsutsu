@@ -185,7 +185,6 @@ $(async function () {
         $("#unfavoriteBtn").removeClass("d-none");
       }
     });
-
     //click "follow"
     $("#followBtn").on("click", async (e) => {
       e.preventDefault();
@@ -244,7 +243,6 @@ $(async function () {
         }
       }
     });
-
     // change review page
     let pageGroup = $("#pageGroup");
     pageGroup.on("click", async (e) => {
@@ -319,6 +317,16 @@ $(async function () {
     $("#signin").on("click", (e) => {
       e.preventDefault();
       window.location = "/user/signin";
+    });
+    $(window).scroll(async () => {
+      last = $("body").height() - $(window).height();
+      if ($(window).scrollTop() / last >= 0.6) {
+        console.log("read");
+        $(window).off("scroll");
+        let data = { recipeId: recipeId };
+        await axios.post("/api/1.0/recipe/viewCount", data);
+        return;
+      }
     });
   } catch (error) {
     console.log(error);

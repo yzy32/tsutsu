@@ -397,6 +397,28 @@ const getFollowingNewRecipe = async (req, res) => {
   res.status(200).json({ recipes: result });
 };
 
+const addViewCount = async (req, res) => {
+  //add view count in mongo
+  let { recipeId } = req.body;
+  let result = await Recipe.findOneAndUpdate(
+    {
+      _id: mongoose.Types.ObjectId(recipeId),
+    },
+    { $inc: { viewCount: 1 } }
+  );
+  res.status(200).json({ msg: "success" });
+};
+
+const getPopularRecipe = async (req, res) => {
+  let result = await Recipe.aggregate([
+    { $match: { isPublic: true } },
+    { $sort: { viewCount: -1 } },
+    { $limit: 6 },
+    { $sample: { size: 3 } },
+  ]);
+  res.status(200).json({ recipes: result });
+};
+
 module.exports = {
   getSearchRecipe,
   createRecipe,
@@ -409,4 +431,6 @@ module.exports = {
   searchUserRecipe,
   searchUserFavorite,
   getFollowingNewRecipe,
+  addViewCount,
+  getPopularRecipe,
 };
