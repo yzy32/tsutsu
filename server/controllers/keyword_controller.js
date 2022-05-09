@@ -20,7 +20,7 @@ const selectTrendingKeyword = async (req, res) => {
     );
     //search keyword
     let keywordsRecipes = [];
-    let start = Math.floor(Math.random() * 10);
+    let start = Math.floor(Math.random() * 10 + 1);
     for (let i = 0; i < keywords.length; i++) {
       let result = await searchRecipe(
         keywords[i]._id,

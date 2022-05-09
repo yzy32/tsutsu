@@ -1,5 +1,5 @@
-const { Recipe, esLog } = require("./mongo");
-const es = require("./es");
+const { Recipe, esLog } = require("../utils/mongo");
+const es = require("../utils/es");
 
 const retryES = async () => {
   try {
@@ -22,6 +22,13 @@ const retryES = async () => {
               favoriteCount: 0,
             },
           });
+          console.log(test);
+          // const esResult = es.update({
+          //   index: "recipes",
+          //   id: logs[i].recipeId,
+          //   doc: { isPublic: isPublic.isPublic },
+          // });
+          // console.log(esResult);
           break;
         }
         case "addFavorite": {
@@ -34,6 +41,15 @@ const retryES = async () => {
               source: "ctx._source.favoriteCount++",
             },
           });
+          console.log(test);
+          // const esResult = await es.update({
+          //   index: "recipes",
+          //   id: logs[i].recipeId,
+          //   script: {
+          //     source: "ctx._source.favoriteCount++",
+          //   },
+          // });
+          // console.log(esResult);
           break;
         }
         case "removeFavorite": {
@@ -46,6 +62,14 @@ const retryES = async () => {
               source: "ctx._source.favoriteCount--",
             },
           });
+          // const esResult = await es.update({
+          //   index: "recipes",
+          //   id: logs[i].recipeId,
+          //   script: {
+          //     source: "ctx._source.favoriteCount--",
+          //   },
+          // });
+          // console.log(esResult);
           break;
         }
         case "createRecipe": {
@@ -63,6 +87,13 @@ const retryES = async () => {
               favoriteCount: 0,
             },
           });
+          console.log(test);
+          // const esResult = await es.index({
+          //   index: "recipes",
+          //   id: logs[i].recipeId,
+          //   body: recipe,
+          // });
+          // console.log(esResult);
           break;
         }
       }

@@ -455,7 +455,7 @@ const createRecipeinES = async (id, recipe) => {
       let esResult = await es.index({
         index: "recipes",
         id: id,
-        document: recipe,
+        body: recipe,
       });
       //FIXME: test time
       console.log("6.recipte creation after es: ", new Date());
