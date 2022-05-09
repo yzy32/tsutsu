@@ -498,12 +498,19 @@ const getFollowingRecipe = async (userId) => {
       .select("following")
       .lean();
     delete followingList._id;
-    query = { authorId: { $in: followingList.following }, isPublic: true };
+    if (followingList.following.length !== 0) {
+      query = { authorId: { $in: followingList.following }, isPublic: true };
+      let count = await Recipe.count(query);
+      if (count < 3) {
+        query = {};
+      }
+    }
   }
   let recipes = await Recipe.find(query)
     .sort({ timeCreated: -1 })
     .limit(3)
     .select("recipeImage recipeName description author authorId");
+  // console.log(recipes);
   return recipes;
 };
 
