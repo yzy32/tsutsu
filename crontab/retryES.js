@@ -1,5 +1,5 @@
-const { Recipe, esLog } = require("../utils/mongo");
-const es = require("../utils/es");
+const { Recipe, esLog } = require(`${__dirname}/../utils/mongo`);
+const es = require(`${__dirname}/../utils/es`);
 
 const retryES = async () => {
   try {
