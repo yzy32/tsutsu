@@ -6,6 +6,9 @@ const {
   createReview,
   getReview,
   setRecipePublic,
+  getFollowingNewRecipe,
+  addViewCount,
+  getPopularRecipe,
 } = require("../../controllers/recipe_controller");
 const { errorHandler } = require("../../../utils/util");
 const {
@@ -16,6 +19,13 @@ const {
 const { upload } = require("../../../utils/s3");
 
 router.get("/recipe/search", searchAuth, errorHandler(getSearchRecipe));
+router.get("/recipe/popular", errorHandler(getPopularRecipe));
+router.get(
+  "/recipe/following",
+  recipeAuth,
+  errorHandler(getFollowingNewRecipe)
+);
+router.post("/recipe/viewCount", errorHandler(addViewCount));
 router.get("/recipe/:id", recipeAuth, errorHandler(getRecipePage));
 router.post(
   "/recipe",

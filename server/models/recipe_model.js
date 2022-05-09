@@ -200,7 +200,7 @@ const getRecipeByUserId = async (userId, page, userPageSize) => {
     const total = await Recipe.count({ authorId: userId });
     const result = await Recipe.find(
       { authorId: userId },
-      "recipeImage recipeName ingredients isPublic"
+      "recipeImage recipeName ingredients isPublic viewCount"
     )
       .sort({
         timeCreated: -1,
@@ -495,6 +495,22 @@ const createRecipeinES = async (id, recipe) => {
   }
 };
 
+const getFollowingRecipe = async (userId) => {
+  let query = { isPublic: true };
+  if (userId) {
+    let followingList = await User.findOne({ userId: userId })
+      .select("following")
+      .lean();
+    delete followingList._id;
+    query = { authorId: { $in: followingList.following }, isPublic: true };
+  }
+  let recipes = await Recipe.find(query)
+    .sort({ timeCreated: -1 })
+    .limit(3)
+    .select("recipeImage recipeName description author authorId");
+  return recipes;
+};
+
 module.exports = {
   searchIngredient,
   searchRecipe,
@@ -508,4 +524,5 @@ module.exports = {
   searchMongoRecipe,
   searchMongoFavorite,
   createRecipeinES,
+  getFollowingRecipe,
 };

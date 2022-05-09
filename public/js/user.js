@@ -353,6 +353,10 @@ async function renderRecipe(authorId, page, jwtToken, pageSize, keyword) {
         }</td></tr>`;
         ingredients += ingredient;
       }
+      //view count
+      let viewCount = recipe.result[i].viewCount
+        ? recipe.result[i].viewCount
+        : 0;
       //public setting
       let publicBtn = "";
       let public = `
@@ -366,6 +370,7 @@ async function renderRecipe(authorId, page, jwtToken, pageSize, keyword) {
           <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic"></i>
         </button>
       </div>
+      <div class="card-tools text-lightgray mr-1">${viewCount}</div>
       `;
       let private = `
       <div class="card-tools d-none">
@@ -378,6 +383,7 @@ async function renderRecipe(authorId, page, jwtToken, pageSize, keyword) {
           <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic"></i>
         </button>
       </div>
+      <div class="card-tools text-lightgray mr-1">${viewCount}</div>
       `;
       //if recipe.setPublic = true, check recipe.result[i].isPublic (true, false)
       //if recipe.setPublic = false, don't show any public setting

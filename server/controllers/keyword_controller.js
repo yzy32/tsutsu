@@ -20,6 +20,7 @@ const selectTrendingKeyword = async (req, res) => {
     );
     //search keyword
     let keywordsRecipes = [];
+    let start = Math.floor(Math.random() * 10);
     for (let i = 0; i < keywords.length; i++) {
       let result = await searchRecipe(
         keywords[i]._id,
@@ -28,7 +29,7 @@ const selectTrendingKeyword = async (req, res) => {
         null,
         null,
         null,
-        1,
+        start,
         3
       );
       let recipes = result.hits.map((obj) => {
@@ -48,7 +49,7 @@ const selectTrendingKeyword = async (req, res) => {
       keywordsRecipes.push(keywordRecipes);
     }
     //return imgurl, recipename, recipeauthor to frontend
-    res.send(keywordsRecipes);
+    res.status(200).send(keywordsRecipes);
     return;
   } catch (error) {
     console.log(error);

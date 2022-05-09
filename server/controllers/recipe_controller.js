@@ -12,8 +12,9 @@ const {
   searchMongoRecipe,
   searchMongoFavorite,
   createRecipeinES,
+  getFollowingRecipe,
 } = require("../models/recipe_model");
-const { isFollow, isFavorite } = require("../models/user_model");
+const { isFollow, isFavorite, getFollowing } = require("../models/user_model");
 
 const { storeKeywords } = require("../models/keyword_model");
 const { arrayToString } = require("../../utils/util.js");
@@ -417,6 +418,34 @@ const searchUserFavorite = async (req, res) => {
   return;
 };
 
+const getFollowingNewRecipe = async (req, res) => {
+  let userId = req.user ? req.user.userId : null;
+  let result = await getFollowingRecipe(userId);
+  res.status(200).json({ recipes: result });
+};
+
+const addViewCount = async (req, res) => {
+  //add view count in mongo
+  let { recipeId } = req.body;
+  let result = await Recipe.findOneAndUpdate(
+    {
+      _id: mongoose.Types.ObjectId(recipeId),
+    },
+    { $inc: { viewCount: 1 } }
+  );
+  res.status(200).json({ msg: "success" });
+};
+
+const getPopularRecipe = async (req, res) => {
+  let result = await Recipe.aggregate([
+    { $match: { isPublic: true } },
+    { $sort: { viewCount: -1 } },
+    { $limit: 6 },
+    { $sample: { size: 3 } },
+  ]);
+  res.status(200).json({ recipes: result });
+};
+
 module.exports = {
   getSearchRecipe,
   createRecipe,
@@ -428,4 +457,7 @@ module.exports = {
   setRecipePublic,
   searchUserRecipe,
   searchUserFavorite,
+  getFollowingNewRecipe,
+  addViewCount,
+  getPopularRecipe,
 };

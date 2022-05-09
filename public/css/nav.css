@@ -550,3 +550,8 @@ h6 {
 .text-darkblue {
   color: #33658a !important;
 }
+
+.text-lightgray {
+  color: #9da6af !important;
+  padding-top: 1px;
+}

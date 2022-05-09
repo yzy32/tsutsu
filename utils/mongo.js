@@ -73,6 +73,7 @@ const recipeSchema = new mongoose.Schema({
   tags: [{ type: String, default: [] }],
   author: { type: String, required: true },
   authorId: { type: String, required: true },
+  viewCount: { type: Number, default: 0 },
 });
 
 //change review schema (userid, documentid)
