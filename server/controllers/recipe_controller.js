@@ -204,42 +204,7 @@ const createRecipe = async (req, res) => {
   recipeES.favoriteCount = 0;
   delete recipeES.servings;
   delete recipeES.recipeSteps;
-  await createRecipeinES(result.id, recipeES);
-  // let count = 0;
-  // let errorMsg = null;
-  // let errorStatus = null;
-  // while (count < 4) {
-  //   //retry 3 times (total: 4 times)
-  //   count++;
-  //   try {
-  //     let esResult = await es.index({
-  //       index: "recipes",
-  //       id: result.id,
-  //       document: recipeES,
-  //     });
-  //     console.log("es success result: ", esResult);
-  //     //TODO: test es error handling
-  //     const test = await es.index({
-  //       index: "testerror",
-  //       body: {
-  //         toPublic: "true",
-  //         recipeName: "test11",
-  //         favoriteCount: "string",
-  //       },
-  //     });
-  //     console.log("es success result: ", test);
-  //     break;
-  //   } catch (error) {
-  //     console.log(`es error ${count}: `, error);
-  //     errorMsg = error;
-  //     errorStatus = error.statusCode;
-  //   }
-  // }
-  // if (count == 4) {
-  //   //after retry 3 times, record error log into mongodb
-  //   await storeESLog("createRecipe", result.id, errorMsg, errorStatus);
-  // }
-
+  createRecipeinES(result.id, recipeES);
   res.status(200).json({ msg: "success" });
   return;
 };

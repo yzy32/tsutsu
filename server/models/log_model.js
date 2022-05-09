@@ -9,7 +9,6 @@ const storeESLog = async (type, recipeId, errorMsg, errorStatus) => {
       errorMsg: errorMsg,
       errorStatus: errorStatus,
     });
-    await mongoresult.save();
     console.log("store logs to mongo: ", mongoresult);
   } catch (error) {
     console.log("failed to store logs to mongo: ", error);

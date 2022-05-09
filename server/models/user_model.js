@@ -82,44 +82,20 @@ const addFavorite = async (userId, recipeId) => {
       { _id: mongoose.Types.ObjectId(recipeId) },
       { $inc: { favoriteCount: 1 } }
     );
-
-    //TODO: test es error handling
     let count = 0;
-    let errorMsg = null;
-    let errorStatus = null;
-    while (count < 4) {
-      //retry 3 times (total: 4 times)
-      count++;
-      try {
-        //update favorite count in ES recipe if success
-        const recipeES = await es.update({
-          index: "recipes",
-          id: recipeId,
-          script: {
-            source: "ctx._source.favoriteCount++",
-          },
-        });
-        console.log("update es for favoritecount++: ", recipeES);
-        const test = await es.index({
-          index: "testerror",
-          body: {
-            toPublic: "true",
-            recipeName: "test11",
-            favoriteCount: "string",
-          },
-        });
-        console.log("es success result: ", test);
-        break;
-      } catch (error) {
+    es.update({
+      index: "recipes",
+      id: recipeId,
+      script: {
+        source: "ctx._source.favoriteCount++",
+      },
+    })
+      .then()
+      .catch((error) => {
+        count++;
         console.log(`es error ${count}: `, error);
-        errorMsg = error;
-        errorStatus = error.statusCode;
-      }
-    }
-    if (count == 4) {
-      //after retry 3 times, record error log into mongodb
-      await storeESLog("addFavorite", recipeId, errorMsg, errorStatus);
-    }
+        esUpateFavorite(count, recipeId, "addFavorite");
+      });
     return true;
   } catch (error) {
     console.log(error);
@@ -137,48 +113,60 @@ const removeFavorite = async (userId, recipeId) => {
       { _id: mongoose.Types.ObjectId(recipeId) },
       { $inc: { favoriteCount: -1 } }
     );
-
     let count = 0;
-    let errorMsg = null;
-    let errorStatus = null;
-    while (count < 4) {
-      //retry 3 times (total: 4 times)
-      count++;
-      try {
-        //update favorite count in ES recipe if success
-        const recipeES = await es.update({
-          index: "recipes",
-          id: recipeId,
-          script: {
-            source: "ctx._source.favoriteCount--",
-          },
-        });
-        console.log("update es for favoritecount--: ", recipeES);
-        //TODO: test es error handling
-        const test = await es.index({
-          index: "testerror",
-          body: {
-            toPublic: "true",
-            recipeName: "test11",
-            favoriteCount: "string",
-          },
-        });
-        console.log("es success result: ", test);
-        break;
-      } catch (error) {
+    es.update({
+      index: "recipes",
+      id: recipeId,
+      script: {
+        source: "ctx._source.favoriteCount--",
+      },
+    })
+      .then()
+      .catch((error) => {
+        count++;
         console.log(`es error ${count}: `, error);
-        errorMsg = error;
-        errorStatus = error.statusCode;
-      }
-    }
-    if (count == 4) {
-      //after retry 3 times, record error log into mongodb
-      await storeESLog("removeFavorite", recipeId, errorMsg, errorStatus);
-    }
+        esUpateFavorite(count, recipeId, "removeFavorite");
+      });
     return true;
   } catch (error) {
     console.log(error);
     throw error;
+  }
+};
+
+const esUpateFavorite = async (count, recipeId, type) => {
+  let errorMsg = null;
+  let errorStatus = null;
+  console.log(count, recipeId, type);
+  let script = "ctx._source.favoriteCount++";
+  if (type == "removeFavorite") {
+    script = "ctx._source.favoriteCount--";
+  }
+  try {
+    if (count < 4) {
+      es.update({
+        index: "recipes",
+        id: recipeId,
+        script: {
+          source: script,
+        },
+      })
+        .then()
+        .catch((error) => {
+          count++;
+          console.log(`es error ${count}: `, error);
+          errorMsg = error;
+          errorStatus = error.statusCode;
+          esUpateFavorite(count, recipeId, type);
+        });
+    }
+    if (count == 4) {
+      //after retry 3 times, record error log into mongodb
+      await storeESLog(type, recipeId, errorMsg, errorStatus);
+    }
+    return;
+  } catch (error) {
+    console.log(error);
   }
 };
 

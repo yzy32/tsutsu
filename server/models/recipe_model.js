@@ -284,50 +284,69 @@ const getFavorite = async (authorId, page, userPageSize) => {
 const setPublic = async (recipeId, toPublic) => {
   try {
     //set public in mongo
-    console.log(toPublic);
+    console.log("set public: ", toPublic);
     const mongoResult = await Recipe.findOneAndUpdate(
       { _id: recipeId },
       { isPublic: toPublic },
       { new: true }
     );
-    //TODO: test es error handling
+    // const esResult = await es.update({
+    //   index: "recipes",
+    //   id: recipeId,
+    //   doc: { isPublic: toPublic },
+    // });
+    // console.log("es success for setting public: ", esResult);
     let count = 0;
-    let errorMsg = null;
-    let errorStatus = null;
-    while (count < 4) {
-      //retry 3 times (total: 4 times)
-      count++;
-      try {
-        //set public in es
-        const esResult = es.update({
-          index: "recipes",
-          id: recipeId,
-          doc: { isPublic: toPublic },
-        });
-        console.log("es success for setting public: ", esResult);
-        const test = await es.index({
-          index: "testerror",
-          body: {
-            toPublic: toPublic,
-            recipeName: "test11",
-            favoriteCount: "string",
-          },
-        });
-        console.log("es success result: ", test);
-        break;
-      } catch (error) {
-        console.log(`es error ${count}: `, error);
-        errorMsg = error;
-        errorStatus = error.statusCode;
-      }
-    }
-    if (count == 4) {
-      //after retry 3 times, record error log into mongodb
-      await storeESLog("setPublic", recipeId, errorMsg, errorStatus);
-    }
+    es.update({
+      index: "recipes",
+      id: recipeId,
+      doc: { isPublic: toPublic },
+    })
+      .then()
+      .catch(() => {
+        count++;
+        esUpatePublic(count, recipeId, toPublic);
+      });
     return true;
   } catch (error) {
     throw error;
+  }
+};
+
+const esUpatePublic = async (count, recipeId, toPublic) => {
+  let errorMsg = null;
+  let errorStatus = null;
+  console.log(count, recipeId, toPublic);
+  try {
+    if (count < 4) {
+      es.update({
+        index: "recipes",
+        id: recipeId,
+        doc: { isPublic: toPublic },
+      })
+        .then()
+        .catch((error) => {
+          count++;
+          console.log(`es error ${count}: `, error);
+          errorMsg = error;
+          errorStatus = error.statusCode;
+          esUpatePublic(count, recipeId, toPublic);
+        });
+    }
+    if (count == 4) {
+      //after retry 3 times, record error log into mongodb
+      const mongoresult = await storeESLog(
+        "setPublic",
+        recipeId,
+        errorMsg,
+        errorStatus
+      );
+      await mongoresult.save();
+      console.log("store logs to mongo: ", mongoresult);
+    }
+    return;
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -442,7 +461,6 @@ const searchMongoFavorite = async (authorId, keyword, page, userPageSize) => {
 };
 
 const createRecipeinES = async (id, recipe) => {
-  //TODO: test es error handling
   let count = 0;
   let errorMsg = null;
   let errorStatus = null;
@@ -460,15 +478,6 @@ const createRecipeinES = async (id, recipe) => {
       //FIXME: test time
       console.log("6.recipte creation after es: ", new Date());
       console.log("es success for creating recipe in ES: ", esResult);
-      const test = await es.index({
-        index: "testerror",
-        body: {
-          isPublic: toPublic,
-          recipeName: "test11",
-          favoriteCount: "string",
-        },
-      });
-      console.log("es success result: ", test);
       break;
     } catch (error) {
       console.log(`es error ${count}: `, error);
@@ -478,20 +487,7 @@ const createRecipeinES = async (id, recipe) => {
   }
   if (count == 4) {
     //TODO: after retry 3 times, record error log into mongodb
-    const mongoresult = await storeESLog(
-      "createRecipe",
-      id,
-      errorMsg,
-      errorStatus
-    );
-    // const mongoresult = await esLog.create({
-    //   type: "createRecipe",
-    //   recipeId: id,
-    //   errorMsg: errorMsg,
-    //   errorStatus: errorStatus,
-    // });
-    await mongoresult.save();
-    console.log("store logs to mongo: ", mongoresult);
+    await storeESLog("createRecipe", id, errorMsg, errorStatus);
   }
 };
 
