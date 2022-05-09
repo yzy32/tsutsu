@@ -260,10 +260,10 @@ $(async function () {
         const profile = $("#profileForm");
         const profileForm = new FormData(profile[0]);
         if (
-          profileForm.get("introduction") == null &&
-          profileForm.get("userImage".name) == ""
+          profileForm.get("introduction") == "" &&
+          profileForm.get("userImage").name == ""
         ) {
-          $("#error").text("Either intro or image cannot be empty");
+          $("#error").text("At least one field should have input");
           return;
         }
         const response = await axios.put("/api/1.0/user/profile", profileForm, {
@@ -280,7 +280,7 @@ $(async function () {
         console.log(error);
         if (error.response && error.response.status == 400) {
           // toastr.warning("Either intro or image has to have input");
-          $("#error").text("Either intro or image cannot be empty");
+          $("#error").text("All fields cannot be empty");
         } else if (error.response && error.response.status == 500) {
           $("#error").text("Upload Failed");
         }
