@@ -48,7 +48,7 @@ const selectTrendingKeyword = async (req, res) => {
       keywordsRecipes.push(keywordRecipes);
     }
     //return imgurl, recipename, recipeauthor to frontend
-    res.send(keywordsRecipes);
+    res.status(200).send(keywordsRecipes);
     return;
   } catch (error) {
     console.log(error);

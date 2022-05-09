@@ -411,6 +411,22 @@ const searchMongoFavorite = async (authorId, keyword, page, userPageSize) => {
   }
 };
 
+const getFollowingRecipe = async (userId) => {
+  let query = {};
+  if (userId) {
+    let followingList = await User.findOne({ userId: userId })
+      .select("following")
+      .lean();
+    delete followingList._id;
+    query = { authorId: { $in: followingList.following } };
+  }
+  let recipes = await Recipe.find(query)
+    .sort({ timeCreated: -1 })
+    .limit(3)
+    .select("recipeImage recipeName description author authorId");
+  return recipes;
+};
+
 module.exports = {
   searchIngredient,
   searchRecipe,
@@ -423,4 +439,5 @@ module.exports = {
   setPublic,
   searchMongoRecipe,
   searchMongoFavorite,
+  getFollowingRecipe,
 };

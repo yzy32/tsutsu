@@ -11,8 +11,9 @@ const {
   setPublic,
   searchMongoRecipe,
   searchMongoFavorite,
+  getFollowingRecipe,
 } = require("../models/recipe_model");
-const { isFollow, isFavorite } = require("../models/user_model");
+const { isFollow, isFavorite, getFollowing } = require("../models/user_model");
 
 const { storeKeywords } = require("../models/keyword_model");
 const { arrayToString } = require("../../utils/util.js");
@@ -390,6 +391,12 @@ const searchUserFavorite = async (req, res) => {
   return;
 };
 
+const getFollowingNewRecipe = async (req, res) => {
+  let userId = req.user ? req.user.userId : null;
+  let result = await getFollowingRecipe(userId);
+  res.status(200).json({ recipes: result });
+};
+
 module.exports = {
   getSearchRecipe,
   createRecipe,
@@ -401,4 +408,5 @@ module.exports = {
   setRecipePublic,
   searchUserRecipe,
   searchUserFavorite,
+  getFollowingNewRecipe,
 };
