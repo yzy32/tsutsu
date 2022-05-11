@@ -16,6 +16,7 @@ const retryES = async () => {
   try {
     let logs = await esLog.find({});
     if (logs.length == 0) {
+      console.log("no error log");
       return;
     }
     for (let i = 0; i < logs.length; i++) {
