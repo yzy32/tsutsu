@@ -193,6 +193,7 @@ $(async function () {
       privateDiv.addClass("d-none");
       publicDiv.removeClass("d-none");
     });
+    $('[data-toggle="tooltip"]').tooltip();
     // listen to follow
     $(".toFollow").on("click", async (e) => {
       e.preventDefault();
@@ -362,28 +363,28 @@ async function renderRecipe(authorId, page, jwtToken, pageSize, keyword) {
       let public = `
       <div class="card-tools">
         <button type="button" class="btn btn-tool">
-          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate"></i>
+          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate" data-bs-toggle="tooltip" data-bs-placement="top" title="public"></i>
         </button>
       </div>
       <div class="card-tools d-none ">
         <button type="button" class="btn btn-tool">
-          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic"></i>
+          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic" data-bs-toggle="tooltip" data-bs-placement="top" title="private"></i>
         </button>
       </div>
-      <div class="card-tools text-lightgray mr-1">${viewCount}</div>
+      <div class="card-tools text-lightgray mr-1" data-bs-toggle="tooltip" data-bs-placement="top" title="view">${viewCount}</div>
       `;
       let private = `
       <div class="card-tools d-none">
         <button type="button" class="btn btn-tool">
-          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate"></i>
+          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate" data-bs-toggle="tooltip" data-bs-placement="top" title="public"></i>
         </button>
       </div>
       <div class="card-tools ">
         <button type="button" class="btn btn-tool">
-          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic"></i>
+          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic" data-bs-toggle="tooltip" data-bs-placement="top" title="private"></i>
         </button>
       </div>
-      <div class="card-tools text-lightgray mr-1">${viewCount}</div>
+      <div class="card-tools text-lightgray mr-1" data-bs-toggle="tooltip" data-bs-placement="top" title="view">${viewCount}</div>
       `;
       //if recipe.setPublic = true, check recipe.result[i].isPublic (true, false)
       //if recipe.setPublic = false, don't show any public setting

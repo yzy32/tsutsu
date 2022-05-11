@@ -88,17 +88,17 @@
               <p class="text-center">Get started with your free account</p>
               <hr>
               <form>
-                <div class="form-group input-group">
+                <!-- <div class="form-group input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                   </div>
                     <input name="userName" id="userName" class="form-control" placeholder="User name" type="text" required>
-                </div> <!-- form-group// -->
+                </div>  -->
                 <div class="form-group input-group">
                   <div class="input-group-prepend">
                       <span class="input-group-text"> <i class="fa-solid fa-utensils"></i> </span>
                   </div>
-                      <input name="userId" id="userId" class="form-control" placeholder="TsuTsu ID (case insensitive)" type="text" required>
+                      <input name="userId" id="userId" class="form-control" placeholder="User ID (no whitespace)" type="text" required pattern="[a-zA-Z0-9]">
                 </div> <!-- form-group// -->
                 <div class="form-group input-group">
                   <div class="input-group-prepend">
@@ -127,22 +127,21 @@
           document.getElementById("submit").addEventListener("click", async(e)=>{
             try {
             e.preventDefault();
-            const userName = document.getElementById("userName").value;
             let userId = document.getElementById("userId").value;
             userId = userId.toLowerCase();
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-            // console.log(userName, userId, email, password);
-            if (userName.length < 4){
-              document.getElementById("error").innerText = "User name has to be longer than 4 characters";
+            if (userId.length <4){
+              document.getElementById("error").innerText = "ID has to be longer than 4 characters";
               return
             }
-            if (userId.length <4){
-              document.getElementById("error").innerText = "TsuTsu ID has to be longer than 4 characters";
+            const format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            if (format.test(userId)){
+              document.getElementById("error").innerText = "Only number and character are allowed in ID";
               return
             }
             if (userId.indexOf(" ")>=0){
-              document.getElementById("error").innerText = "Whitespace is not allowed in TsuTsu ID";
+              document.getElementById("error").innerText = "Whitespace is not allowed in ID";
               return
             }
             if (email.length ==0 ){
@@ -158,14 +157,14 @@
               return
             }
 
-            const response = await axios.post("/api/1.0/user/signup", {
-              userName: userName,
-              userId: userId,
-              email: email,
-              password: password
-            });
-            window.location = `${window.location.origin}/user/${response.data.user.userId}/recipes`
-            localStorage.setItem("user", JSON.stringify(response.data));            
+            // const response = await axios.post("/api/1.0/user/signup", {
+            //   userName: userName,
+            //   userId: userId,
+            //   email: email,
+            //   password: password
+            // });
+            // window.location = `${window.location.origin}/user/${response.data.user.userId}/recipes`
+            // localStorage.setItem("user", JSON.stringify(response.data));            
             } catch (error) {
               console.log(error);
               if (error.response && error.response.status !== 500){

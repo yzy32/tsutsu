@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   type: { type: String, required: true },
-  userName: { type: String, required: true },
+  userName: { type: String },
   introduction: { type: String, default: null },
   userImage: {
     type: String,
