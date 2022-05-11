@@ -44,14 +44,14 @@ $(async function () {
       $("#settings").addClass("d-none");
     }
     let followerCount = author.follower.length;
-    $("#userName").text(author.userName);
+    // $("#userName").text(author.userName);
     $("#userImage").attr("src", author.userImage);
     $("#following").text(`${author.following.length} following`);
     $("#following-link").attr("href", `/user/${author.userId}/followings`);
     $("#follower").text(`${followerCount} follower`);
     $("#follower-link").attr("href", `/user/${author.userId}/followers`);
-    $("#userId").html(`&commat;${author.userId}`);
-    $("#introduction").html(author.introduction);
+    $("#userId").text(`${author.userId}`);
+    $("#introduction").text(author.introduction);
     $("#form-introduction").val(author.introduction);
     $("#author-follow").data("userid", author.userId);
     $("#author-unfollow").data("userid", author.userId);
@@ -88,7 +88,6 @@ $(async function () {
       $("#setting-section").removeClass("d-none");
       $("#form-email").val(author.email);
       $("#form-userId").val(author.userId);
-      $("#form-userName").val(author.userName);
     }
 
     // render recipe and favorites
@@ -267,6 +266,11 @@ $(async function () {
           $("#error").text("At least one field should have input");
           return;
         }
+        let intro = profileForm.get("introduction");
+        // console.log(intro);
+        // intro.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        // profileForm.get("introduction", intro);
+        // console.log(profileForm.get("introduction"));
         const response = await axios.put("/api/1.0/user/profile", profileForm, {
           headers: {
             Authorization: "Bearer " + jwtToken,
