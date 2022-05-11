@@ -80,7 +80,7 @@ const retryES = async () => {
   } catch (error) {
     console.log(error);
     //send mail/slack to notify
-    let text = { logId: logId, content: error };
+    let text = { logId: logId };
     mailOptions = {
       from: "learn2021yy@gmail.com",
       to: "learn2021yy@gmail.com",
