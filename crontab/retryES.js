@@ -27,7 +27,7 @@ const retryES = async () => {
             "isPublic"
           );
           console.log("public: ", isPublic);
-          const esResult = es.update({
+          const esResult = await es.update({
             index: "recipes",
             id: logs[i].recipeId,
             doc: { isPublic: isPublic.isPublic },

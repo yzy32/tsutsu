@@ -341,7 +341,6 @@ const esUpatePublic = async (count, recipeId, toPublic) => {
         errorMsg,
         errorStatus
       );
-      await mongoresult.save();
       console.log("store logs to mongo: ", mongoresult);
     }
     return;
