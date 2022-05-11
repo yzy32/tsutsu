@@ -123,7 +123,7 @@
                   <div class="form-group mt-4">
                     <label class="mr-1 h5">Recipe Description</label>
                     <small class="font-italic text-secondary">required</small>
-                    <textarea name="description" class="form-control" rows="3" placeholder="Tell us more about your recipe - who you cook for, what makes it special..." required></textarea>
+                    <textarea style="white-space: pre-wrap;" name="description" class="form-control" rows="3" placeholder="Tell us more about your recipe - who you cook for, what makes it special..." required></textarea>
                   </div>
                   <!-- recipe image -->
                   <div id="recipeImage-group" class="form-group mt-4">
@@ -253,12 +253,15 @@
                       </ul> 
                     </div>
                   </div>
+                  <div class="mt-3 text-center">
+                    <span id="error" class="error text-danger"></span>  
+                  </div>
                 </div>
-                <!-- /.card-body -->
-
+                <!-- /.card-body -->                                                                                                                                 
                 <div class="card-footer">
                   <button id="submit" type="submit" class="btn btn-orange font-weight-bold" style="width: 100%;">CREATE</button>
                 </div>
+
               </form>
             </div>
           </div>

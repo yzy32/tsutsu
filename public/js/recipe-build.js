@@ -24,7 +24,7 @@ async function validate() {
 
 $(function () {
   $("#recipe-form").on("keydown", (e) => {
-    if (e.key == "Enter") {
+    if (e.key == "Enter" && !$(e.target).is("textarea")) {
       e.preventDefault();
     }
   });
@@ -55,11 +55,9 @@ $(function () {
       }
     } catch (error) {
       console.log(error);
-      console.log(error.response);
-      // if (error.response.data.redirectUrl) {
-      //   const redirectUrl = error.response.data.redirectUrl;
-      //   document.location = redirectUrl;
-      // }
+      if (error.response && error.response.status == 400) {
+        $("#error").text(error.response.data.error);
+      }
     }
   });
   // $("#uploadImage").on("click", (e) => {

@@ -92,7 +92,7 @@ $(async function () {
       <img class="align-self-center mr-3 col-3" src="${stepImg}" alt="Generic placeholder image" style="object-fit:cover; height: 150px;">
       <div class="media-body">
         <h4 class="mt-0">${i + 1}</h4>
-        ${recipe.recipeSteps[i].step}
+        <div style="white-space: pre-wrap;">${recipe.recipeSteps[i].step}</div>
       </div>
     </div>
     <hr>`;
