@@ -15,6 +15,9 @@ const retryES = async () => {
   let logId = null;
   try {
     let logs = await esLog.find({});
+    if (logs.length == 0) {
+      return;
+    }
     for (let i = 0; i < logs.length; i++) {
       logId = logs[i]._id;
       switch (logs[i].type) {
