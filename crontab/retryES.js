@@ -3,7 +3,7 @@ const es = require(`${__dirname}/../utils/es`);
 const nodemailer = require("nodemailer");
 require("dotenv").config({ path: `${__dirname}/../.env` });
 
-const mailTransport = nodemailer.createTransport("SMTP", {
+const mailTransport = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.NODEMAIL,
