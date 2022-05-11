@@ -265,7 +265,13 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
       let follower = await User.findOne({
         userId: followerResult[0].followerId[i],
       })
-        .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
+        .select({
+          userId: 1,
+          userName: 1,
+          userImage: 1,
+          _id: 0,
+          introduction: 1,
+        })
         .lean();
       follower.isFollowing = false;
       // login user
@@ -315,7 +321,13 @@ const getFollowing = async (userId, authorId, page, followPageSize) => {
       let following = await User.findOne({
         userId: followingResult[0].followingId[i],
       })
-        .select({ userId: 1, userName: 1, userImage: 1, _id: 0 })
+        .select({
+          userId: 1,
+          userName: 1,
+          userImage: 1,
+          _id: 0,
+          introduction: 1,
+        })
         .lean();
       following.isFollowing = false;
       // login user

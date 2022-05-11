@@ -44,14 +44,13 @@ $(async function () {
     }
     let followingNew = author.following.length;
     let followerNew = author.follower.length;
-    $("#userName").text(author.userName);
+    $("#userId").text(author.userId);
     $("#user-recipe").attr("href", `/user/${author.userId}/recipes`);
     $("#userImage").attr("src", author.userImage);
     $("#following").text(`${author.following.length} following`);
     $("#following-link").attr("href", `/user/${author.userId}/followings`);
     $("#follower").text(`${author.follower.length} follower`);
     $("#follower-link").attr("href", `/user/${author.userId}/followers`);
-    $("#userId").html(`&commat;${author.userId}`);
     $("#introduction").text(author.introduction);
     $("#followType").text(profileType);
     $("#author-follow").data("userid", author.userId);
@@ -284,8 +283,8 @@ async function renderFollow(
       <div class="media p-3">
         <img class="align-self-center mr-3 profile-user-img img-fluid img-circle" src="${follow[i].userImage}" alt="profile image" style="object-fit: cover; height: 100px;">
         <div class="media-body col-10">
-        <a href="/user/${follow[i].userId}/recipes" class="text-decoration-none" ><h5 style="display: inline;" class="text-dark">${follow[i].userName}</h5></a>
-          <div class="font-italic text-secondary">&commat;${follow[i].userId}</div>
+        <a href="/user/${follow[i].userId}/recipes" class="text-decoration-none" ><h5 style="display: inline;" class="text-dark">${follow[i].userId}</h5></a>
+          <small class="multiline-ellipsis mt-1 d-block" style="display: block; white-space: pre-line; width: 200px height: 35px text-overflow: ellipsis" >${follow[i].introduction}</small>
           <div class="mt-3">
             ${followBtnGroup}
           </div>

@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   type: { type: String, required: true },
   userName: { type: String },
-  introduction: { type: String, default: null },
+  introduction: { type: String, default: "" },
   userImage: {
     type: String,
     default:
