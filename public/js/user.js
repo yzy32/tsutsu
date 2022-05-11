@@ -88,6 +88,10 @@ $(async function () {
       $("#setting-section").removeClass("d-none");
       $("#form-email").val(author.email);
       $("#form-userId").val(author.userId);
+      // $("#userImage").css("cursor", "pointer");
+      // $("#userImage").attr("data-toggle", "tooltip");
+      // $("#userImage").attr("data-placement", "bottom");
+      // $("#userImage").attr("title", "click to upload profile image");
     }
 
     // render recipe and favorites
