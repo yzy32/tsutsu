@@ -124,7 +124,7 @@ $(function () {
       <!-- image -->
       <div class="input-group mb-3">
         <div class="custom-file">
-          <input name="recipeStepImage" type="file" class="custom-file-input" id="recipeImage" required>
+          <input name="recipeStepImage" type="file" accept="image/*" class="custom-file-input" id="recipeImage" style="cursor: pointer !important;" required>
           <label class="custom-file-label" for="recipeImage">Choose Image</label>
         </div>
       </div>

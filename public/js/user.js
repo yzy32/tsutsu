@@ -289,7 +289,11 @@ $(async function () {
         console.log(error);
         if (error.response && error.response.status == 400) {
           // toastr.warning("Either intro or image has to have input");
-          $("#error").text("All fields cannot be empty");
+          console.log(error.response);
+          let msg = error.response.data.error
+            ? error.response.data.error
+            : "Please check your input again";
+          $("#error").text(msg);
         } else if (error.response && error.response.status == 500) {
           $("#error").text("Upload Failed");
         }

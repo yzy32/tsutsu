@@ -38,6 +38,18 @@ const s3Config = new aws.S3({
 
 //upload recipe img to s3
 var upload = multer({
+  fileFilter: function (req, file, cb) {
+    const fileExtension = file.mimetype.split("/")[1];
+    if (
+      fileExtension !== "jpg" &&
+      fileExtension !== "jpeg" &&
+      fileExtension !== "png" &&
+      fileExtension !== "gif"
+    ) {
+      return cb(null, false);
+    }
+    cb(null, true);
+  },
   storage: multerS3({
     s3: s3Config,
     bucket: process.env.AWS_BUCKET_NAME,
@@ -55,6 +67,17 @@ var upload = multer({
       cb(null, `assets/recipe/` + customFileName + "." + fileExtension);
     },
   }),
+  fileFilter: function (req, file, cb) {
+    const fileType = file.mimetype.split("/")[0];
+    console.log("filefilter: ", fileType);
+    console.log(file);
+    if (fileType !== "image") {
+      let error = new Error("Only image is allowed");
+      error.status = 400;
+      return cb(error);
+    }
+    cb(null, true);
+  },
 });
 
 //upload profile image to s3
@@ -75,6 +98,17 @@ var uploadProfile = multer({
       cb(null, `assets/profile/` + customFileName + "." + fileExtension);
     },
   }),
+  fileFilter: function (req, file, cb) {
+    const fileType = file.mimetype.split("/")[0];
+    console.log("filefilter: ", fileType);
+    console.log(file);
+    if (fileType !== "image") {
+      let error = new Error("Only image is allowed");
+      error.status = 400;
+      return cb(error);
+    }
+    cb(null, true);
+  },
 });
 
 module.exports = {
