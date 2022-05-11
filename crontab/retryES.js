@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 require("dotenv").config({ path: `${__dirname}/../.env` });
 
 const mailTransport = nodemailer.createTransport("SMTP", {
-  service: "Gmail",
+  service: "gmail",
   auth: {
     user: process.env.NODEMAIL,
     pass: process.env.MAILPWD,
