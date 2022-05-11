@@ -80,12 +80,12 @@ const retryES = async () => {
   } catch (error) {
     console.log(error);
     //send mail/slack to notify
-    let text = { logId: logId };
+    let text = { logId: logId, error: JSON.stringify(error) };
     mailOptions = {
       from: "learn2021yy@gmail.com",
       to: "learn2021yy@gmail.com",
       subject: "[Alert] ES retry error",
-      text: text,
+      text: JSON.stringify(text),
     };
     mailTransport.sendMail(mailOptions, (mailError, info) => {
       if (mailError) {
