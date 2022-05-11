@@ -87,7 +87,7 @@ const retryES = async () => {
       subject: "[Alert] ES retry error",
       text: text,
     };
-    transporter.sendMail(mailOptions, (error, info) => {
+    mailTransport.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log("send mail error: ", error);
       } else {
