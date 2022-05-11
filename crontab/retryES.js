@@ -89,7 +89,7 @@ const retryES = async () => {
     };
     mailTransport.sendMail(mailOptions, (mailError, info) => {
       if (mailError) {
-        console.log("send mail error: ", err);
+        console.log("send mail error: ", mailError);
       } else {
         console.log("success sending mail: ", info);
       }
