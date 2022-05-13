@@ -29,11 +29,6 @@ app.use("/", [
   require("./server/routes/userflow/recipe_route"),
 ]);
 
-// app.get("/s3Url", async (req, res) => {
-//   const url = await s3.generateUploadURL();
-//   res.status(200).json({ s3Url: url });
-// });
-
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });

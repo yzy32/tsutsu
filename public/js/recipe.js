@@ -50,6 +50,10 @@ $(async function () {
     } else if (recipe.isFavorite === false) {
       $("#favoriteBtn").removeClass("d-none");
     }
+    if (recipe.authorId == userId) {
+      $("#editBtn").removeClass("d-none");
+      $("#editLink").attr("href", `/recipe/${recipe._id}/edit`);
+    }
     $("#recipeName").text(recipe.recipeName);
     $("#recipeImage").attr("src", recipe.recipeImage);
     $("#description").text(recipe.description);

@@ -5,38 +5,42 @@ const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
 
 //for generate upload url
-// const s3 = new aws.S3({
-//   region: process.env.AWS_S3_REGION,
-//   accessKeyId: process.env.AWS_ACCESSKEY_ID,
-//   secretAccessKey: process.env.AWS_ACCESSKEY_SECRET,
-//   signatureVersion: "v4",
-// });
+const s3 = new aws.S3({
+  region: process.env.AWS_S3_REGION,
+  accessKeyId: process.env.AWS_ACCESSKEY_ID,
+  secretAccessKey: process.env.AWS_ACCESSKEY_SECRET,
+  signatureVersion: "v4",
+});
 
-// //FIXME:
-// async function generateUploadURL() {
-//   try {
-//     const imageName = "test.jpeg";
-//     const params = {
-//       Bucket: process.env.AWS_BUCKET_NAME,
-//       Key: imageName,
-//       Expires: 60,
-//       ContentType: "image/jpeg",
-//     };
-//     const uploadURL = await s3.getSignedUrlPromise("putObject", params);
-//     console.log("url: ", uploadURL);
-//     return uploadURL;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+async function generateUploadURL(req, res) {
+  try {
+    // let { imageName } = req.body;
+    // let imageType = imageName.split(".")[1];
+    const customFileName = crypto
+      .randomBytes(18)
+      .toString("hex")
+      .substring(0, 8);
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `assets/recipe/${customFileName}.jpg`,
+      Expires: 60,
+      ContentType: `image/jpeg`,
+    };
+    const uploadURL = await s3.getSignedUrlPromise("putObject", params);
+    res.status(200).json({ s3Url: uploadURL });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
+//upload recipe img to s3
 const s3Config = new aws.S3({
   accessKeyId: process.env.AWS_ACCESSKEY_ID,
   secretAccessKey: process.env.AWS_ACCESSKEY_SECRET,
   Bucket: process.env.AWS_BUCKET_NAME,
 });
 
-//upload recipe img to s3
 var upload = multer({
   fileFilter: function (req, file, cb) {
     const fileExtension = file.mimetype.split("/")[1];
@@ -112,7 +116,7 @@ var uploadProfile = multer({
 });
 
 module.exports = {
-  // generateUploadURL,
+  generateUploadURL,
   upload,
   uploadProfile,
 };

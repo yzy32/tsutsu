@@ -411,6 +411,11 @@ const getPopularRecipe = async (req, res) => {
   res.status(200).json({ recipes: result });
 };
 
+const updateRecipe = async (req, res) => {
+  console.log(req.body);
+  res.status(200).json({ msg: req.body });
+};
+
 module.exports = {
   getSearchRecipe,
   createRecipe,
@@ -425,4 +430,5 @@ module.exports = {
   getFollowingNewRecipe,
   addViewCount,
   getPopularRecipe,
+  updateRecipe,
 };

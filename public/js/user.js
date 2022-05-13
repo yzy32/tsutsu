@@ -375,28 +375,42 @@ async function renderRecipe(authorId, page, jwtToken, pageSize, keyword) {
       let public = `
       <div class="card-tools">
         <button type="button" class="btn btn-tool">
-          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate" data-bs-toggle="tooltip" data-bs-placement="top" title="public"></i>
+          <a href="/recipe/${recipe.result[i]._id}/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="edit" style="text-decoration: none; color:inherit;">
+            <i data-recipeId="${recipe.result[i]._id}" class="fa-solid fa-pen-to-square"></i>
+          </a>
+        </button>
+      </div>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool">
+          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate mr-2" data-bs-toggle="tooltip" data-bs-placement="top" title="click to set private"></i>
         </button>
       </div>
       <div class="card-tools d-none ">
         <button type="button" class="btn btn-tool">
-          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic" data-bs-toggle="tooltip" data-bs-placement="top" title="private"></i>
+          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic mr-2" data-bs-toggle="tooltip" data-bs-placement="top" title="click to set public"></i>
         </button>
       </div>
-      <div class="card-tools text-lightgray mr-1" data-bs-toggle="tooltip" data-bs-placement="top" title="view">${viewCount}</div>
+      <div class="card-tools text-lightgray mr-2" data-bs-toggle="tooltip" data-bs-placement="top" title="view">${viewCount}</div>
       `;
       let private = `
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool">
+          <a href="/recipe/${recipe.result[i]._id}/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="edit" style="text-decoration: none; color:inherit;">
+            <i data-recipeId="${recipe.result[i]._id}" class="fa-solid fa-pen-to-square"></i>
+          </a>
+        </button>
+      </div>
       <div class="card-tools d-none">
         <button type="button" class="btn btn-tool">
-          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate" data-bs-toggle="tooltip" data-bs-placement="top" title="public"></i>
+          <i data-recipeId="${recipe.result[i]._id}" class="fa-regular fa-eye setPrivate mr-2" data-bs-toggle="tooltip" data-bs-placement="top" title="click to set private"></i>
         </button>
       </div>
       <div class="card-tools ">
         <button type="button" class="btn btn-tool">
-          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic" data-bs-toggle="tooltip" data-bs-placement="top" title="private"></i>
+          <i data-recipeid="${recipe.result[i]._id}" class="fa-regular fa-eye-slash setPublic mr-2" data-bs-toggle="tooltip" data-bs-placement="top" title="click to set public"></i>
         </button>
       </div>
-      <div class="card-tools text-lightgray mr-1" data-bs-toggle="tooltip" data-bs-placement="top" title="view">${viewCount}</div>
+      <div class="card-tools text-lightgray mr-2" data-bs-toggle="tooltip" data-bs-placement="top" title="view">${viewCount}</div>
       `;
       //if recipe.setPublic = true, check recipe.result[i].isPublic (true, false)
       //if recipe.setPublic = false, don't show any public setting

@@ -9,7 +9,9 @@ const {
   getFollowingNewRecipe,
   addViewCount,
   getPopularRecipe,
+  updateRecipe,
 } = require("../../controllers/recipe_controller");
+const s3 = require("../../../utils/s3");
 const { errorHandler } = require("../../../utils/util");
 const {
   searchAuth,
@@ -26,6 +28,8 @@ router.get(
   errorHandler(getFollowingNewRecipe)
 );
 router.post("/recipe/viewCount", errorHandler(addViewCount));
+router.post("/recipe/setPublic", auth, errorHandler(setRecipePublic));
+router.get("/recipe/imgUploadUrl", auth, errorHandler(s3.generateUploadURL));
 router.get("/recipe/:id", recipeAuth, errorHandler(getRecipePage));
 router.post(
   "/recipe",
@@ -36,9 +40,8 @@ router.post(
   ]),
   errorHandler(createRecipe)
 );
+router.put("/recipe/:id/edit", auth, errorHandler(updateRecipe));
 router.get("/recipe/:id/review", errorHandler(getReview));
 router.post("/recipe/:id/review", auth, errorHandler(createReview));
-
-router.post("/recipe/setPublic", auth, errorHandler(setRecipePublic));
 
 module.exports = router;
