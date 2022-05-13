@@ -89,7 +89,8 @@ $(async function () {
     for (let i = 0; i < recipe.recipeSteps.length; i++) {
       let stepImg = recipe.recipeSteps[i].image
         ? recipe.recipeSteps[i].image
-        : "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/step.png";
+        : "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/logo/TSUTSU-19.jpeg";
+      // : "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/step.png";
       let step = `
       
       <div class="media">

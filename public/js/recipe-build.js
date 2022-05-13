@@ -309,6 +309,9 @@ $(async function () {
     stepsSection.empty();
     $("#removeStep").removeClass("d-none");
     for (let i = 0; i < recipe.recipeSteps.length; i++) {
+      let stepImg = recipe.recipeSteps[i].image
+        ? recipe.recipeSteps[i].image
+        : "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/logo/TSUTSU-19.jpeg";
       let newStep = `
       <!-- step group -->
       <div class="input-group mb-3 mt-3 recipeSteps-group">
@@ -317,12 +320,8 @@ $(async function () {
           <label>Step ${i + 1}</label>
         </div>
         <div>
-          <img src="${
-            recipe.recipeSteps[i].image
-          }" class="mb-2 ml-1 img-thumbnail " style="object-fit: cover; height: 150px; max-width: 250px;" alt="step image">
-          <input type="text" name="recipeStepImage" class="d-none" value="${
-            recipe.recipeSteps[i].image
-          }">
+          <img src="${stepImg}" class="mb-2 ml-1 img-thumbnail " style="object-fit: cover; height: 150px; max-width: 250px;" alt="step image">
+          <input type="text" name="recipeStepImage" class="d-none" value="${stepImg}">
           <span class="error text-danger ml-5"></span>  
         </div>
         <!-- image -->
