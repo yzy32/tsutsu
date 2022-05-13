@@ -461,7 +461,7 @@ const searchMongoFavorite = async (authorId, keyword, page, userPageSize) => {
   }
 };
 
-const createRecipeinES = async (id, recipe) => {
+const createRecipeinES = async (id, recipe, type) => {
   let count = 0;
   let errorMsg = null;
   let errorStatus = null;
@@ -469,16 +469,22 @@ const createRecipeinES = async (id, recipe) => {
     //retry 3 times (total: 4 times)
     count++;
     try {
-      //FIXME: test time
-      console.log("5.recipte creation before es: ", new Date());
-      let esResult = await es.index({
-        index: "recipes",
-        id: id,
-        body: recipe,
-      });
-      //FIXME: test time
-      console.log("6.recipte creation after es: ", new Date());
-      console.log("es success for creating recipe in ES: ", esResult);
+      let esResult = null;
+      if (type == "update") {
+        esResult = await es.update({
+          index: "recipes",
+          id: id,
+          doc: recipe,
+        });
+      }
+      if (type == "create") {
+        esResult = await es.index({
+          index: "recipes",
+          id: id,
+          body: recipe,
+        });
+      }
+      console.log(`es success for ${type} recipe in ES: `, esResult);
       break;
     } catch (error) {
       console.log(`es error ${count}: `, error);
@@ -487,8 +493,15 @@ const createRecipeinES = async (id, recipe) => {
     }
   }
   if (count == 4) {
-    //TODO: after retry 3 times, record error log into mongodb
-    await storeESLog("createRecipe", id, errorMsg, errorStatus);
+    //after retry 3 times, record error log into mongodb
+    if ((type = "create")) {
+      await storeESLog("createRecipe", id, errorMsg, errorStatus);
+      return;
+    }
+    if ((type = "update")) {
+      await storeESLog("updateRecipe", id, errorMsg, errorStatus);
+      return;
+    }
   }
 };
 

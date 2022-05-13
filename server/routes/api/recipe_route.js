@@ -18,7 +18,9 @@ const {
   recipeAuth,
   auth,
 } = require("../../../utils/authentication");
-const { upload } = require("../../../utils/s3");
+// const { upload } = require("../../../utils/s3");
+const multer = require("multer");
+const upload = multer();
 
 router.get("/recipe/search", searchAuth, errorHandler(getSearchRecipe));
 router.get("/recipe/popular", errorHandler(getPopularRecipe));
@@ -40,7 +42,7 @@ router.post(
   ]),
   errorHandler(createRecipe)
 );
-router.put("/recipe/:id/edit", auth, errorHandler(updateRecipe));
+router.put("/recipe/:id/edit", auth, upload.none(), errorHandler(updateRecipe));
 router.get("/recipe/:id/review", errorHandler(getReview));
 router.post("/recipe/:id/review", auth, errorHandler(createReview));
 

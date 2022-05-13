@@ -52,8 +52,6 @@ $(async function () {
         return;
       }
       const recipeForm = new FormData(recipe[0]);
-      // const user = JSON.parse(localStorage.getItem("user"));
-      // let jwtToken = null;
       if (user) {
         jwtToken = user.accessToken;
       }
@@ -77,13 +75,13 @@ $(async function () {
     try {
       e.preventDefault();
       const recipe = $("#recipe-form");
+      console.log(recipe);
       if (!recipe[0].checkValidity()) {
         recipe[0].reportValidity();
         return;
       }
       const recipeForm = new FormData(recipe[0]);
-      // const user = JSON.parse(localStorage.getItem("user"));
-      // let jwtToken = null;
+      console.log(recipeForm);
       if (user) {
         jwtToken = user.accessToken;
       }
@@ -91,14 +89,17 @@ $(async function () {
       const response = await axios.put(`/api/1.0${updateUrl}`, recipeForm, {
         headers: {
           Authorization: "Bearer " + jwtToken,
+          "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response.data);
-      // if (response.status == 200) {
-      //   window.location = `/user/${user.user.userId}/recipes`;
-      // }
+      if (response.status == 200) {
+        window.location = `/user/${user.user.userId}/recipes`;
+      }
     } catch (error) {
       console.log(error);
+      if (error.response && error.response.status == 400) {
+        $("#error").text(error.response.data.error);
+      }
     }
   });
 
@@ -137,7 +138,7 @@ $(async function () {
           <span class="input-group-text"><i class="fa-regular fa-image"></i></span>
         </div>
         <div class="custom-file recipeSteps" data-step="${stepNum}">
-          <input name="recipeStepImage" type="file" class="custom-file-input recipeStepImage" accept="image/*" style="cursor: pointer !important;" required>
+          <input type="file" class="custom-file-input recipeStepImage" accept="image/*" style="cursor: pointer !important;" required>
           <label class="custom-file-label" for="recipeStepImage">Choose Image</label>
         </div>
       </div>

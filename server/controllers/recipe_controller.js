@@ -152,38 +152,12 @@ const keywordsToMongo = async (req) => {
 };
 
 const createRecipe = async (req, res) => {
-  let recipe = {
-    recipeImage: req.files.recipeImage[0].location,
-    servings: req.body.servings,
-    recipeSteps: [],
-    recipeName: req.body.recipeName,
-    description: req.body.description,
-    cookTime: req.body.cookTime,
-    ingredients: req.body.ingredients,
-    author: req.user.userName,
-    authorId: req.user.userId,
-  };
-  for (let i = 0; i < req.body.recipeSteps.length; i++) {
-    let recipeStep = {
-      step: req.body.recipeSteps[i],
-      image: req.files.recipeStepImage[i].location,
-    };
-    recipe.recipeSteps.push(recipeStep);
+  if (!req.body.recipeImage) {
+    return res.status(400).json({ error: "Recipe image is required" });
   }
-  if (req.body.isPublic) {
-    recipe.isPublic = "false";
-  }
-  if (req.body.tags) {
-    let tags = Array.isArray(req.body.tags) ? req.body.tags : [req.body.tags];
-    recipe.tags = tags;
-  }
-  //FIXME: test time
-  console.log(
-    "2.recipte creation in controller before data validation: ",
-    new Date()
-  );
-  // data validation
+  let recipe = recipeData(req);
   let { recipeName, description, cookTime, servings, ingredients } = recipe;
+  // data validation
   const validate = await validator.createRecipe.validateAsync({
     recipeName,
     description,
@@ -191,20 +165,15 @@ const createRecipe = async (req, res) => {
     servings,
     ingredients,
   });
-  console.log("input", recipe);
-  //FIXME: test time
-  console.log("3.recipte creation in controller before mongo: ", new Date());
   let recipeInserted = await Recipe.create(recipe);
   let result = await recipeInserted.save();
-  //FIXME: test time
-  console.log("4.recipte creation in controller after mongo: ", new Date());
   console.log("recipe", recipe);
   console.log("mongo result for saving: ", result);
   let recipeES = recipe; //shallow copy
   recipeES.favoriteCount = 0;
   delete recipeES.servings;
   delete recipeES.recipeSteps;
-  createRecipeinES(result.id, recipeES);
+  createRecipeinES(result.id, recipeES, "create");
   res.status(200).json({ msg: "success" });
   return;
 };
@@ -412,8 +381,63 @@ const getPopularRecipe = async (req, res) => {
 };
 
 const updateRecipe = async (req, res) => {
-  console.log(req.body);
-  res.status(200).json({ msg: req.body });
+  let recipeId = req.params.id;
+  if (!req.body.recipeImage) {
+    return res.status(400).json({ error: "Recipe image is required" });
+  }
+  let recipe = recipeData(req);
+  let { recipeName, description, cookTime, servings, ingredients } = recipe;
+  // data validation
+  const validate = await validator.createRecipe.validateAsync({
+    recipeName,
+    description,
+    cookTime,
+    servings,
+    ingredients,
+  });
+  const result = await Recipe.findOneAndUpdate(
+    {
+      _id: mongoose.Types.ObjectId(recipeId),
+    },
+    recipe,
+    { new: true }
+  );
+  console.log("update recipe result: ", result);
+  let recipeES = recipe; //shallow copy
+  recipeES.favoriteCount = 0;
+  delete recipeES.servings;
+  delete recipeES.recipeSteps;
+  createRecipeinES(recipeId, recipeES, "update");
+  res.status(200).json({ msg: recipe });
+};
+
+const recipeData = (req) => {
+  let recipe = {
+    recipeImage: req.body.recipeImage,
+    servings: req.body.servings,
+    recipeSteps: [],
+    recipeName: req.body.recipeName,
+    description: req.body.description,
+    cookTime: req.body.cookTime,
+    ingredients: req.body.ingredients,
+    author: req.user.userName,
+    authorId: req.user.userId,
+  };
+  for (let i = 0; i < req.body.recipeSteps.length; i++) {
+    let recipeStep = {
+      step: req.body.recipeSteps[i],
+      image: req.body.recipeStepImage[i],
+    };
+    recipe.recipeSteps.push(recipeStep);
+  }
+  if (req.body.isPublic) {
+    recipe.isPublic = "false";
+  }
+  if (req.body.tags) {
+    let tags = Array.isArray(req.body.tags) ? req.body.tags : [req.body.tags];
+    recipe.tags = tags;
+  }
+  return recipe;
 };
 
 module.exports = {

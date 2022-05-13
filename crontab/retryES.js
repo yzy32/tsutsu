@@ -72,6 +72,19 @@ const retryES = async () => {
           console.log("success update in es: ", esResult);
           break;
         }
+        case "updateRecipe": {
+          let recipe = await Recipe.findById(logs[i].recipeId).lean();
+          delete recipe.servings;
+          delete recipe.recipeSteps;
+          console.log("updateRecipe: ", recipe);
+          const esResult = await es.update({
+            index: "recipes",
+            id: logs[i].recipeId,
+            doc: recipe,
+          });
+          console.log("success update in es: ", esResult);
+          break;
+        }
       }
       //remove from mongo
       const result = await esLog.deleteOne({ _id: logs[i]._id });
