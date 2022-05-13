@@ -494,11 +494,11 @@ const createRecipeinES = async (id, recipe, type) => {
   }
   if (count == 4) {
     //after retry 3 times, record error log into mongodb
-    if ((type = "create")) {
+    if (type == "create") {
       await storeESLog("createRecipe", id, errorMsg, errorStatus);
       return;
     }
-    if ((type = "update")) {
+    if (type == "update") {
       await storeESLog("updateRecipe", id, errorMsg, errorStatus);
       return;
     }
