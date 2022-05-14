@@ -60,7 +60,20 @@ const retryES = async () => {
           break;
         }
         case "createRecipe": {
-          let recipe = await Recipe.findById(logs[i].recipeId).lean();
+          let recipe = await Recipe.findById(logs[i].recipeId)
+            .select({
+              _id: 0,
+              recipeImage: 1,
+              description: 1,
+              cookTime: 1,
+              ingredients: 1,
+              isPublic: 1,
+              favoriteCount: 1,
+              tags: 1,
+              author: 1,
+              authorId: 1,
+            })
+            .lean();
           delete recipe.servings;
           delete recipe.recipeSteps;
           console.log("createRecipe: ", recipe);
@@ -73,7 +86,20 @@ const retryES = async () => {
           break;
         }
         case "updateRecipe": {
-          let recipe = await Recipe.findById(logs[i].recipeId).lean();
+          let recipe = await Recipe.findById(logs[i].recipeId)
+            .select({
+              _id: 0,
+              recipeImage: 1,
+              description: 1,
+              cookTime: 1,
+              ingredients: 1,
+              isPublic: 1,
+              favoriteCount: 1,
+              tags: 1,
+              author: 1,
+              authorId: 1,
+            })
+            .lean();
           delete recipe.servings;
           delete recipe.recipeSteps;
           console.log("updateRecipe: ", recipe);
