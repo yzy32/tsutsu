@@ -68,6 +68,11 @@ $(async function () {
       console.log(error);
       if (error.response && error.response.status == 400) {
         $("#error").text(error.response.data.error);
+        return;
+      }
+      if (error.response && error.response.status !== 200) {
+        $("#error").text("Fail to create");
+        return;
       }
     }
   });
@@ -99,6 +104,11 @@ $(async function () {
       console.log(error);
       if (error.response && error.response.status == 400) {
         $("#error").text(error.response.data.error);
+        return;
+      }
+      if (error.response && error.response.status !== 200) {
+        $("#error").text("Fail to update");
+        return;
       }
     }
   });
