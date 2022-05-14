@@ -1,35 +1,40 @@
+const redisClient = require("../../utils/redis");
 const { getTrendingKeyword } = require("../models/keyword_model");
 const { searchRecipe } = require("../models/recipe_model");
 
 const selectTrendingKeyword = async (req, res) => {
   try {
-    let hour = 24;
-    let limit = 3;
-    let currentTime = Date.now();
-    let past = currentTime - 60 * 60 * 1000 * hour;
-    let currentDatetime = new Date().toISOString();
-    let pastDatetime = new Date(past).toISOString();
-    // console.log("currentTime: ", currentTime);
-    // console.log("currentDatetime: ", currentDatetime);
-    // console.log(`${hour} hour ago: `, past);
-    // console.log(`${hour} hour ago (Datetime): `, pastDatetime);
-    let keywords = await getTrendingKeyword(
-      pastDatetime,
-      currentDatetime,
-      limit
-    );
-    if (keywords.length < 3) {
-      hour = hour * 30;
-      past = currentTime - 60 * 60 * 1000 * hour;
-      pastDatetime = new Date(past).toISOString();
+    let keywords = [];
+    if (redisClient.ready) {
+      keywords = await redisClient.LRANGE("keywords", 0, -1);
+    } else {
+      let hour = 24;
+      let limit = 3;
+      let currentTime = Date.now();
+      let past = currentTime - 60 * 60 * 1000 * hour;
+      let currentDatetime = new Date().toISOString();
+      let pastDatetime = new Date(past).toISOString();
       keywords = await getTrendingKeyword(pastDatetime, currentDatetime, limit);
+      if (keywords.length < 3) {
+        hour = hour * 30;
+        past = currentTime - 60 * 60 * 1000 * hour;
+        pastDatetime = new Date(past).toISOString();
+        keywords = await getTrendingKeyword(
+          pastDatetime,
+          currentDatetime,
+          limit
+        );
+      }
+      keywords = keywords.map((k) => {
+        return k._id;
+      });
     }
     //search keyword
     let keywordsRecipes = [];
     let start = Math.floor(Math.random() * 10 + 1);
     for (let i = 0; i < keywords.length; i++) {
       let result = await searchRecipe(
-        keywords[i]._id,
+        keywords[i],
         null,
         null,
         null,
@@ -51,7 +56,7 @@ const selectTrendingKeyword = async (req, res) => {
         };
         return recipe;
       });
-      let keywordRecipes = { keyword: keywords[i]._id, recipes: recipes };
+      let keywordRecipes = { keyword: keywords[i], recipes: recipes };
       keywordsRecipes.push(keywordRecipes);
     }
     //return imgurl, recipename, recipeauthor to frontend

@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: `${__dirname}/../.env` });
 const redis = require("redis");
 
 // for local host
@@ -25,6 +25,6 @@ redisClient.on("end", () => {
   console.log("Redis is disconnected");
 });
 
-// redisClient.connect();
+redisClient.connect();
 
 module.exports = redisClient;
