@@ -71,7 +71,7 @@ const recipeSchema = new mongoose.Schema({
   isPublic: { type: Boolean, default: "true" },
   favoriteCount: { type: Number, default: 0 },
   tags: [{ type: String, default: [] }],
-  author: { type: String, required: true },
+  author: { type: String },
   authorId: { type: String, required: true },
   viewCount: { type: Number, default: 0 },
 });
