@@ -117,6 +117,7 @@ $(async function () {
     renderReviewPagination(currentPage, pageSize, recipe.reviewCount);
     // ------- end of recipe page -----------
 
+    $('[data-toggle="tooltip"]').tooltip();
     // hide loading icon
     $("#loading").addClass("d-none");
     $("#recipe").removeClass("d-none");
