@@ -21,7 +21,6 @@ const signUp = async (req, res) => {
   const { userName, userId, email, password } = req.body;
   //data validation
   await validator.signup.validateAsync({
-    userName,
     userId,
     email,
     password,

@@ -5,7 +5,7 @@ $(function () {
   if (user) {
     userName = user.user.userName;
     userId = user.user.userId;
-    $("#nav-userName").text(` ${userName} `);
+    $("#nav-userName").text(` ${userId} `);
     $("#link-user").attr("href", `/user/${userId}/recipes`);
     $("#create").removeClass("d-none");
     $("#logout").removeClass("d-none");

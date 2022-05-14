@@ -157,14 +157,13 @@
               return
             }
 
-            // const response = await axios.post("/api/1.0/user/signup", {
-            //   userName: userName,
-            //   userId: userId,
-            //   email: email,
-            //   password: password
-            // });
-            // window.location = `${window.location.origin}/user/${response.data.user.userId}/recipes`
-            // localStorage.setItem("user", JSON.stringify(response.data));            
+            const response = await axios.post("/api/1.0/user/signup", {
+              userId: userId,
+              email: email,
+              password: password
+            });
+            window.location = `${window.location.origin}/user/${response.data.user.userId}/recipes`
+            localStorage.setItem("user", JSON.stringify(response.data));            
             } catch (error) {
               console.log(error);
               if (error.response && error.response.status !== 500){
