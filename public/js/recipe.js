@@ -351,6 +351,25 @@ $(async function () {
         return;
       }
     });
+    $("#copy").on("click", async (e) => {
+      e.preventDefault();
+      try {
+        console.log($("tbody tr").length);
+        let text = ``;
+        for (let i = 0; i < $("tbody tr").length; i++) {
+          text +=
+            "Ingredient " +
+            $("tbody tr th").eq(i).text() +
+            " : " +
+            $("tbody tr td").eq(i).text() +
+            "\n";
+        }
+        await navigator.clipboard.writeText(text);
+        toastr.success("Copy to clipboard");
+      } catch (error) {
+        toastr.warning("Failed to copy");
+      }
+    });
   } catch (error) {
     console.log(error);
     console.log("here");

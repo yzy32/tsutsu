@@ -168,7 +168,12 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-                <table class="table">
+                <div class="card-tools float-right mb-1" style="position: absolute; top: 30px; right: 20px;">
+                  <button type="button" class="btn btn-tool" id="copy">
+                    <i class="fa-regular fa-clone"></i>
+                  </button>
+                </div>
+                <table class="table" id="ingredients-table">
                   <thead class="h5">
                     <tr>
                       <th scope="col" style="width: 80px;">#</th>
@@ -257,6 +262,10 @@
     <style>
       #toast-container > div {
         opacity: 1;
+      }
+      #toast-container > .toast-success {
+        background-color: #4a4a4a;
+        color: #ecebe9;
       }
       span#author:hover{
         color: #f6b02d !important;
