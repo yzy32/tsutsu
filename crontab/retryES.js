@@ -63,6 +63,7 @@ const retryES = async () => {
           let recipe = await Recipe.findById(logs[i].recipeId)
             .select({
               _id: 0,
+              recipeName: 1,
               recipeImage: 1,
               description: 1,
               cookTime: 1,
@@ -89,6 +90,7 @@ const retryES = async () => {
           let recipe = await Recipe.findById(logs[i].recipeId)
             .select({
               _id: 0,
+              recipeName: 1,
               recipeImage: 1,
               description: 1,
               cookTime: 1,
