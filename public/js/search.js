@@ -189,6 +189,10 @@ async function search() {
     }
     // render filter area
     renderFilter(data);
+    // remove loading icon and show search result
+    document.getElementById("loading").classList.add("d-none");
+    document.getElementById("search-results").classList.remove("d-none");
+    document.getElementById("pageGroup").classList.remove("d-none");
     return data;
   } catch (error) {
     // if (error.response.data.redirectUrl) {

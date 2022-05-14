@@ -117,6 +117,10 @@ $(async function () {
     renderReviewPagination(currentPage, pageSize, recipe.reviewCount);
     // ------- end of recipe page -----------
 
+    // hide loading icon
+    $("#loading").addClass("d-none");
+    $("#recipe").removeClass("d-none");
+
     //click "add to favorite"
     $("#favoriteBtn").on("click", async (e) => {
       e.preventDefault();
@@ -282,6 +286,10 @@ $(async function () {
       e.preventDefault();
       try {
         let review = $("#message-text").val();
+        if (!review) {
+          $("#review-error").text("Review cannot be empty");
+          return;
+        }
         recipeReview = {
           recipeId: recipeId,
           review: review,
@@ -297,10 +305,12 @@ $(async function () {
         );
         //if response success, display review on the top of the review and close the window
         //prepend review and remove last one if reviewlist > 5
+        let time = "now";
         let reviewDiv = `
         <div class="callout callout-warning">
-          <h5>${userId}</h5>
-          <p>${review}</p>
+          <h5 style="display: inline">${userId}</h5>
+          <small class="text-secondary ml-1 float-right">${time}</small>
+          <p class="font-italic">${review}</p>
         </div>`;
         reviewList.prepend(reviewDiv);
         if (reviewList.children().length > 5) {
@@ -317,6 +327,14 @@ $(async function () {
         renderReviewPagination(currentPage, pageSize, recipe.reviewCount);
       } catch (error) {
         console.log(error);
+        if (error.response && error.response.status == 400) {
+          $("#review-error").text("Review cannot be empty");
+          return;
+        }
+        if (error.response && error.response.status !== 200) {
+          $("#review-error").text("Submit review failed");
+          return;
+        }
       }
     });
     $("#signin").on("click", (e) => {
@@ -389,10 +407,34 @@ function renderReviewPagination(currentPage, pageSize, reviewCount) {
 }
 
 function renderReview(reviewList, r) {
+  let now = new Date().getTime();
+  let create = new Date(r.timeCreated).getTime();
+  let tillNow = (now - create) / 1000;
+  let time = "now";
+  if (tillNow >= 60 && tillNow < 120) {
+    time = "1 min ago";
+  } else if (tillNow >= 120 && tillNow < 180) {
+    time = "2 min ago";
+  } else if (tillNow >= 180 && tillNow < 300) {
+    time = "5 min ago";
+  } else if (tillNow >= 300 && tillNow < 600) {
+    time = "10 min ago";
+  } else if (tillNow >= 600 && tillNow < 1800) {
+    time = "30 min ago";
+  } else if (tillNow >= 1800 && tillNow < 3600) {
+    time = "1 hr ago";
+  } else if (tillNow >= 3600 && tillNow < 7200) {
+    time = "2 hr ago";
+  } else if (tillNow >= 7200 && tillNow < 14400) {
+    time = "4 hr ago";
+  } else if (tillNow >= 14400) {
+    time = new Date(r.timeCreated);
+  }
   let reviewDiv = `
   <div class="callout callout-warning">
-  <h5>${r.userId}</h5>
-  <p>${r.review}</p>
-</div>`;
+    <h5 style="display: inline">${r.userId}</h5>
+    <small class="text-secondary ml-1 float-right">${time}</small>
+    <p class="font-italic">${r.review}</p>
+  </div>`;
   reviewList.append(reviewDiv);
 }

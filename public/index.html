@@ -27,6 +27,7 @@
     ></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Caveat:wght@700&family=Righteous&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../../js/nav.js"></script>
@@ -83,7 +84,16 @@
       </div>
     </nav>
     <!-- end of navbar section -->
-    <main class="mb-5">
+    <!-- loading -->
+    <div id="loading" class="row">
+      <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+    </div>
+    <!-- end of loading -->
+    <main id="home" class="mb-5 d-none">
       <!-- banner -->
       <div class="row">
         <div class="col-12">
@@ -97,7 +107,7 @@
       </div>
       <!-- end of banner -->
       <div class="container mt-5">
-        <h1 class="mb-5 font-weight-bold" style="text-align:center; color: #f6ae2d;">Today's Trending Keywords</h1>
+        <h1 class="mb-5 font-weight-bold" style="text-align:center; color: #f6ae2d; font-family: 'Abril Fatface';">Today's Trending Keywords</h1>
         <div class="row">
           <!-- keyword 1 -->
           <div class="col-12 mb-5">
@@ -140,8 +150,25 @@
           <!-- end of keyword 3 -->
         </div>
         <!-- end of trending keywords -->
+        <!-- popular recipes -->
+        <h1 class="mt-5 font-weight-bold" style="text-align:center; color: #f6ae2d; font-family: 'Abril Fatface';">Poplular Recipes</h1>
+        <div class="row">
+          <!-- popular recipes -->
+          <div class="col-12 mb-5">
+            <div class="card w-100 border-0">
+              <div class="card-header h4" style="text-align:center; background-color: white; border-bottom: solid #f6b02d83 3px; color: #4a4a4a;"></div>
+              <div class="card-body">
+                <!-- recipes -->
+                <div id="popular" class="card-deck">
+                </div>
+                <!-- end of recipes -->
+              </div>
+            </div>
+          </div>
+        </div>
+          <!-- end of popular recipes -->
         <!-- recently added -->
-        <h1 id="new-add-title" class="mt-5 font-weight-bold" style="text-align:center; color: #f6ae2d;">Checkout New Recipes</h1>
+        <h1 id="new-add-title" class="mt-5 font-weight-bold" style="text-align:center; color: #f6ae2d; font-family: 'Abril Fatface';">Checkout New Recipes</h1>
         <div class="row">
           <!-- recently added -->
           <div class="col-12 mb-5">
@@ -157,23 +184,6 @@
           </div>
         </div>
         <!-- end of recently added -->
-        <!-- popular recipes -->
-        <h1 class="mt-5 font-weight-bold" style="text-align:center; color: #f6ae2d;">Poplular Recipes</h1>
-        <div class="row">
-          <!-- popular recipes -->
-          <div class="col-12 mb-5">
-            <div class="card w-100 border-0">
-              <div class="card-header h4" style="text-align:center; background-color: white; border-bottom: solid #f6b02d83 3px; color: #4a4a4a;"></div>
-              <div class="card-body">
-                <!-- recipes -->
-                <div id="popular" class="card-deck">
-                </div>
-                <!-- end of recipes -->
-              </div>
-            </div>
-          </div>
-        </div>
-         <!-- end of popular recipes -->
       </div>
     </main>
     <script src="../js/index.js"></script>

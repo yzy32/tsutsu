@@ -100,6 +100,9 @@ $(async function () {
     await renderRecipe(authorId, currentPage, jwtToken, pageSize);
     await renderFavorite(authorId, currentPage, pageSize);
 
+    $("#loading").addClass("d-none");
+    $("#user-recipe").removeClass("d-none");
+
     //tab url
     $("#myrecipes").on("click", async (e) => {
       console.log("click on myrecipes");

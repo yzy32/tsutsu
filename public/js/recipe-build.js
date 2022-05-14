@@ -259,6 +259,8 @@ $(async function () {
     }
   });
   if (type == "create") {
+    $("#loading").addClass("d-none");
+    $("#recipe-form-group").removeClass("d-none");
     return;
   }
   // below are all for edit recipe
@@ -351,6 +353,8 @@ $(async function () {
     //render tag list
     tagListValue = recipe.tags;
     renderTagList();
+    $("#loading").addClass("d-none");
+    $("#recipe-form-group").removeClass("d-none");
   } catch (error) {
     console.log(error);
     if (error.response && error.response.status == 500) {

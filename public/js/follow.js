@@ -86,7 +86,9 @@ $(async function () {
       console.log("redirect to 404");
       window.location("/html/redirect/404.html");
     }
-
+    //remove loading icon and show content
+    $("#loading").addClass("d-none");
+    $("#user-follow").removeClass("d-none");
     // click on pagination to new page
     $(".pagination").on("click", async (e) => {
       e.preventDefault();

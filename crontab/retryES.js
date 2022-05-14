@@ -75,8 +75,6 @@ const retryES = async () => {
               authorId: 1,
             })
             .lean();
-          delete recipe.servings;
-          delete recipe.recipeSteps;
           console.log("createRecipe: ", recipe);
           const esResult = await es.index({
             index: "recipes",
@@ -102,8 +100,6 @@ const retryES = async () => {
               authorId: 1,
             })
             .lean();
-          delete recipe.servings;
-          delete recipe.recipeSteps;
           console.log("updateRecipe: ", recipe);
           const esResult = await es.update({
             index: "recipes",
