@@ -13,11 +13,17 @@ const selectTrendingKeyword = async (req, res) => {
     // console.log("currentDatetime: ", currentDatetime);
     // console.log(`${hour} hour ago: `, past);
     // console.log(`${hour} hour ago (Datetime): `, pastDatetime);
-    const keywords = await getTrendingKeyword(
+    let keywords = await getTrendingKeyword(
       pastDatetime,
       currentDatetime,
       limit
     );
+    if (keywords.length < 3) {
+      hour = hour * 30;
+      past = currentTime - 60 * 60 * 1000 * hour;
+      pastDatetime = new Date(past).toISOString();
+      keywords = await getTrendingKeyword(pastDatetime, currentDatetime, limit);
+    }
     //search keyword
     let keywordsRecipes = [];
     let start = Math.floor(Math.random() * 10 + 1);
