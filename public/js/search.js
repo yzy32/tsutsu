@@ -154,7 +154,7 @@ async function search() {
           <div class="media-body col-8">
             <a href="/recipe/${data.recipes[i].recipeId}" class="text-decoration-none">
               <h3 class="mb-0 text-dark">${data.recipes[i].recipeName}</h3>
-              <small class="mb-1">${data.recipes[i].author}</small>
+              <small class="mb-1">${data.recipes[i].authorId}</small>
               <p class="mt-2 text-dark">You have all ${data.recipes[i].ingrMatchedCount} ingredients</p>
               <p>${tags}</p>
               <div>
