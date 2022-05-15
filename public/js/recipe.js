@@ -309,7 +309,7 @@ $(async function () {
         let time = "now";
         let reviewDiv = `
         <div class="callout callout-warning">
-          <h5 style="display: inline">${userId}</h5>
+        <a href="/user/${r.userId}/recipes" class="text-dark" style="text-decoration: none"><h5 style="display: inline" class="user-link">${r.userId}</h5></a>
           <small class="text-secondary ml-1 float-right">${time}</small>
           <p class="font-italic">${review}</p>
         </div>`;
@@ -452,7 +452,7 @@ function renderReview(reviewList, r) {
   }
   let reviewDiv = `
   <div class="callout callout-warning">
-    <h5 style="display: inline">${r.userId}</h5>
+  <a href="/user/${r.userId}/recipes" class="text-dark" style="text-decoration: none"><h5 style="display: inline" class="user-link">${r.userId}</h5></a>
     <small class="text-secondary ml-1 float-right">${time}</small>
     <p class="font-italic">${r.review}</p>
   </div>`;
