@@ -226,6 +226,14 @@ $(async function () {
     });
   } catch (error) {
     console.log(error);
+    if (error.response && error.response.status == 404) {
+      window.location = "/html/redirect/404.html";
+      return;
+    }
+    if (error.response && error.response.status == 500) {
+      window.location = "/html/redirect/500.html";
+      return;
+    }
   }
 });
 
