@@ -117,6 +117,11 @@ li a:hover {
   padding-top: 1px;
 }
 
+/* img border */
+.profile-user-img {
+  border: 3px solid #f6b02d73 !important;
+}
+
 /* loading */
 .spinner {
   width: 70px;

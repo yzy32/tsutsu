@@ -356,11 +356,12 @@ $(async function () {
       e.preventDefault();
       try {
         console.log($("tbody tr").length);
-        let text = ``;
+        let text = `${$("#recipeName").text()}` + "\n";
         for (let i = 0; i < $("tbody tr").length; i++) {
           text +=
-            "Ingredient " +
+            "[" +
             $("tbody tr th").eq(i).text() +
+            "]" +
             " : " +
             $("tbody tr td").eq(i).text() +
             "\n";
