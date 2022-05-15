@@ -404,7 +404,6 @@ const updateRecipe = async (req, res) => {
   );
   console.log("update recipe result: ", result);
   let recipeES = recipe; //shallow copy
-  recipeES.favoriteCount = 0;
   delete recipeES.servings;
   delete recipeES.recipeSteps;
   createRecipeinES(recipeId, recipeES, "update");
