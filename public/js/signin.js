@@ -44,7 +44,7 @@ document.getElementById("submit").addEventListener("click", async (e) => {
       ).innerText = `${error.response.data.error}`;
     } else if (error.response && error.response.status == 500) {
       //TODO: redirect to 500 page
-      window.location("/html/redirect/500.html");
+      window.location = "/html/redirect/500.html";
     }
   }
 });

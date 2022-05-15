@@ -201,7 +201,7 @@ async function search() {
     // }
     console.log(error);
     if (error.response && error.status == 500) {
-      window.location("/html/redirect/500.html");
+      window.location = "/html/redirect/500.html";
     }
   }
 }

@@ -19,16 +19,16 @@ async function validate() {
     });
   } catch (error) {
     console.log(error);
-    if (error.response && error.response.status == 500) {
-      window.location("/html/redirect/500.html");
-      return;
-    }
     if (error.response && error.response.status == 403) {
-      window.location("/html/redirect/403.html");
+      window.location = "/html/redirect/403.html";
       return;
     }
     if (error.response && error.response.status == 404) {
-      window.location("/html/redirect/404.html");
+      window.location = "/html/redirect/404.html";
+      return;
+    }
+    if (error.response && error.response.status == 500) {
+      window.location = "/html/redirect/500.html";
       return;
     }
   }
@@ -367,16 +367,16 @@ $(async function () {
     $("#recipe-form-group").removeClass("d-none");
   } catch (error) {
     console.log(error);
-    if (error.response && error.response.status == 500) {
-      window.location("/html/redirect/500.html");
-      return;
-    }
     if (error.response && error.response.status == 403) {
-      window.location("/html/redirect/403.html");
+      window.location = "/html/redirect/403.html";
       return;
     }
     if (error.response && error.response.status == 404) {
-      window.location("/html/redirect/404.html");
+      window.location = "/html/redirect/404.html";
+      return;
+    }
+    if (error.response && error.response.status == 500) {
+      window.location = "/html/redirect/500.html";
       return;
     }
   }

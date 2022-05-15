@@ -84,7 +84,7 @@ $(async function () {
       );
     } else {
       console.log("redirect to 404");
-      window.location("/html/redirect/404.html");
+      window.location = "/html/redirect/404.html";
     }
     //remove loading icon and show content
     $("#loading").addClass("d-none");
@@ -125,7 +125,7 @@ $(async function () {
           );
         } else {
           console.log("redirect to 404");
-          window.location("/html/redirect/404.html");
+          window.location = "/html/redirect/404.html";
         }
       } catch (error) {
         console.log(error);
