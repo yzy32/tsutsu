@@ -219,6 +219,11 @@ const getUserProfile = async (authorId, userId) => {
       { userId: authorId },
       "userId userName introduction userImage following follower email"
     ).lean();
+    if (!result || result.length == 0) {
+      let error = new Error("User not Found");
+      error.status = 404;
+      throw error;
+    }
     if (authorId == userId) {
       result.isFollowing = null;
       return result;
