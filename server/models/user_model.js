@@ -48,6 +48,7 @@ const getUserInfo = async (type, email) => {
 
 const isFollow = async (userId, authorId) => {
   try {
+    // if userId = null, the result will be empty array
     const result = await User.find({
       userId: userId,
       following: { $in: [authorId] },
@@ -215,10 +216,18 @@ const removeFollowing = async (followerId, followingId) => {
 
 const getUserProfile = async (authorId, userId) => {
   try {
-    const result = await User.findOne(
-      { userId: authorId },
-      "userId userName introduction userImage following follower email"
-    ).lean();
+    const result = await User.findOne({ userId: authorId })
+      .select({
+        userId: 1,
+        userName: 1,
+        introduction: 1,
+        userImage: 1,
+        following: 1,
+        follower: 1,
+        email: 1,
+        _id: 0,
+      })
+      .lean();
     if (!result || result.length == 0) {
       let error = new Error("User not Found");
       error.status = 404;
@@ -240,6 +249,146 @@ const getUserProfile = async (authorId, userId) => {
   }
 };
 
+const getFollowDetails = async (userId, followField, page, followPageSize) => {
+  try {
+    // setting fetch field for follower/following's user info
+    let selectField = {
+      _id: 0,
+      userId: 1,
+      userImage: 1,
+      introduction: 1,
+    };
+    // setting # result for pagination
+    let sliceRange = [
+      `$${followField}`,
+      followPageSize * (page - 1),
+      followPageSize,
+    ];
+    // get author's follower/following's detailed info
+    let [authorFollow] = await User.aggregate([
+      { $match: { userId: userId } },
+      {
+        $project: {
+          followIdList: {
+            $slice: sliceRange,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "followIdList",
+          foreignField: "userId",
+          pipeline: [
+            { $project: selectField },
+            { $addFields: { isFollowing: false } }, // set user didn't follow this author's follower/following
+          ],
+          as: "followDetailList",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          followDetailList: 1,
+        },
+      },
+    ]);
+    return authorFollow;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getFollowingId = async (userId) => {
+  try {
+    let { following } = await User.findOne({ userId: userId }).select({
+      _id: 0,
+      following: 1,
+    });
+    return following;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateUserProfile = async (userId, update) => {
+  try {
+    const userInserted = await User.findOneAndUpdate(
+      { userId: userId },
+      update,
+      {
+        new: true,
+      }
+    );
+    if (!userInserted) {
+      let error = new Error("No User Exists");
+      error.status = 400;
+      throw error;
+    }
+    const result = userInserted.save();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const isInFollow = async (authorId, searchId, followField) => {
+  try {
+    let searchOperation = {
+      isExist: {
+        $in: [searchId, `$${followField}`],
+      },
+    };
+    const [{ isExist }] = await User.aggregate([
+      { $match: { userId: authorId } },
+      { $project: searchOperation },
+    ]);
+    return isExist;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getFavoriteRecipeId = async (authorId, page, userPageSize) => {
+  try {
+    const [result] = await User.aggregate([
+      { $match: { userId: authorId } },
+      {
+        $project: {
+          favoriteCount: { $size: "$userFavorites" },
+          favoriteId: {
+            $slice: [
+              { $reverseArray: "$userFavorites" },
+              userPageSize * (page - 1),
+              userPageSize,
+            ],
+          },
+        },
+      },
+    ]);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {
+  createUser,
+  getUserInfo,
+  isFollow,
+  isFavorite,
+  addFavorite,
+  removeFavorite,
+  addFollowing,
+  removeFollowing,
+  getUserProfile,
+  getFollowDetails,
+  getFollowingId,
+  updateUserProfile,
+  isInFollow,
+  getFavoriteRecipeId,
+};
+
 const getFollower = async (userId, authorId, page, followPageSize) => {
   try {
     // get author's follower
@@ -247,14 +396,12 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
       { $match: { userId: authorId } },
       {
         $project: {
-          // followerCount: { $size: "$follower" },
           followerId: {
             $slice: ["$follower", followPageSize * (page - 1), followPageSize],
           },
         },
       },
     ]);
-    // const total = followerResult[0].followerCount;
 
     // get signin user's following list
     let userFollowings = null;
@@ -288,7 +435,6 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
       }
       result.push(follower);
     }
-    // console.log("user is follow: ", userFollowings);
     return result;
   } catch (error) {
     console.log(error);
@@ -353,28 +499,6 @@ const getFollowing = async (userId, authorId, page, followPageSize) => {
   }
 };
 
-const updateUserProfile = async (userId, update) => {
-  try {
-    const userInserted = await User.findOneAndUpdate(
-      { userId: userId },
-      update,
-      {
-        new: true,
-      }
-    );
-    if (!userInserted) {
-      let error = new Error("No User Exists");
-      error.status = 400;
-      throw error;
-    }
-    const result = userInserted.save();
-    return result;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
-
 const searchFollower = async (authorId, userId, searchId) => {
   try {
     // get author's follower
@@ -415,13 +539,11 @@ const searchFollower = async (authorId, userId, searchId) => {
     }
     return result;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
 
 const searchFollowing = async (authorId, userId, searchId) => {
-  //TODO:
   try {
     // get author's following
     const followingResult = await User.aggregate([
@@ -463,24 +585,6 @@ const searchFollowing = async (authorId, userId, searchId) => {
     }
     return result;
   } catch (error) {
-    console.log(error);
     throw error;
   }
-};
-
-module.exports = {
-  createUser,
-  getUserInfo,
-  isFollow,
-  isFavorite,
-  addFavorite,
-  removeFavorite,
-  addFollowing,
-  removeFollowing,
-  getUserProfile,
-  getFollower,
-  getFollowing,
-  updateUserProfile,
-  searchFollower,
-  searchFollowing,
 };

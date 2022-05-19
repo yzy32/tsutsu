@@ -285,7 +285,7 @@ async function renderFollow(
   <button data-userid="${follow[i].userId}" type="button" class="toUnFollow btn btn-lightgrey-click btn-sm mr-2 toastrDefaultWarning "><i class="fa-solid fa-bell mr-1"></i> Follow</button>`;
       if (follow[i].isFollowing) {
         followBtnGroup += unFollowBtn;
-      } else {
+      } else if (follow[i].isFollowing == false) {
         followBtnGroup += followBtn;
       }
       let followHTML = `

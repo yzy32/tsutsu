@@ -6,12 +6,12 @@ const {
   addFollowing,
   removeFollowing,
   getUserProfile,
-  getFollower,
-  getFollowing,
+  getFollowDetails,
+  getFollowingId,
   updateUserProfile,
-  searchFollower,
-  searchFollowing,
+  isInFollow,
 } = require("../models/user_model");
+const { mapFollowing } = require("../../utils/util");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("../../utils/validator");
@@ -128,7 +128,6 @@ const unfollowing = async (req, res) => {
 const getProfile = async (req, res) => {
   let userId = req.user ? req.user.userId : null;
   const result = await getUserProfile(req.params.id, userId);
-  delete result._id;
   if (result.userImage == "default") {
     result.userImage =
       "https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/user.png";
@@ -140,29 +139,52 @@ const getProfile = async (req, res) => {
 const getUserFollower = async (req, res) => {
   if (!req.params.id) {
     console.log("get follower need to has authorId");
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(404).json({ error: "User not existed" });
   }
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
-  const result = await getFollower(userId, req.params.id, page, followPageSize);
-  res.status(200).json({ follow: result });
+  let { followDetailList } = await getFollowDetails(
+    req.params.id,
+    "follower",
+    page,
+    followPageSize
+  );
+  // if user has signed in, check if user has followed this author's follower/following
+  if (userId) {
+    let userFollowingIdList = await getFollowingId(userId);
+    followDetailList = mapFollowing(
+      followDetailList,
+      userId,
+      userFollowingIdList
+    );
+  }
+  res.status(200).json({ follow: followDetailList });
   return;
 };
 
 const getUserFollowing = async (req, res) => {
   if (!req.params.id) {
     console.log("get following need to has authorId");
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(404).json({ error: "User not existed" });
   }
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
-  const result = await getFollowing(
-    userId,
+  let { followDetailList } = await getFollowDetails(
     req.params.id,
+    "following",
     page,
     followPageSize
   );
-  res.status(200).json({ follow: result });
+  // if user has signed in, check if user has followed this author's follower/following
+  if (userId) {
+    let userFollowingIdList = await getFollowingId(userId);
+    followDetailList = mapFollowing(
+      followDetailList,
+      userId,
+      userFollowingIdList
+    );
+  }
+  res.status(200).json({ follow: followDetailList });
   return;
 };
 
@@ -197,26 +219,36 @@ const updateProfile = async (req, res) => {
 const searchUserFollower = async (req, res) => {
   if (!req.params.id) {
     console.log("search follower need to has authorId");
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(404).json({ error: "User not existed" });
   }
   let authorId = req.params.id;
   let userId = req.user ? req.user.userId : null;
   let searchId = req.query.q;
-  const result = await searchFollower(authorId, userId, searchId);
-  res.status(200).json({ follow: result });
+  let isSearchExist = await isInFollow(authorId, searchId, "follower");
+  if (!isSearchExist) {
+    return res.status(200).json({ follow: [] });
+  }
+  let searchUserProfile = await getUserProfile(searchId, userId);
+  res.status(200).json({ follow: [searchUserProfile] });
   return;
 };
 
 const searchUserFollowing = async (req, res) => {
   if (!req.params.id) {
-    console.log("search follower need to has authorId");
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.log("search following need to has authorId");
+    return res.status(404).json({ error: "User not existed" });
   }
   let authorId = req.params.id;
   let userId = req.user ? req.user.userId : null;
   let searchId = req.query.q;
-  const result = await searchFollowing(authorId, userId, searchId);
-  res.status(200).json({ follow: result });
+  // const result = await searchFollowing(authorId, userId, searchId);
+  // res.status(200).json({ follow: result });
+  let isSearchExist = await isInFollow(authorId, searchId, "following");
+  if (!isSearchExist) {
+    return res.status(200).json({ follow: [] });
+  }
+  let searchUserProfile = await getUserProfile(searchId, userId);
+  res.status(200).json({ follow: [searchUserProfile] });
   return;
 };
 
