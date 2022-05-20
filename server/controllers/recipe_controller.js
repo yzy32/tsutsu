@@ -6,18 +6,27 @@ const {
   insertReview,
   getReviewByRecipeId,
   getRecipeByUserId,
-  getPublicRecipeByUserId,
   getFavorite,
   setPublic,
-  searchMongoRecipe,
-  searchMongoFavorite,
+  searchRecipeByName,
+  searchFavoriteByName,
   createRecipeinES,
   getFollowingRecipe,
 } = require("../models/recipe_model");
-const { isFollow, isFavorite, getFollowing } = require("../models/user_model");
+const {
+  isFollow,
+  isFavorite,
+  getFollowing,
+  getFavoriteRecipeId,
+} = require("../models/user_model");
 
 const { storeKeywords } = require("../models/keyword_model");
-const { arrayToString } = require("../../utils/util.js");
+const {
+  arrayToString,
+  removeRecipePrivateInfo,
+  removeRedundantInfo,
+  cleanRecipeForDB,
+} = require("../../utils/util.js");
 const { Recipe, Review } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const es = require("../../utils/es");
@@ -155,7 +164,7 @@ const createRecipe = async (req, res) => {
   if (!req.body.recipeImage) {
     return res.status(400).json({ error: "Recipe image is required" });
   }
-  let recipe = recipeData(req);
+  let recipe = cleanRecipeForDB(req);
   let { recipeName, description, cookTime, servings, ingredients } = recipe;
   // data validation
   const validate = await validator.createRecipe.validateAsync({
@@ -273,19 +282,16 @@ const getUserRecipe = async (req, res) => {
   let authorId = req.params.id;
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
-  //find recipe from recipe based on userid and authorid
   let result = null;
   if (authorId == userId) {
-    result = await getRecipeByUserId(userId, page, userPageSize);
+    let publicOnly = false;
+    result = await getRecipeByUserId(authorId, publicOnly, page, userPageSize);
     result.setPublic = true;
   } else {
-    result = await getPublicRecipeByUserId(authorId, page, userPageSize);
+    let publicOnly = true;
+    result = await getRecipeByUserId(authorId, publicOnly, page, userPageSize);
     result.setPublic = false;
   }
-  if (result.error) {
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-  // console.log(result);
   //return 10pcs of recipe: recipeName, recipeId, recipeImage, ingredients, isPublic, totalPage
   res.status(200).json({ recipe: result });
   return;
@@ -294,12 +300,26 @@ const getUserRecipe = async (req, res) => {
 const getUserFavorite = async (req, res) => {
   let authorId = req.params.id;
   let page = req.query.page ? req.query.page : 1;
-  //find recipe from recipe based on userid and authorid
-  let result = await getFavorite(authorId, page, userPageSize);
-  if (result.error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+  let { favoriteCount, favoriteId } = await getFavoriteRecipeId(
+    authorId,
+    page,
+    userPageSize
+  );
+  const total = favoriteCount;
+  let result = [];
+  for (let i = 0; i < total; i++) {
+    let recipe = await getRecipeById(favoriteId[i]);
+    if (recipe.isPublic) {
+      recipe = removeRedundantInfo(recipe);
+      result.push(recipe);
+      continue;
+    }
+    if (!recipe.isPublic) {
+      recipe = removeRecipePrivateInfo(recipe);
+      result.push(recipe);
+    }
   }
-  res.status(200).json({ favorite: result });
+  res.status(200).json({ favorite: { total, result } });
   return;
 };
 
@@ -311,19 +331,16 @@ const setRecipePublic = async (req, res) => {
 };
 
 const searchUserRecipe = async (req, res) => {
-  // if (!req.query.q) {
-  //   return res.status(400).json({ error: "Search input cannot be empty" });
-  // }
   if (!req.params.id) {
     console.log("search user recipe need to has authorId");
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(404).json({ error: "Page Not Found" });
   }
   let keyword = req.query.q;
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
   let authorId = req.params.id;
 
-  let result = await searchMongoRecipe(
+  let result = await searchRecipeByName(
     authorId,
     userId,
     keyword,
@@ -341,13 +358,18 @@ const searchUserRecipe = async (req, res) => {
 const searchUserFavorite = async (req, res) => {
   if (!req.params.id) {
     console.log("search user favorite need to has authorId");
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(404).json({ error: "Page Not Found" });
   }
   let keyword = req.query.q;
   let page = req.query.page ? req.query.page : 1;
   let authorId = req.params.id;
 
-  let result = await searchMongoFavorite(authorId, keyword, page, userPageSize);
+  let result = await searchFavoriteByName(
+    authorId,
+    keyword,
+    page,
+    userPageSize
+  );
   res.status(200).json({ favorite: result });
   return;
 };
@@ -385,7 +407,7 @@ const updateRecipe = async (req, res) => {
   if (!req.body.recipeImage) {
     return res.status(400).json({ error: "Recipe image is required" });
   }
-  let recipe = recipeData(req);
+  let recipe = cleanRecipeForDB(req);
   let { recipeName, description, cookTime, servings, ingredients } = recipe;
   // data validation
   const validate = await validator.createRecipe.validateAsync({
@@ -408,35 +430,6 @@ const updateRecipe = async (req, res) => {
   delete recipeES.recipeSteps;
   createRecipeinES(recipeId, recipeES, "update");
   res.status(200).json({ msg: recipe });
-};
-
-const recipeData = (req) => {
-  let recipe = {
-    recipeImage: req.body.recipeImage,
-    servings: req.body.servings,
-    recipeSteps: [],
-    recipeName: req.body.recipeName,
-    description: req.body.description,
-    cookTime: req.body.cookTime,
-    ingredients: req.body.ingredients,
-    author: req.user.userName,
-    authorId: req.user.userId,
-  };
-  for (let i = 0; i < req.body.recipeSteps.length; i++) {
-    let recipeStep = {
-      step: req.body.recipeSteps[i],
-      image: req.body.recipeStepImage[i],
-    };
-    recipe.recipeSteps.push(recipeStep);
-  }
-  if (req.body.isPublic) {
-    recipe.isPublic = "false";
-  }
-  if (req.body.tags) {
-    let tags = Array.isArray(req.body.tags) ? req.body.tags : [req.body.tags];
-    recipe.tags = tags;
-  }
-  return recipe;
 };
 
 module.exports = {

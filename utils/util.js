@@ -22,9 +22,6 @@ const removeRecipePrivateInfo = (recipe) => {
     recipeImage: `https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/private.jpeg`,
     ingredients: ["Top secret", "Top secret", "Top secret", "Top secret"],
   };
-  // recipe._id = "";
-  // recipe.recipeImage = `https://tsutsu-s3.s3.ap-northeast-1.amazonaws.com/assets/default/private.jpeg`;
-  // recipe.ingredients = ["Top secret", "Top secret", "Top secret", "Top secret"];
   return privateRecipe;
 };
 
@@ -84,11 +81,8 @@ const mapFollowing = (authorFollowDetailList, userId, userFollowingIdList) => {
   authorFollowDetailList.map((follow) => {
     if (userFollowIdObj.hasOwnProperty(follow.userId)) {
       follow.isFollowing = true;
-      return;
-    }
-    if (userObj.hasOwnProperty(follow.userId)) {
+    } else if (follow.userId == userId) {
       follow.isFollowing = null;
-      return;
     }
   });
   return authorFollowDetailList;

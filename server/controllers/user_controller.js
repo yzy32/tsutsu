@@ -143,7 +143,7 @@ const getUserFollower = async (req, res) => {
   }
   let page = req.query.page ? req.query.page : 1;
   let userId = req.user ? req.user.userId : null;
-  let { followDetailList } = await getFollowDetails(
+  let { followDetailList: authorFollowerDetailList } = await getFollowDetails(
     req.params.id,
     "follower",
     page,
@@ -152,13 +152,13 @@ const getUserFollower = async (req, res) => {
   // if user has signed in, check if user has followed this author's follower/following
   if (userId) {
     let userFollowingIdList = await getFollowingId(userId);
-    followDetailList = mapFollowing(
-      followDetailList,
+    authorFollowerDetailList = mapFollowing(
+      authorFollowerDetailList,
       userId,
       userFollowingIdList
     );
   }
-  res.status(200).json({ follow: followDetailList });
+  res.status(200).json({ follow: authorFollowerDetailList });
   return;
 };
 
