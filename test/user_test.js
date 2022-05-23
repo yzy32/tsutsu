@@ -7,7 +7,7 @@ const {
 } = require("../server/models/user_model");
 const bcrypt = require("bcrypt");
 const tsutsuError = require("../utils/error");
-const jwt = require("jsonwebtoken");
+const { User } = require("../utils/mongo");
 
 describe("user", () => {
   it("normal sign up", async () => {
@@ -122,15 +122,25 @@ describe("user", () => {
       page: 1,
       followPageSize: 20,
     };
-    const err = new tsutsuError(404, "Author not found");
-    await expect(
-      getFollowDetails.bind(
-        null,
+    try {
+      const result = await getFollowDetails(
         authorFollower.authorId,
         authorFollower.followField,
         authorFollower.page,
         authorFollower.followPageSize
-      )
-    ).to.throw(err);
+      );
+    } catch (error) {
+      const err = new tsutsuError(404, "Author not found");
+      expect(error.status).to.equal(err.status);
+      expect(error.message).to.equal(err.message);
+    }
+  });
+
+  after(async () => {
+    try {
+      await User.findOneAndDelete({ userId: "chai" });
+    } catch (error) {
+      console.log(error);
+    }
   });
 });
