@@ -76,14 +76,22 @@ describe("user", () => {
   });
 
   it("normal sign in", async () => {
-    const user = { type: "native", email: "chai@gmail.com", password: "test" };
+    const user = {
+      type: "native",
+      email: "chai@gmail.com",
+      password: "test",
+    };
     const result = await getUserInfo(user.type, user.email);
     const decoded = await bcrypt.compare(user.password, result.password);
     expect(decoded).to.be.true;
   });
 
   it("sign in with wrong password", async () => {
-    const user = { type: "native", email: "chai@gmail.com", password: "wrong" };
+    const user = {
+      type: "native",
+      email: "chai@gmail.com",
+      password: "wrong",
+    };
     const result = await getUserInfo(user.type, user.email);
     const decoded = await bcrypt.compare(user.password, result.password);
     expect(decoded).to.be.false;
