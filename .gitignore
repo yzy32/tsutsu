@@ -2,4 +2,6 @@
 data/*
 node_modules/*
 .env
+.env-tsutsu
 es_http_ca.crt
+nginx.conf
