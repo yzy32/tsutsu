@@ -1,10 +1,13 @@
 require("dotenv").config({ path: `${__dirname}/../.env` });
 const redis = require("redis");
 
+let redisAddress = `redis://${process.env.REDIS_USER}:${process.env.REDIS_PASSWORD}@${process.env.IP}:${process.env.REDIS_PORT}`;
+if (process.env.NODE_ENV == "docker") {
+  redisAddress = `redis://${process.env.REDIS_USER}:${process.env.REDIS_PASSWORD}@${process.env.CONTAINER_REDIS}:${process.env.REDIS_PORT}`;
+}
 // for local host
 const redisClient = redis.createClient({
-  // url: `redis://${process.env.REDIS_USER}:${process.env.REDIS_PASSWORD}@${process.env.IP}:${process.env.REDIS_PORT}`,
-  url: `redis://${process.env.CONTAINER_REDIS}:${process.env.REDIS_PASSWORD}@${process.env.IP}:${process.env.REDIS_PORT}`,
+  url: redisAddress,
   socket: {
     keepAlive: false,
   },

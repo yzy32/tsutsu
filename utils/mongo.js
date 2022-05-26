@@ -2,6 +2,11 @@ require("dotenv").config({ path: `${__dirname}/../.env` });
 const { number } = require("joi");
 const mongoose = require("mongoose");
 
+let mongoAddress = `mongodb://${process.env.IP}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+if (process.env.NODE_ENV == "docker") {
+  mongoAddress = `mongodb://${process.env.CONTAINER_MONGO}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+}
+
 async function mongoConnection() {
   try {
     const options = {
@@ -9,11 +14,7 @@ async function mongoConnection() {
       user: process.env.MONGO_USER,
       pass: process.env.MONGO_PWD,
     };
-    const mongo = await mongoose.connect(
-      // `mongodb://${process.env.IP}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
-      `mongodb://${process.env.CONTAINER_MONGO}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
-      options
-    );
+    const mongo = await mongoose.connect(mongoAddress, options);
     mongoose.connection.once("open", () => {
       console.log("mongo is connected");
     });

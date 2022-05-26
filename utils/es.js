@@ -3,9 +3,13 @@ const path = require("path");
 const fs = require("fs");
 const { Client, ConnectionPool } = require("@elastic/elasticsearch");
 
+let esAddress = `https://${process.env.IP}:${process.env.ES_PORT}`;
+if (process.env.NODE_ENV == "docker") {
+  esAddress = `https://${process.env.CONTAINER_ES}:${process.env.ES_PORT}`;
+}
+
 const es = new Client({
-  // node: `https://${process.env.IP}:${process.env.ES_PORT}`,
-  node: `https://${process.env.CONTAINER_ES}:${process.env.ES_PORT}`,
+  node: esAddress,
   auth: {
     username: `${process.env.ES_USER}`,
     password: `${process.env.ES_PWD}`,
