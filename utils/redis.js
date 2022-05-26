@@ -3,7 +3,8 @@ const redis = require("redis");
 
 // for local host
 const redisClient = redis.createClient({
-  url: `redis://${process.env.REDIS_USER}:${process.env.REDIS_PASSWORD}@${process.env.IP}:${process.env.REDIS_PORT}`,
+  // url: `redis://${process.env.REDIS_USER}:${process.env.REDIS_PASSWORD}@${process.env.IP}:${process.env.REDIS_PORT}`,
+  url: `redis://${process.env.CONTAINER_REDIS}:${process.env.REDIS_PASSWORD}@${process.env.IP}:${process.env.REDIS_PORT}`,
   socket: {
     keepAlive: false,
   },

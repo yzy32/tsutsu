@@ -4,7 +4,8 @@ const fs = require("fs");
 const { Client, ConnectionPool } = require("@elastic/elasticsearch");
 
 const es = new Client({
-  node: `https://${process.env.IP}:${process.env.ES_PORT}`,
+  // node: `https://${process.env.IP}:${process.env.ES_PORT}`,
+  node: `https://${process.env.CONTAINER_ES}:${process.env.ES_PORT}`,
   auth: {
     username: `${process.env.ES_USER}`,
     password: `${process.env.ES_PWD}`,

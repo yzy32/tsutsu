@@ -10,7 +10,8 @@ async function mongoConnection() {
       pass: process.env.MONGO_PWD,
     };
     const mongo = await mongoose.connect(
-      `mongodb://${process.env.IP}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
+      // `mongodb://${process.env.IP}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
+      `mongodb://${process.env.CONTAINER_MONGO}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`,
       options
     );
     mongoose.connection.once("open", () => {
