@@ -151,8 +151,9 @@ services:
 
   tsutsu:
     container_name: tsutsu
-    build: /home/ec2-user/tsutsu
-    dockerfile: dockerfile
+    build:
+      context: /home/ec2-user/tsutsu
+      dockerfile: dockerfile
     image: tsutsu:v1.0
     env_file:
       - .env-tsutsu
