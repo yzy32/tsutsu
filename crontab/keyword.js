@@ -41,4 +41,5 @@ const getTrendingKeywords = async () => {
   }
 };
 
-getTrendingKeywords();
+// getTrendingKeywords();
+module.exports = getTrendingKeywords;

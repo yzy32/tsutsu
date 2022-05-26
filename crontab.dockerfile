@@ -8,4 +8,4 @@ RUN npm install
 COPY . .
 EXPOSE 8080
 
-CMD ["node", "/usr/src/app/app.js"]
+CMD ["node", "/usr/src/app/crontab/crontab.js"]
