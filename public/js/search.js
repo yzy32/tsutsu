@@ -180,6 +180,14 @@ async function search() {
     }
     searchResults.innerHTML += recipe;
     newUrl = new URL(window.location.href);
+    const sortType = newUrl.searchParams.get("sort");
+    if (!sortType || sortType == "revelance") {
+      document.getElementById("relevance").selected = true;
+    } else if (sortType == "time") {
+      document.getElementById("time").selected = true;
+    } else if (sortType == "favorite") {
+      document.getElementById("favorite").selected = true;
+    }
     newUrl.searchParams.delete("q");
     if (data.filter.ingrIncl && data.filter.ingrIncl.length !== 0) {
       newUrl.searchParams.set("ingrIncl", data.filter.ingrIncl);
