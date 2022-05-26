@@ -1,0 +1,9 @@
+**/crontab
+**/node_modules
+**/.DS_Store
+.gitignore
+**/data
+.env
+es_http_ca.crt
+
+
