@@ -5,5 +5,6 @@
 **/data
 .env
 es_http_ca.crt
+**/docker-compose
 
 

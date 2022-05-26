@@ -5,3 +5,6 @@ node_modules/*
 .env-tsutsu
 es_http_ca.crt
 nginx.conf
+docker-compose/.env-tsutsu
+docker-compose/nginx.conf
+docker-compose/.env
