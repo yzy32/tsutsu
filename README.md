@@ -42,6 +42,8 @@ Password: test
 This is how TsuTsu looks like behind the scene
 <img width="1029" alt="architecture" src="https://user-images.githubusercontent.com/90205595/170695917-478ba7cf-4204-4cb0-be08-71ecc841e8cb.png">
 
+[<div align="right">Back to Top</div>](#README)
+
 <br>
 
 # Features
@@ -62,7 +64,7 @@ You will get categorized keywords in the filter section
 Add any keyword in the filter to search what you need
 ![search-2](https://user-images.githubusercontent.com/90205595/170814898-dc531dbd-c7d1-4995-924b-a607d087e4f7.gif)
 
-[<div align="right">Back to Top</div>](#TSUTSU)
+[Back to Top](#TSUTSU)
 
 <br>
 
@@ -70,6 +72,7 @@ Add any keyword in the filter to search what you need
 
 You can set your recipe's accessibility
 ![set-private](https://user-images.githubusercontent.com/90205595/170818653-eaab855a-3dd3-4198-b229-28b14761d83c.gif)
+[<div align="right">Back to Top</div>](#README)
 
 This is what you see on your user page
 ![User_Author](https://user-images.githubusercontent.com/90205595/170817814-aac6f83e-a472-4df6-a27b-dbdea177dc30.png)
@@ -80,7 +83,7 @@ This is what other users see on your page
 Even your recipe is in other users' favorite, they won't see the content.
 ![User_favorite](https://user-images.githubusercontent.com/90205595/170819170-b06d4c09-8589-4e12-97d2-8794d0b93457.png)
 
-[<div align="right">Back to Top</div>](#TSUTSU)
+[<div align="right">Back to Top</div>](#README)
 
 <br>
 
@@ -90,7 +93,6 @@ This is how you can explore more recipes
 ![inspiration-1](https://user-images.githubusercontent.com/90205595/170814854-87f9b59f-6821-4866-9c2a-58eda60972d0.gif)
 
 ![home-to-author](https://user-images.githubusercontent.com/90205595/170814860-913b22ba-41c5-4747-bc00-b52971628481.gif)
-[<div align="right">Back to Top</div>](#TSUTSU)
 
 ![home-to-recipe](https://user-images.githubusercontent.com/90205595/170814864-2220c376-fbea-4d1e-a1f8-e89fef6399df.gif)
 
@@ -106,7 +108,7 @@ With one click, you can copy ingredients to your clipboard
 
 </details>
 
-[<div align="right">Back to Top</div>](#TSUTSU)
+[<div align="right">Back to Top</div>](#README)
 
 <br>
 
@@ -282,7 +284,7 @@ With one click, you can copy ingredients to your clipboard
 
 </details>
 
-[<div align="right">Back to Top</div>](#TSUTSU)
+[<div align="right">Back to Top</div>](#README)
 
 <br>
 
@@ -292,7 +294,7 @@ With one click, you can copy ingredients to your clipboard
 2. Add autocomplete to search
 3. Improve availability by applying AWS Auto Scaling
 
-[<div align="right">Back to Top</div>](#TSUTSU)
+[<div align="right">Back to Top</div>](#README)
 
 <br>
 
