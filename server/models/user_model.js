@@ -4,6 +4,7 @@ const { User, Recipe } = require("../../utils/mongo");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { storeESLog } = require("./log_model");
+const tsutsuError = require("../../utils/error");
 
 const createUser = async (/*userName,*/ userId, type, email, password) => {
   try {
@@ -229,8 +230,7 @@ const getUserProfile = async (authorId, userId) => {
       })
       .lean();
     if (!result || result.length == 0) {
-      let error = new Error("User not Found");
-      error.status = 404;
+      new tsutsuError(404, "User not Found");
       throw error;
     }
     if (authorId == userId) {
@@ -321,8 +321,7 @@ const updateUserProfile = async (userId, update) => {
       }
     );
     if (!userInserted) {
-      let error = new Error("No User Exists");
-      error.status = 400;
+      new tsutsuError(400, "No User Exists");
       throw error;
     }
     const result = userInserted.save();
