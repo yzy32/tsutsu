@@ -18,7 +18,7 @@ const validator = require("../../utils/validator");
 const followPageSize = 20;
 
 const signUp = async (req, res) => {
-  const { userName, userId, email, password } = req.body;
+  const { userId, email, password } = req.body;
   //data validation
   await validator.signup.validateAsync({
     userId,

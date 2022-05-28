@@ -6,12 +6,11 @@ const jwt = require("jsonwebtoken");
 const { storeESLog } = require("./log_model");
 const tsutsuError = require("../../utils/error");
 
-const createUser = async (/*userName,*/ userId, type, email, password) => {
+const createUser = async (userId, type, email, password) => {
   try {
     const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT));
     const hashedPwd = await bcrypt.hash(password, salt);
     const user = {
-      // userName: userName,
       userId: userId,
       type: type,
       email: email,
@@ -20,7 +19,6 @@ const createUser = async (/*userName,*/ userId, type, email, password) => {
     const accessToken = jwt.sign(
       {
         type: user.type,
-        // userName: user.userName,
         userId: user.userId,
         email: user.email,
       },
@@ -220,7 +218,6 @@ const getUserProfile = async (authorId, userId) => {
     const result = await User.findOne({ userId: authorId })
       .select({
         userId: 1,
-        // userName: 1,
         introduction: 1,
         userImage: 1,
         following: 1,
@@ -418,7 +415,6 @@ const getFollower = async (userId, authorId, page, followPageSize) => {
       })
         .select({
           userId: 1,
-          // userName: 1,
           userImage: 1,
           _id: 0,
           introduction: 1,
@@ -473,7 +469,6 @@ const getFollowing = async (userId, authorId, page, followPageSize) => {
       })
         .select({
           userId: 1,
-          // userName: 1,
           userImage: 1,
           _id: 0,
           introduction: 1,
@@ -524,7 +519,7 @@ const searchFollower = async (authorId, userId, searchId) => {
       let follower = await User.findOne({
         userId: searchId,
       })
-        .select({ userId: 1, /*userName: 1,*/ userImage: 1, _id: 0 })
+        .select({ userId: 1, userImage: 1, _id: 0 })
         .lean();
       follower.isFollowing = false;
       // login user
@@ -568,7 +563,7 @@ const searchFollowing = async (authorId, userId, searchId) => {
       let following = await User.findOne({
         userId: searchId,
       })
-        .select({ userId: 1, /*userName: 1,*/ userImage: 1, _id: 0 })
+        .select({ userId: 1, userImage: 1, _id: 0 })
         .lean();
       following.isFollowing = false;
       // login user
