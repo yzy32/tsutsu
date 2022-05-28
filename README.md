@@ -76,11 +76,11 @@ You can set your recipe's accessibility
 <details>
 <summary>Click to see what your user page looks like</summary>
 <br>
-This is what you see on your user page
+This is what you will see on your user page
 
 ![User_Author](https://user-images.githubusercontent.com/90205595/170817814-aac6f83e-a472-4df6-a27b-dbdea177dc30.png)
 
-This is what other users see on your page
+This is what other users will see on your page
 ![User_non-author](https://user-images.githubusercontent.com/90205595/170819062-b34e955e-18ea-44aa-8f4a-c2fa6e604ff9.png)
 
 Even your recipe is in other users' favorite, they won't see the content.
