@@ -54,13 +54,17 @@ This is how TsuTsu looks like behind the scene
 
 ## Search by ingredients
 
-Type your keywords in TsuTsu.
+Type your keywords in the search bar.
 \
 You will get categorized keywords in the filter section
 ![search-1](https://user-images.githubusercontent.com/90205595/170813741-f49dd333-8109-4569-8057-91a68122580a.gif)
 
 Add any keyword in the filter to search what you need
 ![search-2](https://user-images.githubusercontent.com/90205595/170814898-dc531dbd-c7d1-4995-924b-a607d087e4f7.gif)
+
+[<div align="right">Back to Top</div>](#TSUTSU)
+
+<br>
 
 ## Recipe access management
 
@@ -76,6 +80,8 @@ This is what other users see on your page
 Even your recipe is in other users' favorite, they won't see the content.
 ![User_favorite](https://user-images.githubusercontent.com/90205595/170819170-b06d4c09-8589-4e12-97d2-8794d0b93457.png)
 
+[<div align="right">Back to Top</div>](#TSUTSU)
+
 <br>
 
 ## Inspiration everywhere
@@ -84,15 +90,24 @@ This is how you can explore more recipes
 ![inspiration-1](https://user-images.githubusercontent.com/90205595/170814854-87f9b59f-6821-4866-9c2a-58eda60972d0.gif)
 
 ![home-to-author](https://user-images.githubusercontent.com/90205595/170814860-913b22ba-41c5-4747-bc00-b52971628481.gif)
+[<div align="right">Back to Top</div>](#TSUTSU)
 
 ![home-to-recipe](https://user-images.githubusercontent.com/90205595/170814864-2220c376-fbea-4d1e-a1f8-e89fef6399df.gif)
 
+![recipe-to-search](https://user-images.githubusercontent.com/90205595/170828102-936d50e3-24dc-496b-b8d7-736e0cda5ab6.gif)
+
 <details>
-<summary>small tip for copy the ingredients</summary>
+<summary>Tip for copy the ingredients</summary>
+
 Want to add ingredients to your shopping list?
 \
 With one click, you can copy ingredients to your clipboard
-\
+![copy-ingredients](https://user-images.githubusercontent.com/90205595/170828097-143ecdc7-a25f-4e56-bf4a-342a6bd1a082.gif)
+
+</details>
+
+[<div align="right">Back to Top</div>](#TSUTSU)
+
 <br>
 
 # DB Schema
@@ -267,6 +282,8 @@ With one click, you can copy ingredients to your clipboard
 
 </details>
 
+[<div align="right">Back to Top</div>](#TSUTSU)
+
 <br>
 
 # Future Features
@@ -274,6 +291,8 @@ With one click, you can copy ingredients to your clipboard
 1. Optimize crontab docker image
 2. Add autocomplete to search
 3. Improve availability by applying AWS Auto Scaling
+
+[<div align="right">Back to Top</div>](#TSUTSU)
 
 <br>
 
