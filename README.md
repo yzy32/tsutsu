@@ -1,97 +1,101 @@
-# <img width="35" alt="image" src="https://user-images.githubusercontent.com/90205595/170696813-30073298-d9ed-4390-a2e6-b342dc1882ec.png" style="margin-bottom: -10px"> TsuTsu
+# <img width="35" alt="image" src="https://user-images.githubusercontent.com/90205595/170696813-30073298-d9ed-4390-a2e6-b342dc1882ec.png" style="margin-bottom: -10px"> **TSUTSU**
 
 A recipe website that inspires your cooking ideas, you can expect:
 
-- Inspiration everywhere
 - Search by ingredients
 - Recipe access management
+- Inspiration everywhere
 
-Click [here](https://yzyang.site/) to check it out
+If you are bothered by below problems:
 
-# In This README
+- Don't know what to cook?
+- Want to digitalize your recipe but still make it secret?
 
-- Demo
-- Architecture
-- Website Introduction
-- DB Schema
+Click [here](https://yzyang.site/) to check it out!
 
-## Demo
+<br>
 
-## Architecture
+# **README**
 
+- **[Test Account](#Test-Account)**
+- **[Architecture](#Architecture)**
+- **[Features](#Features)**
+- **[DB Schema](#DB-Schema)**
+- **[Future Features](#Future-Features)**
+- **[Contact Me](#Don't-Miss-Out)**
+
+<br>
+
+# Test Account
+
+Interested? Explore TsuTsu with below test account:
+
+```
+Account: test01@gmail.com
+Password: test
+```
+
+<br>
+
+# Architecture
+
+This is how TsuTsu looks like behind the scene
 <img width="1029" alt="architecture" src="https://user-images.githubusercontent.com/90205595/170695917-478ba7cf-4204-4cb0-be08-71ecc841e8cb.png">
 
-## Features
+<br>
 
-1. Inspiration everywhere (#Inspiration-everywhere)
-2. Search by ingredients
-3. Recipe access management
+# Features
+
+- [Search by ingredients](#Search-by-ingredients)
+- [Recipe access management](#Recipe-access-management)
+- [Inspiration everywhere](#Inspiration-everywhere)
+
+<br>
+
+## Search by ingredients
+
+Type your keywords in TsuTsu.
+\
+You will get categorized keywords in the filter section
+![search-1](https://user-images.githubusercontent.com/90205595/170813741-f49dd333-8109-4569-8057-91a68122580a.gif)
+
+Add any keyword in the filter to search what you need
+![search-2](https://user-images.githubusercontent.com/90205595/170814898-dc531dbd-c7d1-4995-924b-a607d087e4f7.gif)
+
+## Recipe access management
+
+You can set your recipe's accessibility
+![set-private](https://user-images.githubusercontent.com/90205595/170818653-eaab855a-3dd3-4198-b229-28b14761d83c.gif)
+
+This is what you see on your user page
+![User_Author](https://user-images.githubusercontent.com/90205595/170817814-aac6f83e-a472-4df6-a27b-dbdea177dc30.png)
+
+This is what other users see on your page
+![User_non-author](https://user-images.githubusercontent.com/90205595/170819062-b34e955e-18ea-44aa-8f4a-c2fa6e604ff9.png)
+
+Even your recipe is in other users' favorite, they won't see the content.
+![User_favorite](https://user-images.githubusercontent.com/90205595/170819170-b06d4c09-8589-4e12-97d2-8794d0b93457.png)
+
+<br>
 
 ## Inspiration everywhere
 
-You can share all URL of this website and browse more recipes from:
+This is how you can explore more recipes
+![inspiration-1](https://user-images.githubusercontent.com/90205595/170814854-87f9b59f-6821-4866-9c2a-58eda60972d0.gif)
 
-1. Home Page
-   ![inspiration-1](https://user-images.githubusercontent.com/90205595/170712571-edf54a18-0f98-47bf-a185-40962a97df7e.gif)
-2. Recipe Page
-   ![inspiration-2](https://user-images.githubusercontent.com/90205595/170713289-6eba4f45-f4a3-4904-a22c-599d4a99001b.gif)
+![home-to-author](https://user-images.githubusercontent.com/90205595/170814860-913b22ba-41c5-4747-bc00-b52971628481.gif)
 
-   - Get recipes based on searching and sorting result
+![home-to-recipe](https://user-images.githubusercontent.com/90205595/170814864-2220c376-fbea-4d1e-a1f8-e89fef6399df.gif)
 
-   - Tags (when clicking tags, you will be redirect to search page)
+<details>
+<summary>small tip for copy the ingredients</summary>
+Want to add ingredients to your shopping list?
+\
+With one click, you can copy ingredients to your clipboard
+\
+<br>
 
-3. User Page
-   - Recipes
-   - Favorites
-
-## Search Page
-
-Type in the search bar
-![search-1](https://user-images.githubusercontent.com/90205595/170807331-97e242e0-2a7c-4193-b57f-e3ee4f09829a.gif)
-
-Exclude the ingredients you don't want
-![search-2](https://user-images.githubusercontent.com/90205595/170807407-a6dd48f5-91ba-43a4-a663-ff4a15e5eb78.gif)
-
-You can search recipes based on
-
-- Including the ingredients
-- Excluding the ingredients
-- Including other non-ingredients keywords
-- Including recipes within specified cooking time
-- Specifying "only search my recipe", if you only want to search in your recipes
-
-You can also browse the results sorted by
-
-- Relevance
-- Time
-- Favorite
-
-## Recipe Page
-
-If you are the author of this recipe, you can edit it.
-
-If you are not the author, you can:
-
-- Keep this recipes in your favorite
-- Follow this author
-- Leave a review
-- Copy the ingredients to your clipboard
-
-## User Page
-
-If you are the owner of this user page, you can setting your recipes'
-
-- accessibility (public / private)
-- edit the content
-
-If you are browsing other user's page, you can follow this user and view:
-
-- recipes
-- favorites
-- following
-- follower
-
-## DB Schema
+# DB Schema
 
 ### Elasticsearch mapping
 
@@ -262,3 +266,19 @@ If you are browsing other user's page, you can follow this user and view:
 ```
 
 </details>
+
+<br>
+
+# Future Features
+
+1. Optimize crontab docker image
+2. Add autocomplete to search
+3. Improve availability by applying AWS Auto Scaling
+
+<br>
+
+# Contact Me
+
+If you have any idea or comment, please don't hesitate to contact me via
+\
+`yzyang32@gmail.com`
