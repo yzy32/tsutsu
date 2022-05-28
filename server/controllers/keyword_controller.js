@@ -5,7 +5,7 @@ const { searchRecipe } = require("../models/recipe_model");
 const selectTrendingKeyword = async (req, res) => {
   try {
     let keywords = [];
-    if (redisClient.ready) {
+    if (!redisClient.ready) {
       keywords = await redisClient.LRANGE("keywords", 0, -1);
     } else {
       let hour = 24;
@@ -26,7 +26,7 @@ const selectTrendingKeyword = async (req, res) => {
         );
       }
       keywords = keywords.map((k) => {
-        return k._id;
+        return k._id; //accumulate keyword based on _id field
       });
     }
     //search keyword
@@ -57,9 +57,13 @@ const selectTrendingKeyword = async (req, res) => {
         return recipe;
       });
       let keywordRecipes = { keyword: keywords[i], recipes: recipes };
+      if (keywordRecipes.recipes.length < 3) {
+        continue;
+      }
       keywordsRecipes.push(keywordRecipes);
     }
     //return imgurl, recipename, recipeauthor to frontend
+    console.log(keywordsRecipes);
     res.status(200).send(keywordsRecipes);
     return;
   } catch (error) {
