@@ -42,7 +42,7 @@ Password: test
 This is how TsuTsu looks like behind the scene
 <img width="1029" alt="architecture" src="https://user-images.githubusercontent.com/90205595/170695917-478ba7cf-4204-4cb0-be08-71ecc841e8cb.png">
 
-[<div align="right">Back to Top</div>](#README)
+[<div align="right">Back to README</div>](#README)
 
 <br>
 
@@ -64,7 +64,7 @@ You will get categorized keywords in the filter section
 Add any keyword in the filter to search what you need
 ![search-2](https://user-images.githubusercontent.com/90205595/170814898-dc531dbd-c7d1-4995-924b-a607d087e4f7.gif)
 
-[Back to Top](#TSUTSU)
+[<div align="right">Back to README</div>](#README)
 
 <br>
 
@@ -72,9 +72,12 @@ Add any keyword in the filter to search what you need
 
 You can set your recipe's accessibility
 ![set-private](https://user-images.githubusercontent.com/90205595/170818653-eaab855a-3dd3-4198-b229-28b14761d83c.gif)
-[<div align="right">Back to Top</div>](#README)
 
+<details>
+<summary>Click to see what your user page looks like</summary>
+<br>
 This is what you see on your user page
+
 ![User_Author](https://user-images.githubusercontent.com/90205595/170817814-aac6f83e-a472-4df6-a27b-dbdea177dc30.png)
 
 This is what other users see on your page
@@ -83,7 +86,9 @@ This is what other users see on your page
 Even your recipe is in other users' favorite, they won't see the content.
 ![User_favorite](https://user-images.githubusercontent.com/90205595/170819170-b06d4c09-8589-4e12-97d2-8794d0b93457.png)
 
-[<div align="right">Back to Top</div>](#README)
+</details>
+
+[<div align="right">Back to README</div>](#README)
 
 <br>
 
@@ -99,16 +104,15 @@ This is how you can explore more recipes
 ![recipe-to-search](https://user-images.githubusercontent.com/90205595/170828102-936d50e3-24dc-496b-b8d7-736e0cda5ab6.gif)
 
 <details>
-<summary>Tip for copy the ingredients</summary>
+<summary>Want to add ingredients to your shopping list?</summary>
+<br>
 
-Want to add ingredients to your shopping list?
-\
 With one click, you can copy ingredients to your clipboard
 ![copy-ingredients](https://user-images.githubusercontent.com/90205595/170828097-143ecdc7-a25f-4e56-bf4a-342a6bd1a082.gif)
 
 </details>
 
-[<div align="right">Back to Top</div>](#README)
+[<div align="right">Back to README</div>](#README)
 
 <br>
 
@@ -284,7 +288,7 @@ With one click, you can copy ingredients to your clipboard
 
 </details>
 
-[<div align="right">Back to Top</div>](#README)
+[<div align="right">Back to README</div>](#README)
 
 <br>
 
@@ -294,7 +298,7 @@ With one click, you can copy ingredients to your clipboard
 2. Add autocomplete to search
 3. Improve availability by applying AWS Auto Scaling
 
-[<div align="right">Back to Top</div>](#README)
+[<div align="right">Back to README</div>](#README)
 
 <br>
 
