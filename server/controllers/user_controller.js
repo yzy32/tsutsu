@@ -26,7 +26,7 @@ const signUp = async (req, res) => {
     password,
   });
   const type = "native";
-  const result = await createUser(userName, userId, type, email, password);
+  const result = await createUser(userId, type, email, password);
   if (result.error) {
     // create user failed
     if (
@@ -71,7 +71,6 @@ const signIn = async (req, res) => {
   let user;
   if (decoded) {
     user = {
-      userName: result.userName,
       userId: result.userId,
       type: result.type,
       email: result.email,
@@ -85,7 +84,6 @@ const signIn = async (req, res) => {
   const accessToken = jwt.sign(
     {
       type: result.type,
-      userName: result.userName,
       userId: result.userId,
       email: result.email,
     },
@@ -197,9 +195,6 @@ const updateProfile = async (req, res) => {
   if (req.body.introduction) {
     update.introduction = req.body.introduction;
   }
-  if (req.body.userName) {
-    update.userName = req.body.userName;
-  }
   if (Object.keys(update).length === 0) {
     return res.status(400).json({ error: "User must have input" });
   }
@@ -208,7 +203,6 @@ const updateProfile = async (req, res) => {
   let user = {
     userId: userId,
     userImage: result.userImage,
-    userName: result.userName,
     introduction: result.introduction,
   };
   // console.log(user);
