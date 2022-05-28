@@ -344,7 +344,7 @@ $(async function () {
             <span class="input-group-text"><i class="fa-regular fa-image"></i></span>
           </div>
           <div class="custom-file recipeSteps" data-step="${i + 1}">
-            <input name="recipeStepImage" type="file" class="custom-file-input recipeStepImage" accept="image/*" style="cursor: pointer !important;">
+            <input type="file" class="custom-file-input recipeStepImage" accept="image/*" style="cursor: pointer !important;">
             <label class="custom-file-label" for="recipeStepImage">Choose Image</label>
           </div>
         </div>

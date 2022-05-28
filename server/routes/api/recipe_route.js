@@ -33,15 +33,7 @@ router.post("/recipe/viewCount", errorHandler(addViewCount));
 router.post("/recipe/setPublic", auth, errorHandler(setRecipePublic));
 router.get("/recipe/imgUploadUrl", auth, errorHandler(s3.generateUploadURL));
 router.get("/recipe/:id", recipeAuth, errorHandler(getRecipePage));
-router.post(
-  "/recipe",
-  auth,
-  upload.fields([
-    { name: "recipeImage", maxCount: 1 },
-    { name: "recipeStepImage" },
-  ]),
-  errorHandler(createRecipe)
-);
+router.post("/recipe", auth, upload.none(), errorHandler(createRecipe));
 router.put("/recipe/:id/edit", auth, upload.none(), errorHandler(updateRecipe));
 router.get("/recipe/:id/review", errorHandler(getReview));
 router.post("/recipe/:id/review", auth, errorHandler(createReview));

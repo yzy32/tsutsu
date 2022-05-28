@@ -61,7 +61,6 @@ var upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      //FIXME: test time
       console.log("1.recipte creation in multer: ", new Date());
       const customFileName = crypto
         .randomBytes(18)
@@ -93,10 +92,6 @@ var uploadProfile = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      // const customFileName = crypto
-      //   .randomBytes(18)
-      //   .toString("hex")
-      //   .substring(0, 8);
       const customFileName = req.user.userId;
       const fileExtension = file.mimetype.split("/")[1]; // get file extension from original file name
       cb(null, `assets/profile/` + customFileName + "." + fileExtension);
