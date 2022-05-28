@@ -97,11 +97,14 @@ Even your recipe is in other users' favorite, they won't see the content.
 This is how you can explore more recipes
 ![inspiration-1](https://user-images.githubusercontent.com/90205595/170814854-87f9b59f-6821-4866-9c2a-58eda60972d0.gif)
 
-![home-to-author](https://user-images.githubusercontent.com/90205595/170814860-913b22ba-41c5-4747-bc00-b52971628481.gif)
-
+You can just checkout the recipe
 ![home-to-recipe](https://user-images.githubusercontent.com/90205595/170814864-2220c376-fbea-4d1e-a1f8-e89fef6399df.gif)
 
+Try to click the tag to find out more recipes
 ![recipe-to-search](https://user-images.githubusercontent.com/90205595/170828102-936d50e3-24dc-496b-b8d7-736e0cda5ab6.gif)
+
+You can also find out more on user page
+![home-to-author](https://user-images.githubusercontent.com/90205595/170814860-913b22ba-41c5-4747-bc00-b52971628481.gif)
 
 <details>
 <summary>Want to add ingredients to your shopping list?</summary>
