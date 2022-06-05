@@ -62,6 +62,9 @@ const cleanRecipeForDB = (req) => {
     let tags = Array.isArray(req.body.tags) ? req.body.tags : [req.body.tags];
     recipe.tags = tags;
   }
+  if (!Array.isArray(req.body.ingredients)) {
+    recipe.ingredients = [req.body.ingredients];
+  }
   return recipe;
 };
 
