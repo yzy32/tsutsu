@@ -48,6 +48,14 @@ const cleanRecipeForDB = (req) => {
     author: req.user.userName,
     authorId: req.user.userId,
   };
+  console.log("in util for steps : ", req.body.recipeSteps);
+  console.log("in util for images: ", req.body.recipeStepImage);
+  if (!Array.isArray(req.body.recipeSteps)) {
+    req.body.recipeSteps = [req.body.recipeSteps];
+  }
+  if (!Array.isArray(req.body.recipeStepImage)) {
+    req.body.recipeStepImage = [req.body.recipeStepImage];
+  }
   for (let i = 0; i < req.body.recipeSteps.length; i++) {
     let recipeStep = {
       step: req.body.recipeSteps[i],
