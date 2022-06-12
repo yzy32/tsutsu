@@ -21,7 +21,6 @@ Click [here](https://yzyang.site/) to check it out!
 - **[Architecture](#Architecture)**
 - **[Features](#Features)**
 - **[DB Schema](#DB-Schema)**
-- **[Future Features](#Future-Features)**
 - **[Contact Me](#Don't-Miss-Out)**
 
 <br>
@@ -296,16 +295,6 @@ With one click, you can copy ingredients to your clipboard
 ```
 
 </details>
-
-[<div align="right">Back to README</div>](#README)
-
-<br>
-
-# Future Features
-
-1. Optimize crontab docker image
-2. Add autocomplete to search
-3. Improve availability by applying AWS Auto Scaling
 
 [<div align="right">Back to README</div>](#README)
 
