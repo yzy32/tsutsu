@@ -27,7 +27,7 @@ Click [here](https://yzyang.site/) to check it out!
 
 # Test Account
 
-Interested? Explore TsuTsu with below test account:
+Explore TsuTsu with below test account:
 
 ```
 Account: test01@gmail.com
