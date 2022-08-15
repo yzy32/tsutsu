@@ -307,7 +307,7 @@ const getUserFavorite = async (req, res) => {
   );
   const total = favoriteCount;
   let result = [];
-  for (let i = 0; i < total; i++) {
+  for (let i = 0; i < userPageSize; i++) {
     let recipe = await getRecipeById(favoriteId[i]);
     if (recipe.isPublic) {
       recipe = removeRedundantInfo(recipe);
