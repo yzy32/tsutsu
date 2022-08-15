@@ -5,7 +5,7 @@ const { searchRecipe } = require("../models/recipe_model");
 const selectTrendingKeyword = async (req, res) => {
   try {
     let keywords = [];
-    if (!redisClient.ready) {
+    if (redisClient.ready) {
       keywords = await redisClient.LRANGE("keywords", 0, -1);
     } else {
       let hour = 24;
